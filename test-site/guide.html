@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>申请攻略 - 爱尔兰择校决策系统</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" media="print" onerror="this.media='all'">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f4f8; color: #333; line-height: 1.7; }
+    
+    .header { background: linear-gradient(135deg, #1a5f7a 0%, #2d8f6f 100%); color: white; padding: 40px 20px; }
+    .header h1 { font-size: 32px; margin-bottom: 8px; }
+    .header p { opacity: 0.9; font-size: 16px; }
+    
+    .container { max-width: 860px; margin: 0 auto; padding: 40px 20px; }
+    
+    .back-link { display: inline-block; margin-bottom: 20px; color: #1a5f7a; text-decoration: none; font-size: 14px; }
+    .back-link:hover { text-decoration: underline; }
+    
+    .card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .card h2 { font-size: 20px; color: #1a5f7a; margin-bottom: 16px; border-bottom: 2px solid #e8f4f8; padding-bottom: 10px; }
+    .card h3 { font-size: 16px; color: #333; margin: 16px 0 8px; }
+    .card h3 .icon { margin-right: 6px; }
+    
+    .alert-box { background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 6px; padding: 14px 16px; margin: 16px 0; font-size: 14px; }
+    .alert-red { background: #f8d7da; border-color: #dc3545; }
+    .alert-green { background: #d4edda; border-color: #28a745; }
+    .alert-blue { background: #e8f4f8; border-color: #1a5f7a; }
+    
+    .timeline { position: relative; padding-left: 30px; }
+    .timeline::before { content: ''; position: absolute; left: 10px; top: 0; bottom: 0; width: 2px; background: #e0e0e0; }
+    .timeline-item { position: relative; margin-bottom: 24px; }
+    .timeline-item::before { content: ''; position: absolute; left: -24px; top: 6px; width: 12px; height: 12px; background: #1a5f7a; border-radius: 50%; }
+    .timeline-item h4 { font-size: 15px; margin-bottom: 4px; color: #333; }
+    .timeline-item p { font-size: 14px; color: #666; }
+    
+    .school-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+    .school-table th { background: #1a5f7a; color: white; padding: 10px 8px; text-align: left; }
+    .school-table td { padding: 10px 8px; border-bottom: 1px solid #eee; vertical-align: top; }
+    .school-table tr:nth-child(even) td { background: #f8f9fa; }
+    .school-table .tier { padding: 4px 8px; border-radius: 10px; font-size: 12px; font-weight: 600; display: inline-block; }
+    .tier-rush { background: #f8d7da; color: #721c24; }
+    .tier-match { background: #fff3cd; color: #856404; }
+    .tier-safe { background: #d4edda; color: #155724; }
+    .fee-free { background: #d4edda; color: #155724; padding: 2px 6px; border-radius: 4px; }
+    
+    .step-box { background: #f8f9fa; border-radius: 8px; padding: 16px; margin: 12px 0; }
+    .step-box h4 { font-size: 14px; color: #1a5f7a; margin-bottom: 8px; }
+    .step-box ul { list-style: none; padding: 0; }
+    .step-box li { padding: 4px 0; font-size: 14px; color: #555; }
+    .step-box li::before { content: '✓ '; color: #27ae60; font-weight: bold; }
+    
+    .cta-box { background: linear-gradient(135deg, #1a5f7a, #2d8f6f); color: white; border-radius: 12px; padding: 30px; text-align: center; margin: 24px 0; }
+    .cta-box h3 { font-size: 20px; margin-bottom: 10px; }
+    .cta-box p { opacity: 0.9; margin-bottom: 16px; font-size: 14px; }
+    .cta-btn { background: white; color: #1a5f7a; padding: 12px 28px; border-radius: 8px; font-size: 16px; font-weight: 600; text-decoration: none; display: inline-block; }
+    .cta-btn:hover { background: #f0f0f0; }
+    
+    .fee-note { font-size: 13px; color: #666; margin-top: 6px; }
+    .eir-price { font-size: 13px; color: #999; }
+    
+    .nav-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    .nav-card { background: #f8f9fa; border-radius: 10px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s; text-decoration: none; color: #333; }
+    .nav-card:hover { background: #e8f4f8; transform: translateY(-2px); }
+    .nav-card .emoji { font-size: 28px; margin-bottom: 6px; }
+    .nav-card .label { font-weight: 600; font-size: 14px; }
+    .nav-card .sub { font-size: 12px; color: #888; margin-top: 4px; }
+    
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0; }
+    .info-item { background: #f8f9fa; border-radius: 8px; padding: 12px; }
+    .info-item .label { font-size: 12px; color: #888; margin-bottom: 4px; }
+    .info-item .value { font-size: 14px; font-weight: 600; color: #333; }
+    
+    .toc { background: #f8f9fa; border-radius: 10px; padding: 20px; margin-bottom: 24px; }
+    .toc h3 { font-size: 14px; color: #666; margin-bottom: 10px; }
+    .toc ol { padding-left: 20px; }
+    .toc li { padding: 4px 0; font-size: 14px; }
+    .toc a { color: #1a5f7a; text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>📋 爱尔兰中学申请攻略</h1>
+    <p>2026最新版 · 官方数据核实 · 针对深圳家庭优化</p>
+  </div>
+  
+  <div class="container">
+    <a href="questionnaire_v4.html" class="back-link">← 填问卷获取个性化推荐</a>
+    <a href="schools.html" class="back-link" style="margin-left:12px;">| 浏览 20 所核心学校 →</a>
+    
+    <div class="card">
+      <h2>🗂 目录</h2>
+      <div class="toc">
+        <ol>
+          <li><a href="#check">孩子能进哪所？——目标定位</a></li>
+          <li><a href="#tiers">三梯队推荐（冲刺/匹配/保底）</a></li>
+          <li><a href="#money">钱花得值不值？——费用完全解析</a></li>
+          <li><a href="#timeline">申请时间线（现在该做什么）</a></li>
+          <li><a href="#materials">申请材料清单</a></li>
+          <li><a href="#guardian">监护人——爱尔兰法律硬要求</a></li>
+          <li><a href="#next">下一步行动</a></li>
+        </ol>
+      </div>
+    </div>
+    
+    <!-- 1. 孩子能进哪所 -->
+    <div class="card" id="check">
+      <h2>1️⃣ 孩子能进哪所？——目标定位</h2>
+      
+      <div class="alert-box alert-blue">
+        <strong>🎓 您的孩子情况（雅思6.0 = CEFR B2+）</strong><br>
+        这个英语水平是"黄金区间"：足够进入爱尔兰本地优质私校，同时可以享受EAL支持学校的安全垫。建议同时申请有EAL的私校（St Andrew's、Newbridge）+ 冲击传统强校（Blackrock、Gonzaga）。
+      </div>
+      
+      <h3>📊 英语水平 vs 学校EAL要求对照</h3>
+      <table class="school-table">
+        <thead>
+          <tr>
+            <th>雅思成绩</th><th>CEFR级别</th><th>建议策略</th><th>可选学校范围</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>6.5+</td><td>B2+ ~ C1</td>
+            <td>可冲刺无EAL顶级私校</td>
+            <td>Blackrock、Clongowes、Gonzaga、Castleknock</td>
+          </tr>
+          <tr>
+            <td>6.0</td><td>B2+</td>
+            <td>有EAL私校为主，冲刺传统强校</td>
+            <td>St Andrew's、St Columba's、Newbridge + 冲刺Blackrock</td>
+          </tr>
+          <tr>
+            <td>5.5</td><td>B1+</td>
+            <td>必须有EAL支持，优先适应型学校</td>
+            <td>Newbridge、St Columba's、Sutton Park、St Kilian's</td>
+          </tr>
+          <tr>
+            <td>≤5.0</td><td>B1以下</td>
+            <td>先提升英语，或申请国际学校预备班</td>
+            <td>NAIS（IB预备）、St Andrew's语言班</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="alert-box">
+        <strong>📌 重要：Stamp 4 免费读书！</strong><br>
+        您的孩子持Stamp 4签证，<strong>所有爱尔兰公立中学完全免费</strong>（只需支付校服、书本、活动费，约€200-500/年）。如果优先省钱+本地融入，公立女校 Loreto College St Stephen's Green（升学率86%）是顶级选择。
+      </div>
+    </div>
+    
+    <!-- 2. 三梯队推荐 -->
+    <div class="card" id="tiers">
+      <h2>2️⃣ 三梯队推荐（基于雅思6.0深圳男孩）</h2>
+      
+      <h3>🏆 第一梯队：冲刺（需努力但值得一试）</h3>
+      <table class="school-table">
+        <thead>
+          <tr><th>学校</th><th>类型</th><th>费用（走读/寄宿）</th><th>LC升学率</th><th>EAL</th><th>申请难度</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Blackrock College</strong><br><span class="eir-price">爱尔兰排名 #1 男校</span></td>
+            <td>私立男校</td>
+            <td>走读€7,990 / 寄宿€21,075/年</td>
+            <td><strong>96%</strong></td>
+            <td>❌ 无EAL</td>
+            <td><span class="tier tier-rush">极高</span><br><span class="fee-note">⚠️ 2026/27已截止！需联系招生办</span></td>
+          </tr>
+          <tr>
+            <td><strong>Gonzaga College</strong><br><span class="eir-price">耶稣会 Top 5</span></td>
+            <td>私立男校</td>
+            <td>走读约€8,000/年</td>
+            <td><strong>95%</strong></td>
+            <td>❌ 无EAL</td>
+            <td><span class="tier tier-rush">极高</span><br><span class="fee-note">⚠️ 2026/27已截止！纯走读，家长必陪读</span></td>
+          </tr>
+          <tr>
+            <td><strong>Clongowes Wood College</strong><br><span class="eir-price">爱尔兰最佳寄宿男校</span></td>
+            <td>私立·全寄宿</td>
+            <td>寄宿€25,405-29,216/年</td>
+            <td><strong>94%</strong></td>
+            <td>❌ 无EAL</td>
+            <td><span class="tier tier-rush">极高</span><br><span class="fee-note">⚠️ 全寄宿，监护人强制；提前12个月申请</span></td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <h3>✅ 第二梯队：匹配（当前条件较符合）</h3>
+      <table class="school-table">
+        <thead>
+          <tr><th>学校</th><th>类型</th><th>费用（走读/寄宿）</th><th>LC升学率</th><th>EAL</th><th>适配度</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>St Andrew's College</strong><br><span class="eir-price">IB+LC双轨 · 50国籍</span></td>
+            <td>私立混校</td>
+            <td>走读€7,885/年</td>
+            <td><strong>92%</strong></td>
+            <td>✅ EFL部门</td>
+            <td><span class="tier tier-match">强烈推荐</span><br><span class="fee-note">✅ 走读制（无寄宿）；EAL支持完善</span></td>
+          </tr>
+          <tr>
+            <td><strong>Newbridge College</strong><br><span class="eir-price">全爱尔兰顶级私校最低价</span></td>
+            <td>私立混校</td>
+            <td>走读€5,325/年</td>
+            <td><strong>82%</strong></td>
+            <td>✅ AEN支持</td>
+            <td><span class="tier tier-match">强烈推荐</span><br><span class="fee-note">✅ €5,325——比很多公立学校还便宜！Kildare郡</span></td>
+          </tr>
+          <tr>
+            <td><strong>St Columba's College</strong><br><span class="eir-price">圣公会 · 国际生友好</span></td>
+            <td>私立混校</td>
+            <td>走读€11,481 / 寄宿€26,154/年</td>
+            <td><strong>90%</strong></td>
+            <td>✅ 支持</td>
+            <td><span class="tier tier-match">推荐</span><br><span class="fee-note">圣公会背景，多元包容；走读/寄宿均可</span></td>
+          </tr>
+          <tr>
+            <td><strong>Castleknock College</strong><br><span class="eir-price">Rugby强校 Top 10</span></td>
+            <td>私立男校</td>
+            <td>走读€8,500 / 寄宿€19,000/年</td>
+            <td><strong>93%</strong></td>
+            <td>❌ 无EAL</td>
+            <td><span class="tier tier-match">可选</span><br><span class="fee-note">有走读和寄宿，家长需在爱尔兰</span></td>
+          </tr>
+          <tr>
+            <td><strong>Loreto College St Stephen's Green</strong><br><span class="eir-price">🏆 公立女校 Top 1</span></td>
+            <td><strong>公立女校</strong></td>
+            <td><span class="fee-free">✅ 完全免费</span></td>
+            <td><strong>86%</strong></td>
+            <td>❌ 无EAL</td>
+            <td><span class="tier tier-match">省钱首选</span><br><span class="fee-note">⚠️ 公立女校；Stamp 4免费；家长须在学区</span></td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <h3>🛡 第三梯队：保底（最稳妥选择）</h3>
+      <table class="school-table">
+        <thead>
+          <tr><th>学校</th><th>类型</th><th>费用</th><th>LC升学率</th><th>EAL</th><th>适合</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>St Kilian's Deutsche Schule</strong></td>
+            <td>私立混校</td>
+            <td>走读€7,870/年</td>
+            <td><strong>88%</strong></td>
+            <td>✅ 双语支持</td>
+            <td>德语/英语双轨；2026/27七年级已截止</td>
+          </tr>
+          <tr>
+            <td><strong>Sutton Park School</strong></td>
+            <td>私立混校</td>
+            <td>走读€8,000 / 寄宿€16,000/年</td>
+            <td><strong>85%</strong></td>
+            <td>✅ 友好</td>
+            <td>多教派背景；国际生适应较好</td>
+          </tr>
+          <tr>
+            <td><strong>Muckross Park College</strong></td>
+            <td><strong>公立女校</strong></td>
+            <td><span class="fee-free">✅ 免费</span></td>
+            <td><strong>84%</strong></td>
+            <td>❌ 无EAL</td>
+            <td>Dundrum区；华人较少；Stamp 4免费</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- 3. 费用完全解析 -->
+    <div class="card" id="money">
+      <h2>3️⃣ 钱花得值不值？——费用完全解析</h2>
+      
+      <h3>💰 实际年度花费估算（含所有隐藏费用）</h3>
+      <table class="school-table">
+        <thead>
+          <tr><th>学校</th><th>学费</th><th>校服+书本</th><th>交通（家长陪读）</th><th>课外活动</th><th>年度合计估算</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Blackrock College（走读）</td><td>€7,990</td><td>€600</td><td>在爱尔兰自住</td><td>€500</td><td><strong>约€9,000-15,000</strong></td>
+          </tr>
+          <tr>
+            <td>Blackrock College（寄宿）</td><td>€21,075</td><td>€600</td><td>—</td><td>€500</td><td><strong>约€22,000</strong></td>
+          </tr>
+          <tr>
+            <td>St Andrew's College</td><td>€7,885</td><td>€600</td><td>在爱尔兰自住</td><td>€800</td><td><strong>约€9,000-15,000</strong></td>
+          </tr>
+          <tr>
+            <td>Newbridge College ⭐</td><td>€5,325</td><td>€600</td><td>在爱尔兰自住</td><td>€500</td><td><strong>约€6,500-12,000</strong></td>
+          </tr>
+          <tr>
+            <td>Loreto College（公立）</td><td><strong>€0</strong></td><td>€300</td><td>学区定居</td><td>€300</td><td><strong>约€500-1,000</strong></td>
+          </tr>
+          <tr>
+            <td>Clongowes Wood（寄宿）</td><td>€25,405-29,216</td><td>€600</td><td>—</td><td>€800</td><td><strong>约€27,000-31,000</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="alert-box alert-green">
+        <strong>💡 关键发现：Newbridge College €5,325 是全爱尔兰顶级私校中的最低价</strong><br>
+        比很多公立学校还便宜！但已无寄宿（1998年取消），需家长在Kildare/Newbridge自住或通勤。
+      </div>
+      
+      <h3>🆔 Stamp 4 vs 非EU身份费用对比（大学阶段）</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="label">Stamp 4 身份（您的情况）</div>
+          <div class="value" style="color:#27ae60;">大学学费 €1,500-3,000/年</div>
+          <div class="fee-note">符合 Free Fees Initiative 条件后</div>
+        </div>
+        <div class="info-item">
+          <div class="label">非EU国际生</div>
+          <div class="value" style="color:#dc3545;">大学学费 €10,000-25,500/年</div>
+          <div class="fee-note">差距高达 10-17倍！</div>
+        </div>
+      </div>
+      <p class="fee-note">⚠️ Stamp 4本身不等于自动享受本地学费，需满足"入读前5年住满3年在EU/EEA"的条件，由各高校独立评估。2025年起部分Stamp 4类别（IIP投资移民等）已纳入 Home Rate 范围。</p>
+    </div>
+    
+    <!-- 4. 时间线 -->
+    <div class="card" id="timeline">
+      <h2>4️⃣ 申请时间线——现在该做什么？</h2>
+      
+      <div class="alert-box alert-red">
+        <strong>⏰ 紧急：2026/27学年的关键截止日期</strong><br>
+        Blackrock和Gonzaga的2026/27 1st Year申请已于2025年10月22日截止！如想2026年9月入学，需<strong>立即联系招生办</strong>（office@blackrockcollege.com / office@gonzaga.ie）询问是否有候补名额。
+      </div>
+      
+      <h3>📅 申请时间线（2025-2026年度）</h3>
+      <div class="timeline">
+        <div class="timeline-item">
+          <h4>🔴 现在（8月）—— 立即行动</h4>
+          <p>联系目标学校招生办，确认2026年是否还有名额；预约学校开放日；开始准备申请材料</p>
+        </div>
+        <div class="timeline-item">
+          <h4>🟡 9月—— 开放日季节</h4>
+          <p>参加各校开放日（St Andrew's 9月19日；St Kilian's 9月19日；Castleknock 9月28日）；确定2-3所目标学校</p>
+        </div>
+        <div class="timeline-item">
+          <h4>🟢 10-11月—— 正式提交申请</h4>
+          <p>提交申请表格；提交成绩单（需公证认证翻译）；提交雅思成绩；获取推荐信</p>
+        </div>
+        <div class="timeline-item">
+          <h4>🔵 12月-次年1月—— 等待与面试</h4>
+          <p>参加学校面试；等待录取通知；如被拒，立刻联系其他学校（候补机制）</p>
+        </div>
+        <div class="timeline-item">
+          <h4>⚪ 2-4月—— 确认学位</h4>
+          <p>确认offer；缴纳学位定金（通常€500-2,000）；开始办理监护人手续</p>
+        </div>
+        <div class="timeline-item">
+          <h4>⚪ 5-8月—— 行前准备</h4>
+          <p>申请学生签证；安排住宿；购买校服、书本；参加学校迎新；8月底/9月初入学</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 5. 申请材料 -->
+    <div class="card" id="materials">
+      <h2>5️⃣ 申请材料清单</h2>
+      
+      <div class="step-box">
+        <h4>📄 必交材料（所有学校通用）</h4>
+        <ul>
+          <li>近2-3年完整成绩单（学校盖章+公证）</li>
+          <li>雅思成绩单（官方成绩单，非截图）</li>
+          <li>出生证明（需公证+双认证：公证处+爱尔兰驻华大使馆）</li>
+          <li>护照首页复印件</li>
+          <li>护照尺寸照片（白底，3.5×4.5cm，2-4张）</li>
+          <li>疫苗接种记录（中英文公证）</li>
+          <li>一封学校推荐信（英语老师或班主任，中英双语）</li>
+        </ul>
+      </div>
+      
+      <div class="step-box">
+        <h4>📄 私校附加材料</h4>
+        <ul>
+          <li>申请表格（学校官网下载或在线填写）</li>
+          <li>申请费（通常€50-150，不退还）</li>
+          <li>个人陈述/动机信（部分学校要求，英文）</li>
+          <li>家长陈述信（介绍孩子性格、学习情况、为何选择该校）</li>
+          <li>英语水平评估（部分学校有自己的入学测试）</li>
+        </ul>
+      </div>
+      
+      <div class="step-box">
+        <h4>📄 监护人相关材料（申请前必须确认）</h4>
+        <ul>
+          <li>监护人信息表（由爱尔兰监护机构签署）</li>
+          <li>监护协议（家长-监护人-学校三方签署）</li>
+          <li>监护人身份证明（爱尔兰ID或护照）</li>
+          <li>紧急联系方式（家长+监护人+学校三方）</li>
+        </ul>
+      </div>
+      
+      <h3>💡 认证翻译注意事项</h3>
+      <p>爱尔兰学校要求所有非英语材料提供<strong>认证翻译</strong>（Certified Translation）：</p>
+      <ul style="padding-left:20px;margin-top:8px;">
+        <li>找公证处或有资质的翻译公司（NAATI认证优先）</li>
+        <li>翻译件需加盖翻译公司公章+译者签名</li>
+        <li>部分学校接受中国公证处的翻译件，但建议提前确认</li>
+        <li>出生证明：如已有双认证公证件（公证书+外交部认证+爱尔兰大使馆认证），直接使用</li>
+      </ul>
+    </div>
+    
+    <!-- 6. 监护人 -->
+    <div class="card" id="guardian">
+      <h2>6️⃣ 监护人——爱尔兰法律的硬要求</h2>
+      
+      <div class="alert-box alert-red">
+        <strong>⚠️ 重要法律要求：所有18岁以下国际学生必须有爱尔兰本地监护人</strong><br>
+        不管家长是否陪同，<strong>Blackrock、Clongowes等私校强制要求</strong>有爱尔兰本地监护人。监护人必须是年满25岁的爱尔兰居民，可为家庭成员、朋友或专业监护机构。
+      </div>
+      
+      <h3>👤 监护人的职责</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="label">紧急情况</div>
+          <div class="value">学校联系不上家长时，第一时间响应</div>
+        </div>
+        <div class="info-item">
+          <div class="label">学业支持</div>
+          <div class="value">出席家长会，协助家校沟通</div>
+        </div>
+        <div class="info-item">
+          <div class="label">生活安排</div>
+          <div class="value">安排周末/假期住宿、就医等</div>
+        </div>
+        <div class="info-item">
+          <div class="label">文化适应</div>
+          <div class="value">帮助孩子适应爱尔兰生活</div>
+        </div>
+      </div>
+      
+      <h3>🏢 专业监护机构（如果家长不在爱尔兰）</h3>
+      <p>如家长在中国，可选择爱尔兰持牌监护机构，费用约€500-1,500/年：</p>
+      <ul style="padding-left:20px;margin-top:8px;">
+        <li>Guardian Angels Ireland</li>
+        <li>International Guardian Services</li>
+        <li>Irish Boarding Schools Association（可推荐）</li>
+      </ul>
+      <p class="fee-note">⚠️ 建议提前6个月联系监护机构；Blackrock College在其官网列出了合作监护机构名单</p>
+      
+      <div class="alert-box alert-green">
+        <strong>✅ 您的最佳方案（Stamp 4身份）</strong><br>
+        持Stamp 4签证的家长可以<strong>合法陪读</strong>。如果计划家长陪同，最简单方案是：<strong>家长持Stamp 4成为监护人</strong>，无需额外聘请监护机构。但需注意：Gonzaga等纯走读学校要求家长在爱尔兰本地居住。
+      </div>
+    </div>
+    
+    <!-- 7. 下一步 -->
+    <div class="card" id="next">
+      <h2>7️⃣ 下一步行动</h2>
+      
+      <div class="nav-cards">
+        <a href="questionnaire_v4.html" class="nav-card">
+          <div class="emoji">📝</div>
+          <div class="label">填写个性化问卷</div>
+          <div class="sub">获取专属学校推荐</div>
+        </a>
+        <a href="schools.html" class="nav-card">
+          <div class="emoji">🏫</div>
+          <div class="label">浏览全部学校</div>
+          <div class="sub">按地区/类型筛选</div>
+        </a>
+      </div>
+      
+      <div class="step-box">
+        <h4>🎯 建议行动清单（按优先级）</h4>
+        <ul>
+          <li>本周：发邮件给 2-3 所目标学校，询问 2026 年学位情况</li>
+          <li>本周：确认是否需要聘请监护机构（如果家长不陪同）</li>
+          <li>下周：预约并参加 St Andrew's 或 Newbridge 的开放日</li>
+          <li>9月：正式提交申请（提前准备材料）</li>
+          <li>准备雅思成绩单公证材料</li>
+        </ul>
+      </div>
+      
+      <div class="alert-box alert-blue">
+        <strong>📧 建议联系邮箱（直接英文写学校）</strong><br>
+        Blackrock: <strong>office@blackrockcollege.com</strong><br>
+        Gonzaga: <strong>office@gonzaga.ie</strong><br>
+        St Andrew's: <strong>admin@sac.ie</strong><br>
+        Newbridge: <strong>info@newbridgecollege.ie</strong><br>
+        <span class="fee-note">建议用英文写，表达对孩子教育的重视+简单自我介绍。</span>
+      </div>
+    </div>
+    
+    <div class="cta-box">
+      <h3>想获取专属推荐？</h3>
+      <p>回答5分钟问卷，基于真实数据为您匹配冲刺/匹配/保底学校</p>
+      <a href="questionnaire_v4.html" class="cta-btn">开始择校问卷 →</a>
+    </div>
+    
+    <div style="text-align:center;margin-top:30px;color:#999;font-size:13px;">
+      数据来源：各校官网 · Irish Times Feeder Schools · scoilscout.ie · Department of Education Ireland<br>
+      最后更新：2026年8月24日 · 费用数据以学校确认为准
+    </div>
+  </div>
+</body>
+</html>
