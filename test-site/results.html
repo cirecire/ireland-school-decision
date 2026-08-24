@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>推荐结果 - 爱尔兰择校</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" media="print" onerror="this.media='all'">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f4f8; color: #333; line-height: 1.6; }
+    
+    .header { background: linear-gradient(135deg, #1a5f7a 0%, #2d8f6f 100%); color: white; padding: 30px 20px; text-align: center; }
+    .header h1 { font-size: 28px; margin-bottom: 10px; }
+    .header p { opacity: 0.9; font-size: 16px; }
+    
+    .container { max-width: 900px; margin: 0 auto; padding: 30px 20px; }
+    
+    .user-summary { background: white; border-radius: 12px; padding: 20px; margin-bottom: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .user-summary h3 { color: #1a5f7a; margin-bottom: 15px; font-size: 16px; }
+    .summary-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag { background: #e8f4f8; color: #1a5f7a; padding: 6px 12px; border-radius: 20px; font-size: 13px; }
+    
+    .tier-section { margin-bottom: 35px; }
+    .tier-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+    .tier-badge { padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; color: white; }
+    .tier-rush .tier-badge { background: #e74c3c; }
+    .tier-match .tier-badge { background: #27ae60; }
+    .tier-safe .tier-badge { background: #3498db; }
+    .tier-name { font-size: 18px; font-weight: 600; color: #333; }
+    .tier-desc { font-size: 13px; color: #888; }
+    
+    .school-card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 4px solid #ddd; transition: all 0.2s; cursor: pointer; }
+    .school-card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.12); transform: translateY(-2px); }
+    .tier-rush .school-card { border-left-color: #e74c3c; }
+    .tier-match .school-card { border-left-color: #27ae60; }
+    .tier-safe .school-card { border-left-color: #3498db; }
+    
+    .school-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .school-name { font-size: 18px; font-weight: 600; color: #333; }
+    .school-type { font-size: 12px; color: #888; margin-top: 2px; }
+    .match-score { background: #f0f0f0; padding: 6px 12px; border-radius: 20px; font-size: 14px; font-weight: 600; }
+    .match-high { background: #d4edda; color: #155724; }
+    .match-mid { background: #fff3cd; color: #856404; }
+    .match-low { background: #f8d7da; color: #721c24; }
+    
+    .school-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .school-tag { background: #e9ecef; color: #495057; padding: 4px 10px; border-radius: 12px; font-size: 12px; }
+    
+    .school-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 15px; }
+    .meta-item { display: flex; flex-direction: column; }
+    .meta-label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+    .meta-value { font-size: 14px; color: #333; font-weight: 500; }
+    
+    .action-box { background: #f8f9fa; border-radius: 8px; padding: 15px; }
+    .action-title { font-size: 13px; font-weight: 600; color: #333; margin-bottom: 10px; }
+    .action-list { list-style: none; }
+    .action-list li { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 13px; color: #555; }
+    .action-list li::before { content: '☐'; color: #1a5f7a; font-size: 14px; }
+    .action-link { color: #1a5f7a; text-decoration: none; font-weight: 500; margin-left: auto; }
+    .action-link:hover { text-decoration: underline; }
+    
+    .btn-primary { background: #1a5f7a; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 15px; cursor: pointer; text-decoration: none; display: inline-block; margin-top: 15px; }
+    .btn-primary:hover { background: #155166; }
+    
+    .empty-state { text-align: center; padding: 40px; background: white; border-radius: 12px; }
+    .empty-state h3 { color: #666; margin-bottom: 10px; }
+    .empty-state p { color: #999; }
+    
+    .back-link { display: inline-block; margin-bottom: 20px; color: #1a5f7a; text-decoration: none; font-size: 14px; }
+    .back-link:hover { text-decoration: underline; }
+    
+    .loading { text-align: center; padding: 60px; }
+    .loading-spinner { width: 40px; height: 40px; border: 3px solid #e0e0e0; border-top-color: #1a5f7a; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 15px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    
+    .expand-btn { background: none; border: none; color: #1a5f7a; font-size: 13px; cursor: pointer; margin-top: 10px; }
+    .expand-btn:hover { text-decoration: underline; }
+    .school-details { display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; }
+    .school-details.show { display: block; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🇮🇪 您的爱尔兰择校推荐</h1>
+    <p>基于问卷结果，为您匹配的学校</p>
+  </div>
+  
+  <div class="container">
+    <a href="questionnaire_v4.html" class="back-link">← 重新填写问卷</a>
+    
+    <div id="userSummary" class="user-summary">
+      <h3>📋 您的条件</h3>
+      <div class="summary-tags" id="summaryTags"></div>
+    </div>
+    
+    <div id="loading" class="loading">
+      <div class="loading-spinner"></div>
+      <p>正在匹配学校...</p>
+    </div>
+    
+    <div id="results" style="display: none;">
+      <div id="rushSection" class="tier-section tier-rush"></div>
+      <div id="matchSection" class="tier-section tier-match"></div>
+      <div id="safeSection" class="tier-section tier-safe"></div>
+    </div>
+    
+    <div id="emptyState" class="empty-state" style="display: none;">
+      <h3>暂无推荐学校</h3>
+      <p>请尝试调整您的筛选条件，或浏览全部学校清单</p>
+      <a href="schools.html" class="btn-primary">查看全部学校</a>
+    </div>
+    
+    <div style="text-align: center; margin-top: 40px;">
+      <a href="schools.html" class="btn-primary">浏览全部 51 所学校</a>
+    </div>
+  </div>
+
+  <script>
+    // 51所学校数据（完整数据来自 master_list.json）
+    const SCHOOLS = [
+      { id: 1, name: "St Andrew's College", city: "Dublin", type: "private", gender: "coed", boarding: "both", district: "dublin4", fee: 12500, eal: true, international: true, curriculum: "IB", website: "https://www.standrewscollege.ie", applicationDeadline: "2025-10-31", openDay: "2025-09-19", feeders: 78, rank: 12 },
+      { id: 2, name: "Blackrock College", city: "Dublin", type: "private", gender: "boys", boarding: "both", district: "dublin4", fee: 19450, eal: false, international: false, curriculum: "lc", website: "https://www.blackrockcollege.com", applicationDeadline: "2025-10-22", openDay: "2025-10-05", feeders: 91, rank: 3 },
+      { id: 3, name: "Clongowes Wood College", city: "Kildare", type: "private", gender: "boys", boarding: "boarding", district: "kildare", fee: 20920, eal: false, international: false, curriculum: "lc", website: "https://www.clongowes.net", applicationDeadline: "2025-11-01", openDay: "2025-10-12", feeders: 88, rank: 5 },
+      { id: 4, name: "Newbridge College", city: "Kildare", type: "private", gender: "coed", boarding: "both", district: "kildare", fee: 5325, eal: true, international: false, curriculum: "lc", website: "https://www.newbridgecollege.ie", applicationDeadline: "2025-11-15", openDay: "2025-10-18", feeders: 82, rank: 18 },
+      { id: 5, name: "St Columba's College", city: "Dublin", type: "private", gender: "coed", boarding: "both", district: "dublin14", fee: 11481, eal: true, international: false, curriculum: "lc", website: "https://www.stcolumbas.ie", applicationDeadline: "2025-10-15", openDay: "2025-09-21", feeders: 76, rank: 15 },
+      { id: 6, name: "Gonzaga College", city: "Dublin", type: "private", gender: "boys", boarding: "day", district: "dublin6", fee: 9000, eal: false, international: false, curriculum: "lc", website: "https://www.gonzaga.ie", applicationDeadline: "2025-10-22", openDay: "2025-10-05", feeders: 89, rank: 4 },
+      { id: 7, name: "King's Hospital School", city: "Dublin", type: "private", gender: "coed", boarding: "both", district: "dublin20", fee: 9360, eal: true, international: false, curriculum: "lc", website: "https://www.kingshospital.ie", applicationDeadline: "2025-10-31", openDay: "2025-10-11", feeders: 84, rank: 9 },
+      { id: 8, name: "St Michael's College", city: "Dublin", type: "private", gender: "boys", boarding: "both", district: "dublin4", fee: 8000, eal: false, international: false, curriculum: "lc", website: "https://www.stmichaelscollege.ie", applicationDeadline: "2025-11-01", openDay: "2025-10-19", feeders: 85, rank: 8 },
+      { id: 9, name: "Belvedere College", city: "Dublin", type: "private", gender: "boys", boarding: "day", district: "dublin1", fee: 7500, eal: false, international: false, curriculum: "lc", website: "https://www.belvederecollege.ie", applicationDeadline: "2025-10-31", openDay: "2025-10-12", feeders: 82, rank: 14 },
+      { id: 10, name: "Castleknock College", city: "Dublin", type: "private", gender: "boys", boarding: "both", district: "dublin15", fee: 8500, eal: false, international: false, curriculum: "lc", website: "https://www.castleknockcollege.ie", applicationDeadline: "2025-10-15", openDay: "2025-09-28", feeders: 87, rank: 6 },
+      { id: 11, name: "The High School Dublin", city: "Dublin", type: "private", gender: "coed", boarding: "day", district: "dublin6", fee: 7450, eal: false, international: false, curriculum: "lc", website: "https://www.highschooldublin.ie", applicationDeadline: "2025-10-31", openDay: "2025-10-05", feeders: 83, rank: 11 },
+      { id: 12, name: "Wesley College", city: "Dublin", type: "private", gender: "coed", boarding: "both", district: "dublin6", fee: 7800, eal: false, international: false, curriculum: "lc", website: "https://www.wesleycollege.ie", applicationDeadline: "2025-11-01", openDay: "2025-10-18", feeders: 80, rank: 16 },
+      { id: 13, name: "Alexandra College", city: "Dublin", type: "private", gender: "girls", boarding: "both", district: "dublin6", fee: 9200, eal: true, international: false, curriculum: "lc", website: "https://www.alexandracollege.ie", applicationDeadline: "2025-10-31", openDay: "2025-10-11", feeders: 81, rank: 13 },
+      { id: 14, name: "St Kilian's German School", city: "Dublin", type: "private", gender: "coed", boarding: "both", district: "dublin14", fee: 7870, eal: true, international: true, curriculum: "lc_ib", website: "https://www.stkilians.ie", applicationDeadline: "2025-10-15", openDay: "2025-09-19", feeders: 75, rank: 20 },
+      { id: 15, name: "NAIS Dublin", city: "Dublin", type: "private", gender: "coed", boarding: "both", district: "dublin4", fee: 16561, eal: true, international: true, curriculum: "ib", website: "https://www.nais.ie", applicationDeadline: "2025-09-30", openDay: "2025-10-05", feeders: 72, rank: 25 },
+      { id: 16, name: "Sutton Park School", city: "Dublin", type: "private", gender: "coed", boarding: "both", district: "dublin13", fee: 7900, eal: true, international: false, curriculum: "lc", website: "https://www.suttonparkschool.ie", applicationDeadline: "2025-11-01", openDay: "2025-10-12", feeders: 79, rank: 17 },
+      { id: 17, name: "St Gerard's School", city: "Dublin", type: "private", gender: "coed", boarding: "both", district: "dublin5", fee: 7200, eal: true, international: false, curriculum: "lc", website: "https://www.stgerards.ie", applicationDeadline: "2025-11-15", openDay: "2025-10-18", feeders: 77, rank: 19 },
+      { id: 18, name: "SEK Dublin International School", city: "Dublin", type: "private", gender: "coed", boarding: "both", district: "dublin22", fee: 15900, eal: true, international: true, curriculum: "ib", website: "https://www.sekdublin.ie", applicationDeadline: "2025-10-01", openDay: "2025-09-28", feeders: 70, rank: 30 },
+      { id: 19, name: "North Dublin Muslim School", city: "Dublin", type: "private", gender: "coed", boarding: "day", district: "dublin17", fee: 3500, eal: true, international: false, curriculum: "lc", applicationDeadline: "2025-11-01", openDay: "2025-10-12", feeders: 68, rank: 35 },
+      { id: 20, name: "Muckross Park College", city: "Dublin", type: "private", gender: "girls", boarding: "day", district: "dublin14", fee: 6500, eal: false, international: false, curriculum: "lc", website: "https://www.muckrosspark.ie", applicationDeadline: "2025-10-31", openDay: "2025-10-11", feeders: 84, rank: 10 },
+      // 公立学校数据（免费，fee = 0）
+      { id: 21, name: "St Mary's College Dún Laoghaire", city: "Dublin", type: "public", gender: "girls", boarding: "day", district: "dunlaoghaire", fee: 0, eal: false, international: false, curriculum: "lc", applicationDeadline: "随时", openDay: null, feeders: 75, rank: 22 },
+      { id: 22, name: "Christian Brothers Greendale", city: "Dublin", type: "public", gender: "boys", boarding: "day", district: "dublin17", fee: 0, eal: false, international: false, curriculum: "lc", applicationDeadline: "随时", openDay: null, feeders: 72, rank: 28 },
+      { id: 23, name: "Loreto College St Stephen's Green", city: "Dublin", type: "public", gender: "girls", boarding: "day", district: "dublin2", fee: 0, eal: false, international: false, curriculum: "lc", applicationDeadline: "随时", openDay: null, feeders: 86, rank: 7 },
+      { id: 24, name: "Presentation College Terenure", city: "Dublin", type: "public", gender: "girls", boarding: "day", district: "dublin6w", fee: 0, eal: false, international: false, curriculum: "lc", applicationDeadline: "随时", openDay: null, feeders: 78, rank: 21 },
+      { id: 25, name: "Fingal Community College", city: "Dublin", type: "public", gender: "coed", boarding: "day", district: "dublin15", fee: 0, eal: false, international: false, curriculum: "lc", applicationDeadline: "随时", openDay: null, feeders: 65, rank: 40 },
+    ];
+
+    // 用户条件映射
+    const BUDGET_MAP = { low: [0, 10000], mid: [10000, 20000], high: [20000, 35000], any: [0, 50000] };
+    const ENGLISH_SCORE = { c1: 4, b2: 3, b1: 2, weak: 1 }; // 4=雅思6.5+, 3=雅思6.0, 2=雅思5.5, 1=雅思5以下
+    const DISTRICT_MAP = {
+      dublin4: ["dublin4", "booterstown", "santry"],
+      dublin6: ["dublin6", "rathgar", "rathmines"],
+      dublin14: ["dublin14", "dundrum", "stepaside"],
+      dunlaoghaire: ["dunlaoghaire"],
+      kildare: ["kildare", "newbridge", "naas", "clane"],
+      wicklow: ["wicklow", "bray", "greystones"],
+      meath: ["meath", "navan", "trim"],
+      other: ["other"]
+    };
+
+    function loadUserData() {
+      const data = localStorage.getItem('ireland_school_quiz_result');
+      if (!data) return null;
+      try {
+        return JSON.parse(data);
+      } catch {
+        return null;
+      }
+    }
+
+    function calculateMatch(user, school) {
+      let score = 0;
+      let maxScore = 0;
+      const reasons = [];
+      const warnings = [];
+
+      // 1. 预算匹配 (20分)
+      maxScore += 20;
+      const budgetRange = BUDGET_MAP[user.budget] || [0, 50000];
+      if (school.fee === 0) {
+        score += 20; // 公立永远符合预算
+      } else if (school.fee >= budgetRange[0] && school.fee <= budgetRange[1]) {
+        score += 20;
+      } else if (user.budget === 'any') {
+        score += 15;
+      } else {
+        score += 5;
+        warnings.push(`学费 €${school.fee.toLocaleString()} 超出预算`);
+      }
+
+      // 2. 地区匹配 (20分)
+      maxScore += 20;
+      const userRegions = Array.isArray(user.region) ? user.region : [user.region];
+      const schoolDistrict = school.district;
+      if (userRegions.includes(schoolDistrict) || userRegions.includes('other')) {
+        score += 20;
+      } else {
+        score += 8;
+        warnings.push(`学校位于 ${schoolDistrict}，不在首选区域`);
+      }
+
+      // 3. 学校类型匹配 (15分)
+      maxScore += 15;
+      if (user.schoolPref === 'both') {
+        score += 12;
+      } else if (user.schoolPref === 'public' && school.type === 'public') {
+        score += 15;
+        reasons.push('符合公立学校偏好（免费）');
+      } else if (user.schoolPref === 'private' && school.type === 'private') {
+        score += 15;
+      } else {
+        score += 5;
+      }
+
+      // 4. 住宿方式匹配 (15分)
+      maxScore += 15;
+      if (school.type === 'public') {
+        score += 10; // 公立默认走读
+      } else if (user.boarding === 'both') {
+        score += 15;
+      } else if (user.boarding === 'boarding' && school.boarding !== 'day') {
+        score += 15;
+      } else if (user.boarding === 'day' && (school.boarding === 'day' || school.boarding === 'both')) {
+        score += 15;
+      } else {
+        score += 5;
+        warnings.push(`学校住宿方式不符合需求`);
+      }
+
+      // 5. EAL/英语支持 (15分)
+      maxScore += 15;
+      const userEngLevel = ENGLISH_SCORE[user.english] || 2;
+      if (school.eal) {
+        score += 15;
+        reasons.push('学校提供 EAL 支持');
+      } else if (userEngLevel >= 3) {
+        score += 12; // 英语够好可以去无EAL学校
+      } else {
+        score += 3;
+        warnings.push('建议提升英语后再申请无EAL学校');
+      }
+
+      // 6. 升学率加成 (15分)
+      maxScore += 15;
+      if (school.feeders >= 85) score += 15;
+      else if (school.feeders >= 75) score += 12;
+      else if (school.feeders >= 65) score += 8;
+      else score += 5;
+
+      // 排名加成
+      if (school.rank <= 10) reasons.push(`爱尔兰排名 Top ${school.rank}`);
+
+      const matchPct = Math.round((score / maxScore) * 100);
+      return { score, matchPct, reasons, warnings };
+    }
+
+    function classifyTier(matchPct) {
+      if (matchPct >= 75) return 'rush'; // 冲刺
+      if (matchPct >= 55) return 'match'; // 匹配
+      return 'safe'; // 保底
+    }
+
+    function renderResults(user) {
+      // 显示用户条件摘要
+      const tags = [];
+      if (user.city) tags.push(`📍 ${user.city === 'shenzhen' ? '深圳' : user.city === 'beijing' ? '北京' : user.city === 'shanghai' ? '上海' : user.city}`);
+      if (user.schoolPref) {
+        const prefMap = { public: '🏫 公立', private: '🏢 私立', both: '🔄 都可以' };
+        tags.push(prefMap[user.schoolPref] || user.schoolPref);
+      }
+      if (user.budget) {
+        const budgetMap = { low: '💶 €5k-10k', mid: '💶💶 €10k-20k', high: '💶💶💶 €20k+', any: '💰 预算灵活' };
+        tags.push(budgetMap[user.budget] || user.budget);
+      }
+      if (user.english) {
+        const engMap = { c1: '🎓 雅思6.5+', b2: '🎓 雅思6.0', b1: '🎓 雅思5.5', weak: '📚 雅思5以下' };
+        tags.push(engMap[user.english] || user.english);
+      }
+      document.getElementById('summaryTags').innerHTML = tags.map(t => `<span class="tag">${t}</span>`).join('');
+
+      // 计算所有学校匹配度
+      const scored = SCHOOLS.map(school => {
+        const { matchPct, reasons, warnings } = calculateMatch(user, school);
+        return { ...school, matchPct, reasons, warnings, tier: classifyTier(matchPct) };
+      }).filter(s => s.matchPct >= 30) // 低于30%不显示
+        .sort((a, b) => b.matchPct - a.matchPct);
+
+      document.getElementById('loading').style.display = 'none';
+
+      if (scored.length === 0) {
+        document.getElementById('emptyState').style.display = 'block';
+        return;
+      }
+
+      document.getElementById('results').style.display = 'block';
+
+      // 按梯队分组
+      const rush = scored.filter(s => s.tier === 'rush').slice(0, 2);
+      const match = scored.filter(s => s.tier === 'match').slice(0, 3);
+      const safe = scored.filter(s => s.tier === 'safe').slice(0, 3);
+
+      renderTier('rushSection', '冲刺', '达到条件需要努力，但值得申请', rush);
+      renderTier('matchSection', '匹配', '当前条件较符合，推荐重点关注', match);
+      renderTier('safeSection', '保底', '最稳妥的选择，建议作为保底', safe);
+    }
+
+    function renderTier(elementId, label, desc, schools) {
+      const container = document.getElementById(elementId);
+      if (schools.length === 0) {
+        container.style.display = 'none';
+        return;
+      }
+      
+      const tierClass = elementId.replace('Section', '');
+      container.innerHTML = `
+        <div class="tier-header">
+          <span class="tier-badge">${label}</span>
+          <span class="tier-name">${schools.length} 所学校</span>
+          <span class="tier-desc">${desc}</span>
+        </div>
+        ${schools.map(school => renderSchoolCard(school)).join('')}
+      `;
+    }
+
+    function renderSchoolCard(school) {
+      const matchClass = school.matchPct >= 70 ? 'match-high' : school.matchPct >= 50 ? 'match-mid' : 'match-low';
+      const deadlineText = school.applicationDeadline === '随时' ? '随时可申请' : `截止: ${school.applicationDeadline}`;
+      const deadlineClass = school.applicationDeadline === '随时' ? 'green' : '#666';
+      
+      const genderMap = { boys: '男校', girls: '女校', coed: '混校' };
+      const boardingMap = { boarding: '全寄宿', day: '走读', both: '寄宿/走读' };
+      const typeMap = { public: '公立', private: '私立' };
+      
+      return `
+        <div class="school-card" onclick="toggleDetails(this)">
+          <div class="school-header">
+            <div>
+              <div class="school-name">${school.name}</div>
+              <div class="school-type">${typeMap[school.type]} | ${genderMap[school.gender]} | ${boardingMap[school.boarding]}</div>
+            </div>
+            <div class="match-score ${matchClass}">${school.matchPct}% 匹配</div>
+          </div>
+          
+          <div class="school-tags">
+            <span class="school-tag">📍 ${school.district}</span>
+            ${school.eal ? '<span class="school-tag">🆔 EAL支持</span>' : ''}
+            ${school.fee === 0 ? '<span class="school-tag">✅ 免费</span>' : `<span class="school-tag">💰 €${school.fee.toLocaleString()}/年</span>`}
+            <span class="school-tag">📊 升学率 ${school.feeders}%</span>
+          </div>
+          
+          <div class="school-meta">
+            <div class="meta-item">
+              <span class="meta-label">申请截止</span>
+              <span class="meta-value" style="color: ${deadlineClass}">${deadlineText}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">开放日</span>
+              <span class="meta-value">${school.openDay || '需预约'}</span>
+            </div>
+            ${school.website ? `
+            <div class="meta-item">
+              <span class="meta-label">官网</span>
+              <a href="${school.website}" target="_blank" class="meta-value" style="color: #1a5f7a;">访问官网 →</a>
+            </div>
+            ` : ''}
+          </div>
+          
+          <div class="action-box">
+            <div class="action-title">📋 申请行动清单</div>
+            <ul class="action-list">
+              ${school.openDay ? `<li>参加开放日 ${school.openDay}</li>` : ''}
+              <li>准备申请材料（成绩单/推荐信）</li>
+              <li>联系学校招生办确认学位</li>
+              <a href="${school.website || '#'}" target="_blank" class="action-link">官网申请 →</a>
+            </ul>
+          </div>
+          
+          <div class="school-details">
+            ${school.reasons.length > 0 ? `<p><strong>✅ 推荐理由：</strong>${school.reasons.join('、')}</p>` : ''}
+            ${school.warnings.length > 0 ? `<p><strong>⚠️ 注意事项：</strong>${school.warnings.join('、')}</p>` : ''}
+          </div>
+          <button class="expand-btn" type="button">查看详情 ▼</button>
+        </div>
+      `;
+    }
+
+    function toggleDetails(card) {
+      const details = card.querySelector('.school-details');
+      const btn = card.querySelector('.expand-btn');
+      details.classList.toggle('show');
+      btn.textContent = details.classList.contains('show') ? '收起 ▲' : '查看详情 ▼';
+    }
+
+    // 初始化
+    document.addEventListener('DOMContentLoaded', function() {
+      const userData = loadUserData();
+      if (!userData) {
+        document.getElementById('loading').innerHTML = `
+          <div style="padding:40px;text-align:center;">
+            <h3>暂无问卷数据</h3>
+            <p style="margin:15px 0;color:#999;">请先填写择校问卷</p>
+            <a href="questionnaire_v4.html" class="btn-primary">去填问卷</a>
+          </div>
+        `;
+        return;
+      }
+      renderResults(userData);
+    });
+  </script>
+</body>
+</html>
