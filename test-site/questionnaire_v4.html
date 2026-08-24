@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>爱尔兰择校问卷 v4 (修复版)</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; margin: 0; padding: 20px; }
+    .container { max-width: 700px; margin: 0 auto; background: white; border-radius: 12px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    h1 { text-align: center; color: #333; margin-bottom: 10px; }
+    .subtitle { text-align: center; color: #666; margin-bottom: 30px; }
+    .progress-bar { height: 6px; background: #e0e0e0; border-radius: 3px; margin-bottom: 30px; overflow: hidden; }
+    .progress-fill { height: 100%; background: #4A90E2; width: 33%; transition: width 0.3s; }
+    .part { display: none; }
+    .part.active { display: block; }
+    .question { margin-bottom: 25px; }
+    .question-label { display: block; font-weight: 600; margin-bottom: 12px; color: #333; font-size: 16px; }
+    .required { color: #E74C3C; }
+    .options { display: flex; flex-direction: column; gap: 10px; }
+    .option { display: flex; align-items: flex-start; padding: 15px; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.2s; }
+    .option:hover { border-color: #4A90E2; background: #f8f9fa; }
+    .option input { margin-right: 12px; margin-top: 3px; width: 18px; height: 18px; }
+    .option-text { flex: 1; }
+    .option-title { font-weight: 500; color: #333; }
+    .option-note { font-size: 13px; color: #888; margin-top: 3px; }
+    select { width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; }
+    .error-msg { color: #E74C3C; font-size: 13px; margin-top: 8px; display: none; }
+    .error-msg.show { display: block; }
+    .btn-group { display: flex; gap: 12px; margin-top: 30px; }
+    button { flex: 1; padding: 15px; font-size: 16px; border: none; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+    .btn-primary { background: #4A90E2; color: white; }
+    .btn-primary:hover { background: #357ABD; }
+    .btn-secondary { background: #e0e0e0; color: #333; }
+    .btn-secondary:hover { background: #d0d0d0; }
+    #btnPrev { display: none; }
+    .conditional { display: none; }
+    .conditional.show { display: block; }
+    .sortable-list { list-style: none; padding: 0; margin: 0; }
+    .sortable-item { padding: 15px; margin-bottom: 10px; background: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 10px; cursor: move; display: flex; align-items: center; gap: 12px; }
+    .sortable-item:hover { border-color: #4A90E2; }
+    .sortable-item .rank { width: 28px; height: 28px; background: #4A90E2; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; }
+    .sortable-item .text { flex: 1; }
+    .drag-handle { color: #999; font-size: 18px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🇮🇪 爱尔兰择校问卷</h1>
+    <p class="subtitle">为孩子找到最适合的爱尔兰中学</p>
+    
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <form id="quizForm">
+      <!-- Part A: 孩子画像 -->
+      <div id="partA" class="part active">
+        <h3>Part A：孩子画像</h3>
+        
+        <div class="question">
+          <label class="question-label">所在城市 <span class="required">*</span></label>
+          <select name="city" id="city" required>
+            <option value="">请选择城市</option>
+            <option value="beijing">北京</option>
+            <option value="shanghai">上海</option>
+            <option value="shenzhen">深圳</option>
+            <option value="guangzhou">广州</option>
+            <option value="hangzhou">杭州</option>
+            <option value="chengdu">成都</option>
+            <option value="other">其他城市</option>
+          </select>
+        </div>
+
+        <div class="question">
+          <label class="question-label">当前学校类型 <span class="required">*</span></label>
+          <div class="options">
+            <label class="option">
+              <input type="radio" name="schoolType" value="public" required onchange="toggleConditional()">
+              <div class="option-text">
+                <div class="option-title">公立学校</div>
+                <div class="option-note">国内普通公立中小学</div>
+              </div>
+            </label>
+            <label class="option">
+              <input type="radio" name="schoolType" value="international" required onchange="toggleConditional()">
+              <div class="option-text">
+                <div class="option-title">国际学校</div>
+                <div class="option-note">IB/A-Level/AP等国际课程</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="question">
+          <label class="question-label">年级排名 <span class="required">*</span></label>
+          <div class="options">
+            <label class="option">
+              <input type="radio" name="ranking" value="top10" required>
+              <div class="option-text">
+                <div class="option-title">前 10%</div>
+                <div class="option-note">优秀学生</div>
+              </div>
+            </label>
+            <label class="option">
+              <input type="radio" name="ranking" value="top30" required>
+              <div class="option-text">
+                <div class="option-title">前 30%</div>
+                <div class="option-note">中上学生</div>
+              </div>
+            </label>
+            <label class="option">
+              <input type="radio" name="ranking" value="mid" required>
+              <div class="option-text">
+                <div class="option-title">前 30%-70%</div>
+                <div class="option-note">中等学生</div>
+              </div>
+            </label>
+            <label class="option">
+              <input type="radio" name="ranking" value="lower" required>
+              <div class="option-text">
+                <div class="option-title">后 30%</div>
+                <div class="option-note">需要额外支持</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="question">
+          <label class="question-label">孩子的英语水平 <span class="required">*</span></label>
+          <select name="english" id="english" required>
+            <option value="">请选择标化考试成绩或自评</option>
+            <option value="c1">雅思 6.5+ / 托福 100+ / CAE / CPE</option>
+            <option value="b2">雅思 6.0 / 托福 80-99 / FCE</option>
+            <option value="b1">雅思 5.5 / 托福 60-79 / PET</option>
+            <option value="weak">雅思 ≤5.0 / 托福 &lt;60 / KET</option>
+          </select>
+        </div>
+
+        <div class="question">
+          <label class="question-label">孩子的性格特点（可多选）<span class="required">*</span></label>
+          <div class="options">
+            <label class="option">
+              <input type="checkbox" name="personality" value="independent">
+              <div class="option-text">
+                <div class="option-title">独立型</div>
+                <div class="option-note">能自己管理学习和生活</div>
+              </div>
+            </label>
+            <label class="option">
+              <input type="checkbox" name="personality" value="sensitive">
+              <div class="option-text">
+                <div class="option-title">敏感型</div>
+                <div class="option-note">需要更多关注和支持</div>
+              </div>
+            </label>
+            <label class="option">
+              <input type="checkbox" name="personality" value="social">
+              <div class="option-text">
+                <div class="option-title">社交型</div>
+                <div class="option-note">喜欢交朋友，适应快</div>
+              </div>
+            </label>
+            <label class="option">
+              <input type="checkbox" name="personality" value="quiet">
+              <div class="option-text">
+                <div class="option-title">内向型</div>
+                <div class="option-note">需要时间适应新环境</div>
+              </div>
+            </label>
+          </div>
+          <div class="error-msg" id="personalityError">请至少选择一项性格特点</div>
+        </div>
+      </div>
+
+      <!-- Part B: 家庭条件 -->
+      <div id="partB" class="part">
+        <h3>Part B：家庭条件与偏好</h3>
+        
+        <div class="question">
+          <label class="question-label">学校类型偏好 <span class="required">*</span></label>
+          <div class="options">
+            <label class="option">
+              <input type="radio" name="schoolPref" value="public" required onchange="toggleConditional()">
+              <div class="option-text">
+                <div class="option-title">公立学校</div>
+                <div class="option-note">免费，融入本地社区</div>
+              </div>
+            </label>
+            <label class="option">
+              <input type="radio" name="schoolPref" value="private" required onchange="toggleConditional()">
+              <div class="option-text">
+                <div class="option-title">私立学校</div>
+                <div class="option-note">升学率高，设施更好</div>
+              </div>
+            </label>
+            <label class="option">
+              <input type="radio" name="schoolPref" value="both" required onchange="toggleConditional()">
+              <div class="option-text">
+                <div class="option-title">都可以考虑</div>
+                <div class="option-note">根据匹配度决定</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div id="boardingSection" class="conditional">
+          <div class="question">
+            <label class="question-label">住宿方式偏好 <span class="required">*</span></label>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="boarding" value="day" required>
+                <div class="option-text">
+                  <div class="option-title">走读</div>
+                  <div class="option-note">家长陪读或寄宿家庭</div>
+                </div>
+              </label>
+              <label class="option">
+                <input type="radio" name="boarding" value="boarding" required>
+                <div class="option-text">
+                  <div class="option-title">寄宿</div>
+                  <div class="option-note">学校宿舍，培养独立性</div>
+                </div>
+              </label>
+              <label class="option">
+                <input type="radio" name="boarding" value="both" required>
+                <div class="option-text">
+                  <div class="option-title">都可以</div>
+                  <div class="option-note">根据学校决定</div>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div id="budgetSection" class="conditional">
+          <div class="question">
+            <label class="question-label">学费预算范围（年）<span class="required">*</span></label>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="budget" value="low" required>
+                <div class="option-text">
+                  <div class="option-title">€5,000 - €10,000</div>
+                  <div class="option-note">经济实惠</div>
+                </div>
+              </label>
+              <label class="option">
+                <input type="radio" name="budget" value="mid" required>
+                <div class="option-text">
+                  <div class="option-title">€10,000 - €20,000</div>
+                  <div class="option-note">中等预算</div>
+                </div>
+              </label>
+              <label class="option">
+                <input type="radio" name="budget" value="high" required>
+                <div class="option-text">
+                  <div class="option-title">€20,000 - €30,000</div>
+                  <div class="option-note">较高预算</div>
+                </div>
+              </label>
+              <label class="option">
+                <input type="radio" name="budget" value="any" required>
+                <div class="option-text">
+                  <div class="option-title">预算灵活</div>
+                  <div class="option-note">优先考虑匹配度</div>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="question">
+          <label class="question-label">地区偏好（可多选）<span class="required">*</span></label>
+          <div class="options">
+            <label class="option">
+              <input type="checkbox" name="region" value="dublin4">
+              <div class="option-text">
+                <div class="option-title">Dublin 4 / Blackrock</div>
+                <div class="option-note">都柏林南区，富人区，名校集中</div>
+              </div>
+            </label>
+            <label class="option">
+              <input type="checkbox" name="region" value="dublin6">
+              <div class="option-text">
+                <div class="option-title">Dublin 6 / Rathgar</div>
+                <div class="option-note">老牌富人区，学术氛围浓</div>
+              </div>
+            </label>
+            <label class="option">
+              <input type="checkbox" name="region" value="dublin14">
+              <div class="option-text">
+                <div class="option-title">Dublin 14 / Dundrum</div>
+                <div class="option-note">华人聚集区，生活便利</div>
+              </div>
+            </label>
+            <label class="option">
+              <input type="checkbox" name="region" value="dunlaoghaire">
+              <div class="option-text">
+                <div class="option-title">Dún Laoghaire</div>
+                <div class="option-note">海滨城区，环境优美</div>
+              </div>
+            </label>
+            <label class="option">
+              <input type="checkbox" name="region" value="kildare">
+              <div class="option-text">
+                <div class="option-title">Kildare郡 / Newbridge</div>
+                <div class="option-note">性价比最高，通勤便利</div>
+              </div>
+            </label>
+            <label class="option">
+              <input type="checkbox" name="region" value="wicklow">
+              <div class="option-text">
+                <div class="option-title">Wicklow郡</div>
+                <div class="option-note">自然风光，宁静宜居</div>
+              </div>
+            </label>
+            <label class="option">
+              <input type="checkbox" name="region" value="meath">
+              <div class="option-text">
+                <div class="option-title">Meath郡</div>
+                <div class="option-note">历史名郡，房价较低</div>
+              </div>
+            </label>
+            <label class="option">
+              <input type="checkbox" name="region" value="other">
+              <div class="option-text">
+                <div class="option-title">其他地区</div>
+                <div class="option-note"> Cork / Galway / Limerick 等</div>
+              </div>
+            </label>
+          </div>
+          <div class="error-msg" id="regionError">请至少选择一个地区</div>
+        </div>
+      </div>
+
+      <!-- Part C: 核心诉求 -->
+      <div id="partC" class="part">
+        <h3>Part C：核心诉求</h3>
+        <p style="color: #666; margin-bottom: 20px;">拖动排序，将最重要的放在最上面</p>
+        
+        <ul class="sortable-list" id="priorityList">
+          <li class="sortable-item" data-value="academic">
+            <span class="rank">1</span>
+            <span class="text">升学率优先 — 冲刺爱尔兰Top 5 / 英国Top 10</span>
+            <span class="drag-handle">⋮⋮</span>
+          </li>
+          <li class="sortable-item" data-value="integration">
+            <span class="rank">2</span>
+            <span class="text">融入优先 — 快速适应本地文化，交到爱尔兰朋友</span>
+            <span class="drag-handle">⋮⋮</span>
+          </li>
+          <li class="sortable-item" data-value="support">
+            <span class="rank">3</span>
+            <span class="text">支持优先 — 学校有完善的国际生/EAL支持体系</span>
+            <span class="drag-handle">⋮⋮</span>
+          </li>
+          <li class="sortable-item" data-value="cost">
+            <span class="rank">4</span>
+            <span class="text">性价比优先 — 控制总成本，包括学费和生活费</span>
+            <span class="drag-handle">⋮⋮</span>
+          </li>
+          <li class="sortable-item" data-value="community">
+            <span class="rank">5</span>
+            <span class="text">华人社区 — 有华人家庭圈子，方便交流互助</span>
+            <span class="drag-handle">⋮⋮</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="btn-group">
+        <button type="button" id="btnPrev" class="btn-secondary" onclick="prevPart()">← 上一步</button>
+        <button type="button" id="btnNext" class="btn-primary" onclick="nextPart()">下一步 →</button>
+        <button type="submit" id="btnSubmit" class="btn-primary" style="display: none;">查看推荐学校</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    let currentPart = 1;
+    const totalParts = 3;
+
+    function updateProgress() {
+      const pct = (currentPart / totalParts) * 100;
+      document.getElementById('progressFill').style.width = pct + '%';
+    }
+
+    function toggleConditional() {
+      const schoolPref = document.querySelector('input[name="schoolPref"]:checked')?.value;
+      const boardingSection = document.getElementById('boardingSection');
+      const budgetSection = document.getElementById('budgetSection');
+      
+      if (schoolPref === 'private' || schoolPref === 'both') {
+        boardingSection.classList.add('show');
+        budgetSection.classList.add('show');
+      } else {
+        boardingSection.classList.remove('show');
+        budgetSection.classList.remove('show');
+      }
+    }
+
+    function validateCurrentPart() {
+      // 清除错误提示
+      document.querySelectorAll('.error-msg').forEach(e => e.classList.remove('show'));
+      
+      const partId = 'ABC'[currentPart - 1];
+      const part = document.getElementById('part' + partId);
+      let valid = true;
+
+      if (partId === 'A') {
+        // 验证城市
+        if (!document.getElementById('city').value) {
+          valid = false;
+        }
+        // 验证学校类型
+        if (!document.querySelector('input[name="schoolType"]:checked')) {
+          valid = false;
+        }
+        // 验证排名
+        if (!document.querySelector('input[name="ranking"]:checked')) {
+          valid = false;
+        }
+        // 验证英语
+        if (!document.getElementById('english').value) {
+          valid = false;
+        }
+        // 验证性格（关键修复：直接检查）
+        const personalityChecked = document.querySelectorAll('input[name="personality"]:checked').length;
+        console.log('Personality checked count:', personalityChecked); // 调试
+        if (personalityChecked === 0) {
+          valid = false;
+          document.getElementById('personalityError').classList.add('show');
+        }
+      }
+
+      if (partId === 'B') {
+        // 验证学校偏好
+        if (!document.querySelector('input[name="schoolPref"]:checked')) {
+          valid = false;
+        }
+        // 验证条件字段
+        const schoolPref = document.querySelector('input[name="schoolPref"]:checked')?.value;
+        if (schoolPref === 'private' || schoolPref === 'both') {
+          if (!document.querySelector('input[name="boarding"]:checked')) {
+            valid = false;
+          }
+          if (!document.querySelector('input[name="budget"]:checked')) {
+            valid = false;
+          }
+        }
+        // 验证地区
+        const regionChecked = document.querySelectorAll('input[name="region"]:checked').length;
+        if (regionChecked === 0) {
+          valid = false;
+          document.getElementById('regionError').classList.add('show');
+        }
+      }
+
+      return valid;
+    }
+
+    function nextPart() {
+      console.log('nextPart called, currentPart:', currentPart); // 调试
+      
+      if (!validateCurrentPart()) {
+        console.log('Validation failed');
+        // 滚动到第一个错误
+        const firstError = document.querySelector('.error-msg.show');
+        if (firstError) {
+          firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return;
+      }
+
+      console.log('Validation passed, proceeding...');
+      
+      if (currentPart < totalParts) {
+        document.getElementById('part' + 'ABC'[currentPart - 1]).classList.remove('active');
+        currentPart++;
+        document.getElementById('part' + 'ABC'[currentPart - 1]).classList.add('active');
+        document.getElementById('btnPrev').style.display = 'block';
+
+        if (currentPart === totalParts) {
+          document.getElementById('btnNext').style.display = 'none';
+          document.getElementById('btnSubmit').style.display = 'block';
+          initSortable();
+        }
+
+        updateProgress();
+        window.scrollTo(0, 0);
+      }
+    }
+
+    function prevPart() {
+      if (currentPart > 1) {
+        document.getElementById('part' + 'ABC'[currentPart - 1]).classList.remove('active');
+        currentPart--;
+        document.getElementById('part' + 'ABC'[currentPart - 1]).classList.add('active');
+
+        if (currentPart === 1) {
+          document.getElementById('btnPrev').style.display = 'none';
+        }
+        document.getElementById('btnNext').style.display = 'block';
+        document.getElementById('btnSubmit').style.display = 'none';
+
+        updateProgress();
+        window.scrollTo(0, 0);
+      }
+    }
+
+    // 简单的拖拽排序实现
+    function initSortable() {
+      const list = document.getElementById('priorityList');
+      let draggedItem = null;
+
+      list.querySelectorAll('.sortable-item').forEach(item => {
+        item.draggable = true;
+        
+        item.addEventListener('dragstart', function(e) {
+          draggedItem = this;
+          this.style.opacity = '0.5';
+        });
+        
+        item.addEventListener('dragend', function() {
+          this.style.opacity = '1';
+          draggedItem = null;
+          updateRanks();
+        });
+        
+        item.addEventListener('dragover', function(e) {
+          e.preventDefault();
+          if (this !== draggedItem) {
+            const rect = this.getBoundingClientRect();
+            const mid = rect.top + rect.height / 2;
+            if (e.clientY < mid) {
+              this.parentNode.insertBefore(draggedItem, this);
+            } else {
+              this.parentNode.insertBefore(draggedItem, this.nextSibling);
+            }
+          }
+        });
+      });
+    }
+
+    function updateRanks() {
+      document.querySelectorAll('.sortable-item .rank').forEach((rank, i) => {
+        rank.textContent = i + 1;
+      });
+    }
+
+    // 表单提交
+    document.getElementById('quizForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // 收集数据
+      const formData = new FormData(this);
+      const data = {};
+      formData.forEach((value, key) => {
+        if (data[key]) {
+          if (!Array.isArray(data[key])) data[key] = [data[key]];
+          data[key].push(value);
+        } else {
+          data[key] = value;
+        }
+      });
+      
+      // 获取排序
+      const priorities = [];
+      document.querySelectorAll('.sortable-item').forEach(item => {
+        priorities.push(item.dataset.value);
+      });
+      data.priorities = priorities;
+      
+      // 保存到 localStorage
+      localStorage.setItem('ireland_school_quiz_result', JSON.stringify(data));
+      
+      // 跳转
+      window.location.href = 'schools.html';
+    });
+
+    // 初始化
+    updateProgress();
+    console.log('Form initialized');
+  </script>
+</body>
+</html>
