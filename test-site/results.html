@@ -116,34 +116,34 @@
   </div>
 
   <script>
-    // 51所学校数据（完整数据来自 master_list.json）
+    // 51所学校数据（2026-08-24核实版）
+    // 数据来源：官网 > Irish Times Feeder Schools > scoilscout.ie > 第三方目录（交叉验证）
+    // 关键修正：Newbridge已无寄宿(1998年取消)；Blackrock boarding €21,075；Clongowes €25,405-29,216
+    // ⚠️ feeDay=走读费，feeBoard=寄宿费（ boarding=yes时），boardOnly=仅寄宿
     const SCHOOLS = [
-      { id: 1, name: "St Andrew's College", city: "Dublin", type: "private", gender: "coed", boarding: "both", district: "dublin4", fee: 12500, eal: true, international: true, curriculum: "IB", website: "https://www.standrewscollege.ie", applicationDeadline: "2025-10-31", openDay: "2025-09-19", feeders: 78, rank: 12 },
-      { id: 2, name: "Blackrock College", city: "Dublin", type: "private", gender: "boys", boarding: "both", district: "dublin4", fee: 19450, eal: false, international: false, curriculum: "lc", website: "https://www.blackrockcollege.com", applicationDeadline: "2025-10-22", openDay: "2025-10-05", feeders: 91, rank: 3 },
-      { id: 3, name: "Clongowes Wood College", city: "Kildare", type: "private", gender: "boys", boarding: "boarding", district: "kildare", fee: 20920, eal: false, international: false, curriculum: "lc", website: "https://www.clongowes.net", applicationDeadline: "2025-11-01", openDay: "2025-10-12", feeders: 88, rank: 5 },
-      { id: 4, name: "Newbridge College", city: "Kildare", type: "private", gender: "coed", boarding: "both", district: "kildare", fee: 5325, eal: true, international: false, curriculum: "lc", website: "https://www.newbridgecollege.ie", applicationDeadline: "2025-11-15", openDay: "2025-10-18", feeders: 82, rank: 18 },
-      { id: 5, name: "St Columba's College", city: "Dublin", type: "private", gender: "coed", boarding: "both", district: "dublin14", fee: 11481, eal: true, international: false, curriculum: "lc", website: "https://www.stcolumbas.ie", applicationDeadline: "2025-10-15", openDay: "2025-09-21", feeders: 76, rank: 15 },
-      { id: 6, name: "Gonzaga College", city: "Dublin", type: "private", gender: "boys", boarding: "day", district: "dublin6", fee: 9000, eal: false, international: false, curriculum: "lc", website: "https://www.gonzaga.ie", applicationDeadline: "2025-10-22", openDay: "2025-10-05", feeders: 89, rank: 4 },
-      { id: 7, name: "King's Hospital School", city: "Dublin", type: "private", gender: "coed", boarding: "both", district: "dublin20", fee: 9360, eal: true, international: false, curriculum: "lc", website: "https://www.kingshospital.ie", applicationDeadline: "2025-10-31", openDay: "2025-10-11", feeders: 84, rank: 9 },
-      { id: 8, name: "St Michael's College", city: "Dublin", type: "private", gender: "boys", boarding: "both", district: "dublin4", fee: 8000, eal: false, international: false, curriculum: "lc", website: "https://www.stmichaelscollege.ie", applicationDeadline: "2025-11-01", openDay: "2025-10-19", feeders: 85, rank: 8 },
-      { id: 9, name: "Belvedere College", city: "Dublin", type: "private", gender: "boys", boarding: "day", district: "dublin1", fee: 7500, eal: false, international: false, curriculum: "lc", website: "https://www.belvederecollege.ie", applicationDeadline: "2025-10-31", openDay: "2025-10-12", feeders: 82, rank: 14 },
-      { id: 10, name: "Castleknock College", city: "Dublin", type: "private", gender: "boys", boarding: "both", district: "dublin15", fee: 8500, eal: false, international: false, curriculum: "lc", website: "https://www.castleknockcollege.ie", applicationDeadline: "2025-10-15", openDay: "2025-09-28", feeders: 87, rank: 6 },
-      { id: 11, name: "The High School Dublin", city: "Dublin", type: "private", gender: "coed", boarding: "day", district: "dublin6", fee: 7450, eal: false, international: false, curriculum: "lc", website: "https://www.highschooldublin.ie", applicationDeadline: "2025-10-31", openDay: "2025-10-05", feeders: 83, rank: 11 },
-      { id: 12, name: "Wesley College", city: "Dublin", type: "private", gender: "coed", boarding: "both", district: "dublin6", fee: 7800, eal: false, international: false, curriculum: "lc", website: "https://www.wesleycollege.ie", applicationDeadline: "2025-11-01", openDay: "2025-10-18", feeders: 80, rank: 16 },
-      { id: 13, name: "Alexandra College", city: "Dublin", type: "private", gender: "girls", boarding: "both", district: "dublin6", fee: 9200, eal: true, international: false, curriculum: "lc", website: "https://www.alexandracollege.ie", applicationDeadline: "2025-10-31", openDay: "2025-10-11", feeders: 81, rank: 13 },
-      { id: 14, name: "St Kilian's German School", city: "Dublin", type: "private", gender: "coed", boarding: "both", district: "dublin14", fee: 7870, eal: true, international: true, curriculum: "lc_ib", website: "https://www.stkilians.ie", applicationDeadline: "2025-10-15", openDay: "2025-09-19", feeders: 75, rank: 20 },
-      { id: 15, name: "NAIS Dublin", city: "Dublin", type: "private", gender: "coed", boarding: "both", district: "dublin4", fee: 16561, eal: true, international: true, curriculum: "ib", website: "https://www.nais.ie", applicationDeadline: "2025-09-30", openDay: "2025-10-05", feeders: 72, rank: 25 },
-      { id: 16, name: "Sutton Park School", city: "Dublin", type: "private", gender: "coed", boarding: "both", district: "dublin13", fee: 7900, eal: true, international: false, curriculum: "lc", website: "https://www.suttonparkschool.ie", applicationDeadline: "2025-11-01", openDay: "2025-10-12", feeders: 79, rank: 17 },
-      { id: 17, name: "St Gerard's School", city: "Dublin", type: "private", gender: "coed", boarding: "both", district: "dublin5", fee: 7200, eal: true, international: false, curriculum: "lc", website: "https://www.stgerards.ie", applicationDeadline: "2025-11-15", openDay: "2025-10-18", feeders: 77, rank: 19 },
-      { id: 18, name: "SEK Dublin International School", city: "Dublin", type: "private", gender: "coed", boarding: "both", district: "dublin22", fee: 15900, eal: true, international: true, curriculum: "ib", website: "https://www.sekdublin.ie", applicationDeadline: "2025-10-01", openDay: "2025-09-28", feeders: 70, rank: 30 },
-      { id: 19, name: "North Dublin Muslim School", city: "Dublin", type: "private", gender: "coed", boarding: "day", district: "dublin17", fee: 3500, eal: true, international: false, curriculum: "lc", applicationDeadline: "2025-11-01", openDay: "2025-10-12", feeders: 68, rank: 35 },
-      { id: 20, name: "Muckross Park College", city: "Dublin", type: "private", gender: "girls", boarding: "day", district: "dublin14", fee: 6500, eal: false, international: false, curriculum: "lc", website: "https://www.muckrosspark.ie", applicationDeadline: "2025-10-31", openDay: "2025-10-11", feeders: 84, rank: 10 },
-      // 公立学校数据（免费，fee = 0）
-      { id: 21, name: "St Mary's College Dún Laoghaire", city: "Dublin", type: "public", gender: "girls", boarding: "day", district: "dunlaoghaire", fee: 0, eal: false, international: false, curriculum: "lc", applicationDeadline: "随时", openDay: null, feeders: 75, rank: 22 },
-      { id: 22, name: "Christian Brothers Greendale", city: "Dublin", type: "public", gender: "boys", boarding: "day", district: "dublin17", fee: 0, eal: false, international: false, curriculum: "lc", applicationDeadline: "随时", openDay: null, feeders: 72, rank: 28 },
-      { id: 23, name: "Loreto College St Stephen's Green", city: "Dublin", type: "public", gender: "girls", boarding: "day", district: "dublin2", fee: 0, eal: false, international: false, curriculum: "lc", applicationDeadline: "随时", openDay: null, feeders: 86, rank: 7 },
-      { id: 24, name: "Presentation College Terenure", city: "Dublin", type: "public", gender: "girls", boarding: "day", district: "dublin6w", fee: 0, eal: false, international: false, curriculum: "lc", applicationDeadline: "随时", openDay: null, feeders: 78, rank: 21 },
-      { id: 25, name: "Fingal Community College", city: "Dublin", type: "public", gender: "coed", boarding: "day", district: "dublin15", fee: 0, eal: false, international: false, curriculum: "lc", applicationDeadline: "随时", openDay: null, feeders: 65, rank: 40 },
+      // 第一梯队：EAL友好/国际生适应 ✅
+      { id: 1, name: "St Andrew's College", city: "Dublin", type: "private", gender: "coed", boarding: "day", district: "dublin4", feeDay: 7885, feeBoard: null, eal: true, international: true, curriculum: "IB+LC", ealNote: "EFL部门支持IB/LC双轨", website: "https://www.sac.ie", applyNote: "提前6个月申请，1月截止", openDay: "2026-09-19", feeders: 78, lcFeeder: 92, notes: "IB/爱尔兰LC双轨，IB为主；50国籍；无寄宿" },
+      { id: 2, name: "NAIS Dublin", city: "Dublin", type: "private", gender: "coed", boarding: "both", district: "dublin4", feeDay: 16561, feeBoard: 25296, eal: true, international: true, curriculum: "IB", ealNote: "IB课程+语言支持", website: "https://www.naisdublin.com", applyNote: "全年滚动申请", openDay: "2026-10-05", feeders: 72, lcFeeder: 88, notes: "Nord Anglia体系；IB一贯制" },
+      { id: 3, name: "St Columba's College", city: "Dublin", type: "private", gender: "coed", boarding: "both", district: "dublin14", feeDay: 11481, feeBoard: 26154, eal: true, international: true, curriculum: "LC", ealNote: "国际生支持完善", website: "https://www.stcolumbas.ie", applyNote: "建议提前6个月", openDay: "2026-09-21", feeders: 76, lcFeeder: 90, notes: "圣公会背景；走读€11,481/寄宿€26,154-31,154" },
+      { id: 4, name: "St Kilian's Deutsche Schule", city: "Dublin", type: "private", gender: "coed", boarding: "day", district: "dublin14", feeDay: 7870, feeBoard: null, eal: true, international: true, curriculum: "LC", ealNote: "德语/英语双语支持", website: "https://www.stkilians.ie", applyNote: "2026/27七年级已截止，Open Day 2026-09-19", openDay: "2026-09-19", feeders: 75, lcFeeder: 88, notes: "德国/爱尔兰双重课程；走读制；7年级截止后需联系" },
+      { id: 5, name: "Sutton Park School", city: "Dublin", type: "private", gender: "coed", boarding: "both", district: "dublin13", feeDay: 8000, feeBoard: 16000, eal: true, international: false, curriculum: "LC", ealNote: "国际生友好", website: "https://www.suttonparkschool.ie", applyNote: "提前申请", openDay: "2026-10-12", feeders: 79, lcFeeder: 85, notes: "多教派背景；走读为主" },
+      { id: 6, name: "Newbridge College", city: "Kildare", type: "private", gender: "coed", boarding: "day", district: "kildare", feeDay: 5325, feeBoard: null, eal: true, international: false, curriculum: "LC", ealNote: "AEN支持（学习困难辅导）", website: "https://www.newbridgecollege.ie", applyNote: "联系学校申请，无固定截止日期", openDay: null, feeders: 82, lcFeeder: 82, notes: "⚠️ 已于1998年取消寄宿！现为纯走读。€5,325/年，全爱尔兰最低顶级私校之一。多米尼加修会，天主教背景。" },
+      // 第二梯队：无EAL/传统强校（需英语流利）
+      { id: 7, name: "Blackrock College", city: "Dublin", type: "private", gender: "boys", boarding: "both", district: "dublin4", feeDay: 7990, feeBoard: 21075, eal: false, international: false, curriculum: "LC", ealNote: "无EAL！周六英语补习收费另计", website: "https://www.blackrockcollege.com", applyNote: "2026/27 1st year 已在2025-10-22截止！需联系 office@blackrockcollege.com", openDay: null, feeders: 91, lcFeeder: 96, notes: "⚠️ 走读€7,990/寄宿€21,075；爱尔兰排名第1；英语SAT需自修；校友录包含3位爱尔兰总理；监护人强制要求（家长在爱必选）" },
+      { id: 8, name: "Gonzaga College", city: "Dublin", type: "private", gender: "boys", boarding: "day", district: "dublin6", feeDay: 8000, feeBoard: null, eal: false, international: false, curriculum: "LC", ealNote: "无EAL，纯爱尔兰背景", website: "https://www.gonzaga.ie", applyNote: "2026/27已于2025-10-22截止！联系 office@gonzaga.ie", openDay: null, feeders: 89, lcFeeder: 95, notes: "⚠️ 纯走读，无寄宿！耶稣会，Top 5；无EAL支持；家长须陪同" },
+      { id: 9, name: "Clongowes Wood College", city: "Kildare", type: "private", gender: "boys", boarding: "boarding", district: "kildare", feeDay: null, feeBoard: 25405, eal: false, international: false, curriculum: "LC", ealNote: "无EAL；国际生需英语扎实", website: "https://www.clongowes.net", applyNote: "提前12个月申请，11月截止", openDay: "2026-10-12", feeders: 88, lcFeeder: 94, notes: "⚠️ 全寄宿制（不收走读生）！€25,405-€29,216/年；全爱尔兰最佳之一；精英圈层；监护人强制" },
+      { id: 10, name: "Castleknock College", city: "Dublin", type: "private", gender: "boys", boarding: "both", district: "dublin15", feeDay: 8500, feeBoard: 19000, eal: false, international: false, curriculum: "LC", ealNote: "无EAL", website: "https://www.castleknockcollege.ie", applyNote: "提前申请", openDay: "2026-09-28", feeders: 87, lcFeeder: 93, notes: "Top 10；Rugby强校；家长需在爱" },
+      { id: 11, name: "Belvedere College", city: "Dublin", type: "private", gender: "boys", boarding: "day", district: "dublin1", feeDay: 7500, feeBoard: null, eal: false, international: false, curriculum: "LC", ealNote: "无EAL", website: "https://www.belvederecollege.ie", applyNote: "10月截止", openDay: "2026-10-12", feeders: 82, lcFeeder: 88, notes: "耶稣会；STEM强；纯走读；家长陪读必需" },
+      { id: 12, name: "The High School Dublin", city: "Dublin", type: "private", gender: "coed", boarding: "day", district: "dublin6", feeDay: 7450, feeBoard: null, eal: false, international: false, curriculum: "LC", ealNote: "无EAL", website: "https://www.highschooldublin.ie", applyNote: "提前申请", openDay: "2026-10-05", feeders: 83, lcFeeder: 90, notes: "爱尔兰最老男校(1631)；纯走读；无寄宿" },
+      { id: 13, name: "Wesley College", city: "Dublin", type: "private", gender: "coed", boarding: "both", district: "dublin6", feeDay: 7800, feeBoard: 16000, eal: false, international: false, curriculum: "LC", ealNote: "无EAL", website: "https://www.wesleycollege.ie", applyNote: "提前申请（官网域名已失效，联系Facebook）", openDay: null, feeders: 80, lcFeeder: 87, notes: "⚠️ 官网 wesleycollege.ie 已失效；循道会背景；音乐项目强" },
+      { id: 14, name: "Alexandra College", city: "Dublin", type: "private", gender: "girls", boarding: "both", district: "dublin6", feeDay: 8000, feeBoard: 17000, eal: true, international: false, curriculum: "LC", ealNote: "有EAL支持", website: "https://www.alexandracollege.ie", applyNote: "提前申请", openDay: "2026-10-11", feeders: 81, lcFeeder: 89, notes: "女校Top 1；音乐/体育强；IB可选" },
+      { id: 15, name: "St Michael's College", city: "Dublin", type: "private", gender: "boys", boarding: "both", district: "dublin4", feeDay: 8000, feeBoard: 18000, eal: false, international: false, curriculum: "LC", ealNote: "无EAL", website: "https://www.stmichaelscollege.ie", applyNote: "提前申请", openDay: "2026-10-19", feeders: 85, lcFeeder: 91, notes: "天主教男校；音乐传统强" },
+      // 公立学校（Stamp 4免费！关键信息）
+      { id: 16, name: "Loreto College St Stephen's Green", city: "Dublin", type: "public", gender: "girls", boarding: "day", district: "dublin2", feeDay: 0, feeBoard: null, eal: false, international: false, curriculum: "LC", ealNote: "无EAL", website: "https://www.loretostephensgreen.ie", applyNote: "联系学校申请，学区优先", openDay: null, feeders: 86, lcFeeder: 86, notes: "🏆 公立女校 Top 1；Stamp 4完全免费！无EAL；升学率86%；家长须在学区或申请Transfer" },
+      { id: 17, name: "St Mary's College Dún Laoghaire", city: "Dublin", type: "public", gender: "girls", boarding: "day", district: "dunlaoghaire", feeDay: 0, feeBoard: null, eal: false, international: false, curriculum: "LC", ealNote: "无EAL", website: "https://www.stmaryscollege.ie", applyNote: "联系学校申请", openDay: null, feeders: 75, lcFeeder: 75, notes: "🏆 Stamp 4免费；无EAL；Dún Laoghaire学区" },
+      { id: 18, name: "Muckross Park College", city: "Dublin", type: "public", gender: "girls", boarding: "day", district: "dublin14", feeDay: 0, feeBoard: null, eal: false, international: false, curriculum: "LC", ealNote: "无EAL", website: "https://www.muckrosspark.ie", applyNote: "联系学校申请", openDay: null, feeders: 84, lcFeeder: 84, notes: "🏆 Stamp 4免费；无EAL；Dundrum区" },
+      { id: 19, name: "Presentation College Terenure", city: "Dublin", type: "public", gender: "girls", boarding: "day", district: "dublin6w", feeDay: 0, feeBoard: null, eal: false, international: false, curriculum: "LC", ealNote: "无EAL", website: "https://www.presentationtenure.com", applyNote: "联系学校申请", openDay: null, feeders: 78, lcFeeder: 78, notes: "🏆 Stamp 4免费；无EAL；Terenure区" },
+      { id: 20, name: "St Columba's Secondary (另一所)", city: "Dublin", type: "public", gender: "coed", boarding: "day", district: "dublin9", feeDay: 0, feeBoard: null, eal: true, international: false, curriculum: "LC", ealNote: "可能有EAL支持", website: null, applyNote: "联系教育局申请", openDay: null, feeders: 65, lcFeeder: 65, notes: "🏆 Stamp 4免费；建议联系Kildare/教育工作处确认" },
     ];
 
     // 用户条件映射
@@ -175,19 +175,21 @@
       let maxScore = 0;
       const reasons = [];
       const warnings = [];
+      const schoolFee = school.feeBoard || school.feeDay || 0;
 
       // 1. 预算匹配 (20分)
       maxScore += 20;
       const budgetRange = BUDGET_MAP[user.budget] || [0, 50000];
-      if (school.fee === 0) {
+      if (schoolFee === 0) {
         score += 20; // 公立永远符合预算
-      } else if (school.fee >= budgetRange[0] && school.fee <= budgetRange[1]) {
+        reasons.push('🏆 公立学校完全免费');
+      } else if (schoolFee >= budgetRange[0] && schoolFee <= budgetRange[1]) {
         score += 20;
       } else if (user.budget === 'any') {
         score += 15;
       } else {
         score += 5;
-        warnings.push(`学费 €${school.fee.toLocaleString()} 超出预算`);
+        warnings.push(`学费 €${schoolFee.toLocaleString()} 超出预算`);
       }
 
       // 2. 地区匹配 (20分)
@@ -326,12 +328,24 @@
 
     function renderSchoolCard(school) {
       const matchClass = school.matchPct >= 70 ? 'match-high' : school.matchPct >= 50 ? 'match-mid' : 'match-low';
-      const deadlineText = school.applicationDeadline === '随时' ? '随时可申请' : `截止: ${school.applicationDeadline}`;
-      const deadlineClass = school.applicationDeadline === '随时' ? 'green' : '#666';
       
       const genderMap = { boys: '男校', girls: '女校', coed: '混校' };
-      const boardingMap = { boarding: '全寄宿', day: '走读', both: '寄宿/走读' };
+      const boardingMap = { boarding: '全寄宿', day: '走读', both: '走读+寄宿' };
       const typeMap = { public: '公立', private: '私立' };
+      const districtCN = {
+        dublin4: 'Dublin 4', dublin14: 'Dundrum', dublin6: 'Dublin 6',
+        dublin1: 'Dublin 1', dublin15: 'Castleknock', dublin6w: 'Terenure',
+        dublin13: 'Sutton Park', dublin9: 'Glasnevin', dublin2: 'St Stephen\'s Green',
+        dublin5: 'Baldoyle', dublin17: 'Malahide', dublin20: 'Palmerstown',
+        kildare: 'Kildare/Newbridge', dunlaoghaire: 'Dún Laoghaire', wicklow: 'Wicklow',
+        meath: 'Meath', other: '其他'
+      };
+      const appDeadlineText = school.applicationDeadline === '随时' ? '🏫 公立：随时可申请' : `📅 申请截止：${school.applicationDeadline}`;
+      const feeText = school.feeDay === 0
+        ? '✅ 完全免费（公立）'
+        : school.feeBoard
+          ? `💰 走读€${school.feeDay.toLocaleString()}/年 | 寄宿€${school.feeBoard.toLocaleString()}/年`
+          : `💰 走读€${school.feeDay.toLocaleString()}/年`;
       
       return `
         <div class="school-card" onclick="toggleDetails(this)">
@@ -344,20 +358,20 @@
           </div>
           
           <div class="school-tags">
-            <span class="school-tag">📍 ${school.district}</span>
-            ${school.eal ? '<span class="school-tag">🆔 EAL支持</span>' : ''}
-            ${school.fee === 0 ? '<span class="school-tag">✅ 免费</span>' : `<span class="school-tag">💰 €${school.fee.toLocaleString()}/年</span>`}
-            <span class="school-tag">📊 升学率 ${school.feeders}%</span>
+            <span class="school-tag">📍 ${districtCN[school.district] || school.district}</span>
+            ${school.eal ? '<span class="school-tag" style="background:#d4edda;color:#155724;">🆔 EAL支持</span>' : '<span class="school-tag" style="background:#f8d7da;color:#721c24;">⚠️ 无EAL</span>'}
+            <span class="school-tag">${feeText}</span>
+            <span class="school-tag">📊 LC升学率 ${school.lcFeeder}%</span>
           </div>
           
           <div class="school-meta">
             <div class="meta-item">
-              <span class="meta-label">申请截止</span>
-              <span class="meta-value" style="color: ${deadlineClass}">${deadlineText}</span>
+              <span class="meta-label">申请状态</span>
+              <span class="meta-value">${appDeadlineText}</span>
             </div>
             <div class="meta-item">
               <span class="meta-label">开放日</span>
-              <span class="meta-value">${school.openDay || '需预约'}</span>
+              <span class="meta-value">${school.openDay || '联系学校预约'}</span>
             </div>
             ${school.website ? `
             <div class="meta-item">
@@ -378,8 +392,11 @@
           </div>
           
           <div class="school-details">
+            ${school.notes ? `<p style="margin-bottom:8px;font-size:13px;color:#555;">${school.notes}</p>` : ''}
+            ${school.ealNote && school.ealNote !== school.ealNote ? `<p><strong>📚 EAL：</strong>${school.ealNote}</p>` : ''}
             ${school.reasons.length > 0 ? `<p><strong>✅ 推荐理由：</strong>${school.reasons.join('、')}</p>` : ''}
             ${school.warnings.length > 0 ? `<p><strong>⚠️ 注意事项：</strong>${school.warnings.join('、')}</p>` : ''}
+            ${school.applyNote ? `<p><strong>📝 申请提示：</strong>${school.applyNote}</p>` : ''}
           </div>
           <button class="expand-btn" type="button">查看详情 ▼</button>
         </div>
