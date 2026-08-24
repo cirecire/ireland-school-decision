@@ -178,12 +178,15 @@
     // 用户条件映射
     const BUDGET_MAP = { '10k': [0, 10000], '15k': [10000, 15000], '20k': [15000, 20000], '25k': [20000, 25000], 'unlimited': [0, 50000], 'undecided': [0, 50000] };
     const ENGLISH_SCORE = { c1: 4, b2: 3, b1: 2, weak: 1, strong: 3, mid: 2, weakself: 1 };
-    // 问卷 region 值 → 学校 city（地区硬筛用）
-    const REGION_TO_CITY = {
-      dublin4: ['Dublin'], dublin6: ['Dublin'], dublin14: ['Dublin'],
-      blackrock: ['Dublin'], dunlaoghaire: ['Dublin'],
-      wicklow: ['Wicklow'], kildare: ['Kildare'], meath: ['Meath'],
-      cork: ['Cork'], galway: ['Galway'], limerick: ['Limerick'], waterford: ['Waterford']
+    // 每所学校的地区标签（与问卷 region 选项值一一对应），用于地区硬筛
+    // dublin_other = 未单独列出的都柏林校（Belvedere / Castleknock / Sutton Park / Mount Sackville / King's Hospital / Loreto Foxrock 等）
+    const SCHOOL_DISTRICT = {
+      1:'blackrock',2:'kildare',3:'dublin6',4:'dublin_other',5:'dublin_other',6:'dublin4',7:'dublin4',8:'dunlaoghaire',9:'cork',10:'cork',
+      11:'limerick',12:'limerick',13:'limerick',14:'kildare',15:'dublin6',16:'dublin14',17:'dublin_other',18:'dublin6',19:'dunlaoghaire',20:'dublin14',
+      21:'dublin4',22:'dunlaoghaire',23:'dunlaoghaire',24:'dunlaoghaire',25:'dublin_other',26:'dublin_other',27:'dublin14',28:'dublin14',29:'wicklow',30:'dublin6',
+      31:'dublin_other',32:'dublin6',33:'dublin6',34:'dublin4',35:'dublin6',36:'dublin4',37:'dublin14',38:'dunlaoghaire',39:'dublin14',40:'dublin14',
+      41:'limerick',42:'cork',43:'cork',44:'cork',45:'waterford',46:'galway',47:'meath',48:'meath',49:'meath',50:'meath',
+      51:'waterford',52:'dublin6',53:'dunlaoghaire',54:'dublin14',55:'dublin6',56:'dublin14'
     };
 
     function loadUserData() {
@@ -281,7 +284,7 @@
         tags.push(engMap[user.english] || user.english);
       }
       if (Array.isArray(user.region) && user.region.length) {
-        const regMap = { dublin4: 'Dublin 4', dublin6: 'Dublin 6', dublin14: 'Dundrum', blackrock: 'Blackrock', dunlaoghaire: 'Dún Laoghaire', wicklow: 'Wicklow', kildare: 'Kildare', meath: 'Meath', cork: 'Cork', galway: 'Galway', limerick: 'Limerick', waterford: 'Waterford' };
+        const regMap = { dublin4: 'Dublin 4', dublin6: 'Dublin 6', dublin14: 'Dundrum', blackrock: 'Blackrock', dunlaoghaire: 'Dún Laoghaire', wicklow: 'Wicklow', kildare: 'Kildare', meath: 'Meath', cork: 'Cork', galway: 'Galway', limerick: 'Limerick', waterford: 'Waterford', dublin_other: '都柏林其他' };
         tags.push('📌 地区：' + user.region.map(r => regMap[r] || r).join('、'));
       }
       if (Array.isArray(user.priorities) && user.priorities.length === 5) {
@@ -292,15 +295,9 @@
 
       // 地区硬筛：构建候选城市集合
       const userRegions = Array.isArray(user.region) ? user.region : [user.region];
-      const citySet = new Set();
-      let hasOther = false;
-      userRegions.forEach(r => {
-        if (r === 'other') hasOther = true;
-        (REGION_TO_CITY[r] || []).forEach(c => citySet.add(c));
-      });
       let pool = SCHOOLS;
-      if (!hasOther && citySet.size > 0) {
-        pool = SCHOOLS.filter(s => citySet.has(s.city));
+      if (userRegions.length) {
+        pool = SCHOOLS.filter(s => userRegions.includes(SCHOOL_DISTRICT[s.id]));
       }
 
       const scored = pool.map(school => {

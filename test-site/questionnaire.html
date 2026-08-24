@@ -57,6 +57,9 @@
     .sortable-item .text { flex: 1; }
     .sortable-item .text-title { font-weight: 500; }
     .sortable-item .text-note { font-size: 12px; color: #999; }
+    .sortable-item .item-btns { display: flex; flex-direction: column; gap: 3px; margin-left: auto; }
+    .sortable-item .move-btn { width: 28px; height: 20px; border: 1px solid #4A90E2; background: #fff; color: #4A90E2; border-radius: 4px; cursor: pointer; font-size: 11px; line-height: 1; padding: 0; }
+    .sortable-item .move-btn:hover { background: #4A90E2; color: #fff; }
     .drag-handle { color: #aaa; font-size: 18px; }
     .sort-hint { font-size: 13px; color: #4A90E2; margin-bottom: 6px; }
 
@@ -256,6 +259,8 @@
                 <div class="option-text"><div class="option-title">Limerick 利默里克</div><div class="option-note">第三大城市，180km</div><div class="option-en">Limerick City</div></div></label>
               <label class="option"><input type="checkbox" name="region" value="waterford" onchange="saveDraft()">
                 <div class="option-text"><div class="option-title">Waterford 瓦特福德</div><div class="option-note">最古老城市，155km</div><div class="option-en">Waterford City</div></div></label>
+              <label class="option"><input type="checkbox" name="region" value="dublin_other" onchange="saveDraft()">
+                <div class="option-text"><div class="option-title">都柏林其他区域</div><div class="option-note">未单独列出的都柏林校</div><div class="option-en">Dublin (other)</div></div></label>
             </div>
             <div class="error-msg" id="regionError">请至少选择一个地区</div>
           </div>
@@ -265,69 +270,37 @@
         <div class="part" id="partC" style="display: none;">
           <h2 style="font-size: 20px; margin-bottom: 20px; color: #4A90E2;">Part C: 核心诉求</h2>
 
-          <div class="question">
-            <label class="question-label">在以下场景中，您会如何选择？<span class="required">*</span></label>
-
-            <div style="background: #f0f7ff; padding: 16px; border-radius: 6px; margin-bottom: 16px;">
-              <div style="font-weight: 500; margin-bottom: 8px;">场景 1：升学率 vs 孩子压力</div>
-              <div style="font-size: 14px; color: #666; margin-bottom: 12px;">学校 A 升学率高但学业压力大、竞争激烈<br>学校 B 升学率中等但孩子更快乐、压力适中</div>
-              <div class="options">
-                <label class="option"><input type="radio" name="scene1" value="high" required onchange="saveDraft()"><div class="option-text">选学校 A（升学率优先）</div></label>
-                <label class="option"><input type="radio" name="scene1" value="balanced" required onchange="saveDraft()"><div class="option-text">选学校 B（孩子快乐优先）</div></label>
-                <label class="option"><input type="radio" name="scene1" value="neutral" required onchange="saveDraft()"><div class="option-text">需要更多信息才能决定</div></label>
-              </div>
-            </div>
-
-            <div style="background: #f0f7ff; padding: 16px; border-radius: 6px; margin-bottom: 16px;">
-              <div style="font-weight: 500; margin-bottom: 8px;">场景 2：融入本地 vs 有华人圈</div>
-              <div style="font-size: 14px; color: #666; margin-bottom: 12px;">学校 A 本地学生为主，孩子能快速融入爱尔兰文化<br>学校 B 有一定华人学生，孩子不会感到孤独</div>
-              <div class="options">
-                <label class="option"><input type="radio" name="scene2" value="local" required onchange="saveDraft()"><div class="option-text">选学校 A（融入本地优先）</div></label>
-                <label class="option"><input type="radio" name="scene2" value="chinese" required onchange="saveDraft()"><div class="option-text">选学校 B（有华人圈优先）</div></label>
-                <label class="option"><input type="radio" name="scene2" value="neutral" required onchange="saveDraft()"><div class="option-text">需要更多信息才能决定</div></label>
-              </div>
-            </div>
-
-            <div style="background: #f0f7ff; padding: 16px; border-radius: 6px;">
-              <div style="font-weight: 500; margin-bottom: 8px;">场景 3：学校声誉 vs 孩子兴趣</div>
-              <div style="font-size: 14px; color: #666; margin-bottom: 12px;">学校 A 声誉高、传统强校，但课外活动较少<br>学校 B 声誉中等，但体育/艺术等课外活动丰富</div>
-              <div class="options">
-                <label class="option"><input type="radio" name="scene3" value="reputation" required onchange="saveDraft()"><div class="option-text">选学校 A（声誉优先）</div></label>
-                <label class="option"><input type="radio" name="scene3" value="interest" required onchange="saveDraft()"><div class="option-text">选学校 B（孩子兴趣优先）</div></label>
-                <label class="option"><input type="radio" name="scene3" value="neutral" required onchange="saveDraft()"><div class="option-text">需要更多信息才能决定</div></label>
-              </div>
-            </div>
-          </div>
+          <p style="color:#666; font-size:14px; margin:0 0 18px; line-height:1.6;">我们不替您做「二选一」的零和判断。请直接告诉系统：下面五个因素，对您家<strong>从最重要到最不重要</strong>怎么排——可<strong>拖动卡片</strong>，或点每项的 <strong>▲▼</strong> 按钮调整。</p>
 
           <div class="question">
             <label class="question-label">请为以下因素按重要性排序<span class="required">*</span></label>
-            <div class="question-desc">不能零和博弈——请拖动调整顺序，把最重要的放在最上面</div>
-            <div class="sort-hint">👆 拖动卡片上下移动即可排序</div>
+            <div class="question-desc">不能零和博弈——请调整顺序，把最重要的放在最上面</div>
+            <div class="sort-hint">👆 可拖动卡片排序，或用每项的 ▲▼ 按钮调整</div>
             <ul class="sortable-list" id="priorityList">
               <li class="sortable-item" data-value="academic" draggable="true">
                 <span class="rank">1</span>
                 <span class="text"><span class="text-title">升学率</span><br><span class="text-note">冲刺爱尔兰 Top 5 / 英国 Top 10 的机会</span></span>
-                <span class="drag-handle">⋮⋮</span>
+                <span class="item-btns"><button type="button" class="move-btn" onclick="moveItem(this,-1)" aria-label="上移">▲</button><button type="button" class="move-btn" onclick="moveItem(this,1)" aria-label="下移">▼</button></span>
               </li>
               <li class="sortable-item" data-value="happiness" draggable="true">
                 <span class="rank">2</span>
                 <span class="text"><span class="text-title">孩子快乐</span><br><span class="text-note">心理健康与适应，不希望压力太大</span></span>
-                <span class="drag-handle">⋮⋮</span>
+                <span class="item-btns"><button type="button" class="move-btn" onclick="moveItem(this,-1)" aria-label="上移">▲</button><button type="button" class="move-btn" onclick="moveItem(this,1)" aria-label="下移">▼</button></span>
               </li>
               <li class="sortable-item" data-value="integration" draggable="true">
                 <span class="rank">3</span>
                 <span class="text"><span class="text-title">融入本地</span><br><span class="text-note">英语与文化适应，真正融入爱尔兰</span></span>
-                <span class="drag-handle">⋮⋮</span>
+                <span class="item-btns"><button type="button" class="move-btn" onclick="moveItem(this,-1)" aria-label="上移">▲</button><button type="button" class="move-btn" onclick="moveItem(this,1)" aria-label="下移">▼</button></span>
               </li>
               <li class="sortable-item" data-value="cost" draggable="true">
                 <span class="rank">4</span>
                 <span class="text"><span class="text-title">学费预算</span><br><span class="text-note">家庭经济承受能力</span></span>
-                <span class="drag-handle">⋮⋮</span>
+                <span class="item-btns"><button type="button" class="move-btn" onclick="moveItem(this,-1)" aria-label="上移">▲</button><button type="button" class="move-btn" onclick="moveItem(this,1)" aria-label="下移">▼</button></span>
               </li>
               <li class="sortable-item" data-value="location" draggable="true">
                 <span class="rank">5</span>
                 <span class="text"><span class="text-title">地理位置</span><br><span class="text-note">便利性与生活环境</span></span>
-                <span class="drag-handle">⋮⋮</span>
+                <span class="item-btns"><button type="button" class="move-btn" onclick="moveItem(this,-1)" aria-label="上移">▲</button><button type="button" class="move-btn" onclick="moveItem(this,1)" aria-label="下移">▼</button></span>
               </li>
             </ul>
             <div class="error-msg" id="priorityError">请确认排序（默认已按上方顺序排列）</div>
@@ -416,7 +389,15 @@
       return true;
     }
 
-    // —— 排序拖拽 ——
+    // —— 排序：上移/下移按钮 + 拖拽 ——
+    function moveItem(btn, dir) {
+      const li = btn.closest('.sortable-item');
+      const list = document.getElementById('priorityList');
+      if (dir < 0 && li.previousElementSibling) list.insertBefore(li, li.previousElementSibling);
+      else if (dir > 0 && li.nextElementSibling) list.insertBefore(li, li.nextElementSibling.nextElementSibling);
+      updateRanks(); saveDraft();
+    }
+
     function initSortable() {
       const list = document.getElementById('priorityList');
       let dragEl = null;
