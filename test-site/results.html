@@ -103,6 +103,11 @@
       <p>当前学校数据库主要覆盖都柏林与周边郡。请尝试增加地区，或浏览全部学校清单。</p>
       <a href="schools.html" class="btn-primary">查看全部 51 所学校</a>
     </div>
+    <div id="errorState" class="empty-state" style="display:none;background:#fee;border-left:4px solid #c33;padding:20px;margin-top:20px;text-align:left;">
+      <h3 style="color:#c33;">⚠️ 页面处理出错</h3>
+      <pre id="errorMessage" style="white-space:pre-wrap;background:#fff;padding:10px;border-radius:4px;margin-top:10px;font-size:12px;"></pre>
+      <p style="margin-top:10px;color:#888;font-size:13px;">请截图发给我（这条信息会包含错误原因）。</p>
+    </div>
     
     <div style="text-align: center; margin-top: 40px;">
       <a href="schools.html" class="btn-primary">浏览全部学校清单</a>
@@ -265,6 +270,7 @@
     }
 
     function renderResults(user) {
+      try {
       // 用户条件摘要
       const tags = [];
       if (user.city) {
@@ -294,7 +300,9 @@
       document.getElementById('summaryTags').innerHTML = tags.map(t => `<span class="tag">${t}</span>`).join('');
 
       // 地区硬筛：构建候选城市集合
-      const userRegions = Array.isArray(user.region) ? user.region : [user.region];
+      let userRegions = [];
+      if (Array.isArray(user.region)) userRegions = user.region.filter(Boolean);
+      else if (user.region) userRegions = [user.region];
       let pool = SCHOOLS;
       if (userRegions.length) {
         pool = SCHOOLS.filter(s => userRegions.includes(SCHOOL_DISTRICT[s.id]));
@@ -322,6 +330,12 @@
       renderTier('rushSection', '冲刺', '条件匹配度高，值得重点申请', rush);
       renderTier('matchSection', '匹配', '当前条件较符合，推荐重点关注', match);
       renderTier('safeSection', '保底', '最稳妥的选择，建议作为保底', safe);
+      } catch (err) {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('errorState').style.display = 'block';
+        document.getElementById('errorMessage').textContent = String(err && err.stack || err);
+        console.error('renderResults error:', err);
+      }
     }
 
     function renderTier(elementId, label, desc, schools) {
