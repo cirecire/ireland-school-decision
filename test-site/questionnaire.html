@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>问卷 - 爱尔兰中学择校决策系统（测试版）</title>
+<style>
+:root { --blue:#2F5496; --green:#375623; --amber:#7F6000; --red:#dc3545; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:"PingFang SC","Microsoft YaHei",Arial,sans-serif; background:#f5f7fa; color:#333; }
+.test-banner { background:#ff6b6b; color:white; padding:8px; text-align:center; font-weight:bold; }
+.container { max-width:900px; margin:20px auto; padding:20px; }
+.progress-wrap { background:white; padding:15px; border-radius:8px; margin-bottom:20px; box-shadow:0 2px 4px rgba(0,0,0,0.1); }
+.progress-steps { display:flex; justify-content:space-between; margin-bottom:10px; }
+.step { text-align:center; flex:1; }
+.step-num { width:30px; height:30px; border-radius:50%; background:#e0e0e0; color:#666; display:inline-flex; align-items:center; justify-content:center; font-weight:bold; }
+.step.active .step-num { background:var(--blue); color:white; }
+.step.done .step-num { background:var(--green); color:white; }
+.step-label { font-size:12px; margin-top:5px; color:#666; }
+.progress-bar { height:4px; background:#e0e0e0; border-radius:2px; margin-top:10px; }
+.progress-fill { height:100%; background:var(--blue); border-radius:2px; transition:width 0.3s; }
+.question-card { background:white; padding:30px; border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,0.1); display:none; }
+.question-card.active { display:block; }
+.question-card h2 { color:var(--blue); margin-bottom:10px; font-size:22px; }
+.question-card .subtitle { color:#666; font-size:14px; margin-bottom:25px; }
+.question-card h3 { font-size:16px; margin:25px 0 10px 0; padding-bottom:8px; border-bottom:2px solid #e0e0e0; }
+.option-group { margin:15px 0; }
+.option-group p { font-weight:500; margin-bottom:10px; }
+.option-group .hint { color:#666; font-size:13px; margin-top:5px; }
+.checkbox-item { display:flex; align-items:center; padding:12px 15px; margin:6px 0; border:1px solid #ddd; border-radius:6px; cursor:pointer; transition:all 0.2s; }
+.checkbox-item:hover { background:#f8f9fa; border-color:var(--blue); }
+.checkbox-item input { margin-right:12px; width:18px; height:18px; cursor:pointer; }
+.checkbox-item.selected { background:#e7f1ff; border-color:var(--blue); }
+.radio-item { display:block; padding:12px 15px; margin:6px 0; border:1px solid #ddd; border-radius:6px; cursor:pointer; transition:all 0.2s; }
+.radio-item:hover { background:#f8f9fa; border-color:var(--blue); }
+.radio-item input { margin-right:12px; }
+.radio-item.selected { background:#e7f1ff; border-color:var(--blue); }
+.range-group { margin:20px 0; padding:20px; background:#f8f9fa; border-radius:8px; }
+.range-group input[type=range] { width:100%; margin:10px 0; }
+.range-display { text-align:center; font-size:18px; font-weight:bold; color:var(--blue); margin:10px 0; }
+.range-labels { display:flex; justify-content:space-between; font-size:12px; color:#666; margin-top:10px; }
+.scenario-card { background:#f8f9fa; padding:20px; margin:15px 0; border-radius:8px; border-left:4px solid var(--blue); }
+.scenario-card p { margin:10px 0; line-height:1.6; }
+.scenario-options { margin-top:15px; }
+.btn-wrap { margin-top:30px; display:flex; justify-content:space-between; padding-top:20px; border-top:1px solid #e0e0e0; }
+.btn { background:var(--blue); color:white; border:none; padding:12px 28px; border-radius:6px; cursor:pointer; font-size:16px; }
+.btn:hover { background:#1f3a73; }
+.btn-secondary { background:#6c757d; }
+.btn:disabled { background:#ccc; cursor:not-allowed; }
+.note-box { background:#fff3cd; border:1px solid #ffc107; padding:12px 15px; border-radius:6px; margin:15px 0; font-size:14px; }
+</style>
+</head>
+<body>
+<div class="test-banner">⚠️ 测试版本 - 请勿对外发布</div>
+<div class="container">
+
+<div class="progress-wrap">
+<div class="progress-steps">
+<div class="step active" id="step1"><div class="step-num">1</div><div class="step-label">孩子画像</div></div>
+<div class="step" id="step2"><div class="step-num">2</div><div class="step-label">家庭条件</div></div>
+<div class="step" id="step3"><div class="step-num">3</div><div class="step-label">核心诉求</div></div>
+<div class="step" id="step4"><div class="step-num">4</div><div class="step-label">查看结果</div></div>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+
+<!-- ========== Part A: 孩子画像 ========== -->
+<div class="question-card active" id="cardA">
+<h2>Part A：孩子画像</h2>
+<p class="subtitle">了解孩子当前情况，帮助我们评估学术背景和匹配学校</p>
+
+<h3>📍 教育背景</h3>
+
+<div class="option-group">
+<p>1. 孩子当前所在城市</p>
+<input type="text" id="city" placeholder="例如：深圳、北京、上海..." style="width:100%; padding:12px; border:1px solid #ddd; border-radius:6px; font-size:15px;">
+<p class="hint">不同城市的公立/国际教育资源差异较大，这会影响我们对孩子学术能力的判断基准</p>
+</div>
+
+<div class="option-group">
+<p>2. 当前就读学校类型</p>
+<label class="radio-item"><input type="radio" name="schoolType" value="public"> 公立学校（普通公立）</label>
+<label class="radio-item"><input type="radio" name="schoolType" value="public-top"> 公立学校（重点/名校）</label>
+<label class="radio-item"><input type="radio" name="schoolType" value="intl-chinese"> 国际学校（中文为主）</label>
+<label class="radio-item"><input type="radio" name="schoolType" value="intl-english"> 国际学校（英文为主/纯国际）</label>
+</div>
+
+<div class="option-group">
+<p>3. 当前年级</p>
+<label class="radio-item"><input type="radio" name="grade" value="g6"> 小学六年级（对应爱尔兰 J1）</label>
+<label class="radio-item"><input type="radio" name="grade" value="g7"> 初一（对应爱尔兰 J2）</label>
+<label class="radio-item"><input type="radio" name="grade" value="g8"> 初二（对应爱尔兰 J3）</label>
+<label class="radio-item"><input type="radio" name="grade" value="g9"> 初三（对应爱尔兰 TY/LC1）</label>
+<label class="radio-item"><input type="radio" name="grade" value="g10"> 高一（对应爱尔兰 LC2）</label>
+</div>
+
+<h3>🗣️ 语言能力</h3>
+
+<div class="option-group">
+<p>4. 英语水平（如有标化成绩请选择）</p>
+<label class="radio-item"><input type="radio" name="english" value="ielts65"> 雅思 6.5+ / 托福 100+ / CAE / CPE（接近母语水平）</label>
+<label class="radio-item"><input type="radio" name="english" value="ielts60"> 雅思 6.0 / 托福 80-99 / FCE（良好沟通能力）</label>
+<label class="radio-item"><input type="radio" name="english" value="ielts55"> 雅思 5.5 / 托福 60-79 / PET（基本沟通）</label>
+<label class="radio-item"><input type="radio" name="english" value="ielts50"> 雅思 5.0 以下 / 托福 60 以下 / KET（需要强化）</label>
+<label class="radio-item"><input type="radio" name="english" value="none"> 无标化成绩，需要评估</label>
+</div>
+
+<div class="note-box">💡 <strong>爱尔兰中学语言要求：</strong>大部分学校要求 CEFR B2+（相当于雅思 5.5-6.0）。低于此水平建议选择有 EAL（英语辅导）的学校，或考虑重读一个年级。</div>
+
+<h3>📊 学术能力</h3>
+
+<div class="option-group">
+<p>5. 在当前学校的成绩排名</p>
+<label class="radio-item"><input type="radio" name="ranking" value="top10"> 前 10%</label>
+<label class="radio-item"><input type="radio" name="ranking" value="top30"> 前 30%</label>
+<label class="radio-item"><input type="radio" name="ranking" value="mid"> 中等（前 30-70%）</label>
+<label class="radio-item"><input type="radio" name="ranking" value="lower"> 后 30%</label>
+</div>
+
+<div class="option-group">
+<p>6. 孩子性格特点（可多选）</p>
+<div class="checkbox-item"><input type="checkbox" name="personality" value="outgoing"> <span>外向活跃，喜欢社交</span></div>
+<div class="checkbox-item"><input type="checkbox" name="personality" value="quiet"> <span>安静专注，独立学习能力强</span></div>
+<div class="checkbox-item"><input type="checkbox" name="personality" value="sporty"> <span>热爱运动，体能好</span></div>
+<div class="checkbox-item"><input type="checkbox" name="personality" value="artistic"> <span>喜欢艺术/音乐/戏剧</span></div>
+<div class="checkbox-item"><input type="checkbox" name="personality" value="competitive"> <span>适应竞争环境，喜欢挑战</span></div>
+<div class="checkbox-item"><input type="checkbox" name="personality" value="sensitive"> <span>性格敏感，需要更多关怀</span></div>
+</div>
+
+<div class="btn-wrap">
+<button class="btn btn-secondary" disabled>← 上一步</button>
+<button class="btn" onclick="nextCard('A')">下一步 →</button>
+</div>
+</div>
+
+<!-- ========== Part B: 家庭条件 ========== -->
+<div class="question-card" id="cardB">
+<h2>Part B：家庭条件</h2>
+<p class="subtitle">了解您的家庭情况和实际需求，帮助我们筛选合适的学校</p>
+
+<h3>📍 地区偏好</h3>
+
+<div class="option-group">
+<p>7. 目标地区（可多选）</p>
+<div class="checkbox-item"><input type="checkbox" name="region" value="dublin-city"> <span><strong>都柏林市区</strong> — 资源最多，华人社区成熟</span></div>
+<div class="checkbox-item"><input type="checkbox" name="region" value="dublin-south"> <span><strong>都柏林南郊</strong> — Blackrock / Dun Laoghaire / Sandyford</span></div>
+<div class="checkbox-item"><input type="checkbox" name="region" value="dublin-north"> <span><strong>都柏林北郊</strong> — Sutton / Malahide / Howth</span></div>
+<div class="checkbox-item"><input type="checkbox" name="region" value="wicklow"> <span><strong>威克洛郡</strong> — Greystones / Bray（距都柏林 30-50km）</span></div>
+<div class="checkbox-item"><input type="checkbox" name="region" value="kildare"> <span><strong>基尔代尔郡</strong> — Newbridge / Clane（距都柏林 35-60km）</span></div>
+<div class="checkbox-item"><input type="checkbox" name="region" value="other"> <span><strong>其他城市</strong> — 科克 / 高威 / 利默里克</span></div>
+<div class="checkbox-item"><input type="checkbox" name="region" value="any"> <span><strong>都可以</strong> — 没有地区限制</span></div>
+</div>
+
+<h3>🏫 学校类型</h3>
+
+<div class="option-group">
+<p>8. 学校类型偏好（可多选）</p>
+<div class="checkbox-item"><input type="checkbox" name="schoolPref" value="local-elite"> <span><strong>本地精英校</strong> — Blackrock / Clongowes / Gonzaga 等，生源以本地为主</span></div>
+<div class="checkbox-item"><input type="checkbox" name="schoolPref" value="intl-friendly"> <span><strong>国际生友好校</strong> — 有 EAL / 国际部 / 华人已有先例</span></div>
+<div class="checkbox-item"><input type="checkbox" name="schoolPref" value="ib-school"> <span><strong>IB 学校</strong> — St Andrew's / NAIS / SEK 等，国际课程</span></div>
+<div class="checkbox-item"><input type="checkbox" name="schoolPref" value="boarding-school"> <span><strong>传统寄宿校</strong> — 全寄宿，孩子独立性强</span></div>
+<div class="checkbox-item"><input type="checkbox" name="schoolPref" value="catholic"> <span><strong>天主教学校</strong> — 宗教氛围较强</span></div>
+<div class="checkbox-item"><input type="checkbox" name="schoolPref" value="any"> <span><strong>都可以</strong> — 不限学校类型</span></div>
+</div>
+
+<h3>🏠 住宿与陪读</h3>
+
+<div class="option-group">
+<p>9. 住宿方式（可多选）</p>
+<div class="checkbox-item"><input type="checkbox" name="boarding" value="day"> <span><strong>走读</strong> — 家长陪读，租房/买房</span></div>
+<div class="checkbox-item"><input type="checkbox" name="boarding" value="boarding"> <span><strong>寄宿</strong> — 学校宿舍，周末可回家或留校</span></div>
+<div class="checkbox-item"><input type="checkbox" name="boarding" value="homestay"> <span><strong>寄宿家庭</strong> — 学校安排当地家庭</span></div>
+</div>
+
+<div class="option-group">
+<p>10. 陪读意愿</p>
+<label class="radio-item"><input type="radio" name="accompany" value="yes"> 家长全程陪读</label>
+<label class="radio-item"><input type="radio" name="accompany" value="partial"> 部分陪读（比如妈妈陪读，爸爸在国内工作）</label>
+<label class="radio-item"><input type="radio" name="accompany" value="no"> 不陪读（孩子独立 / 寄宿）</label>
+<label class="radio-item"><input type="radio" name="accompany" value="flex"> 看情况，可陪可不陪</label>
+</div>
+
+<h3>💰 学费预算</h3>
+
+<div class="note-box">💡 <strong>爱尔兰中学学费说明：</strong><br>
+• 走读：€5,000 - €20,000/年（大部分 €6,000-10,000）<br>
+• 寄宿：€15,000 - €35,000/年（大部分 €20,000-25,000）<br>
+• <strong>Stamp 4 身份可享欧盟生学费</strong>（本科约 €3,000/年）</div>
+
+<div class="option-group">
+<p>11. 走读学费预算（如果选择走读）</p>
+<div class="checkbox-item"><input type="checkbox" name="budgetDay" value="low"> <span>€5,000 以下（性价比优先）</span></div>
+<div class="checkbox-item"><input type="checkbox" name="budgetDay" value="mid"> <span>€5,000 - €8,000（中等预算）</span></div>
+<div class="checkbox-item"><input type="checkbox" name="budgetDay" value="high"> <span>€8,000 - €12,000（中上预算）</span></div>
+<div class="checkbox-item"><input type="checkbox" name="budgetDay" value="top"> <span>€12,000 以上（预算充足）</span></div>
+<div class="checkbox-item"><input type="checkbox" name="budgetDay" value="any"> <span>预算不是主要限制</span></div>
+</div>
+
+<div class="option-group">
+<p>12. 寄宿学费预算（如果选择寄宿）</p>
+<div class="checkbox-item"><input type="checkbox" name="budgetBoard" value="low"> <span>€15,000 - €20,000</span></div>
+<div class="checkbox-item"><input type="checkbox" name="budgetBoard" value="mid"> <span>€20,000 - €25,000</span></div>
+<div class="checkbox-item"><input type="checkbox" name="budgetBoard" value="high"> <span>€25,000 - €30,000</span></div>
+<div class="checkbox-item"><input type="checkbox" name="budgetBoard" value="top"> <span>€30,000 以上</span></div>
+<div class="checkbox-item"><input type="checkbox" name="budgetBoard" value="any"> <span>预算不是主要限制</span></div>
+</div>
+
+<div class="btn-wrap">
+<button class="btn btn-secondary" onclick="prevCard('B')">← 上一步</button>
+<button class="btn" onclick="nextCard('B')">下一步 →</button>
+</div>
+</div>
+
+<!-- ========== Part C: 核心诉求 ========== -->
+<div class="question-card" id="cardC">
+<h2>Part C：核心诉求</h2>
+<p class="subtitle">升学、融入、适应都很重要，但在具体选择时，您更看重什么？</p>
+
+<div class="scenario-card">
+<h4>场景 1：升学率 vs 孩子压力</h4>
+<p>假设有两所学校：</p>
+<p>• <strong>学校 A</strong>：升学率高，进入 TCD/UCD 比例 60%+，但学业压力大，孩子可能不适应</p>
+<p>• <strong>学校 B</strong>：升学率中等，进入 TCD/UCD 比例 30-40%，但氛围宽松，孩子更容易适应</p>
+<p style="margin-top:15px;"><strong>您更倾向哪个？</strong></p>
+</div>
+
+<div class="option-group">
+<label class="radio-item"><input type="radio" name="scenario1" value="a"> 学校 A（升学优先）</label>
+<label class="radio-item"><input type="radio" name="scenario1" value="b"> 学校 B（孩子适应优先）</label>
+<label class="radio-item"><input type="radio" name="scenario1" value="balance"> 希望找到平衡点（升学率和适应都重要）</label>
+<label class="radio-item"><input type="radio" name="scenario1" value="unsure"> 不确定，需要更多信息</label>
+</div>
+
+<div class="scenario-card">
+<h4>场景 2：融入本地 vs 有华人圈</h4>
+<p>假设有两所学校：</p>
+<p>• <strong>学校 A</strong>：几乎全是本地学生，融入爱尔兰文化快，但孩子可能孤独</p>
+<p>• <strong>学校 B</strong>：有一定华人/国际学生，过渡更平滑，但融入本地文化慢</p>
+<p style="margin-top:15px;"><strong>您更倾向哪个？</strong></p>
+</div>
+
+<div class="option-group">
+<label class="radio-item"><input type="radio" name="scenario2" value="a"> 学校 A（融入优先）</label>
+<label class="radio-item"><input type="radio" name="scenario2" value="b"> 学校 B（过渡平滑优先）</label>
+<label class="radio-item"><input type="radio" name="scenario2" value="balance"> 希望找到平衡点（既有华人圈又能融入）</label>
+<label class="radio-item"><input type="radio" name="scenario2" value="unsure"> 不确定，需要更多信息</label>
+</div>
+
+<div class="scenario-card">
+<h4>场景 3：学校声誉 vs 孩子兴趣</h4>
+<p>假设有两所学校：</p>
+<p>• <strong>学校 A</strong>：名校，声誉好，校友圈强，但课外活动少，孩子兴趣（比如体育/艺术）发展有限</p>
+<p>• <strong>学校 B</strong>：声誉中等，但课外活动丰富，孩子兴趣能得到充分发展</p>
+<p style="margin-top:15px;"><strong>您更倾向哪个？</strong></p>
+</div>
+
+<div class="option-group">
+<label class="radio-item"><input type="radio" name="scenario3" value="a"> 学校 A（声誉优先）</label>
+<label class="radio-item"><input type="radio" name="scenario3" value="b"> 学校 B（孩子兴趣优先）</label>
+<label class="radio-item"><input type="radio" name="scenario3" value="balance"> 希望找到平衡点</label>
+<label class="radio-item"><input type="radio" name="scenario3" value="unsure"> 不确定，需要更多信息</label>
+</div>
+
+<div class="option-group" style="margin-top:30px;">
+<p><strong>13. 如果只能选一个最重要的因素，您会选？</strong></p>
+<label class="radio-item"><input type="radio" name="priority" value="university"> 升学率（考上好大学）</label>
+<label class="radio-item"><input type="radio" name="priority" value="adapt"> 孩子适应（性格匹配/心理健康）</label>
+<label class="radio-item"><input type="radio" name="priority" value="integrate"> 融入本地（英语/爱尔兰文化）</label>
+<label class="radio-item"><input type="radio" name="priority" value="reputation"> 学校声誉（校友圈/社会资源）</label>
+</div>
+
+<div class="btn-wrap">
+<button class="btn btn-secondary" onclick="prevCard('C')">← 上一步</button>
+<button class="btn" onclick="showResults()">查看推荐学校 →</button>
+</div>
+</div>
+
+<!-- ========== Part D: 结果 ========== -->
+<div class="question-card" id="cardD">
+<h2>推荐学校</h2>
+<p class="subtitle">根据您的条件，为您匹配以下学校</p>
+
+<div id="resultsContainer">
+<p style="text-align:center; padding:40px; color:#666;">正在计算匹配度...</p>
+</div>
+
+<div class="btn-wrap">
+<button class="btn btn-secondary" onclick="prevCard('D')">← 返回修改</button>
+<button class="btn" onclick="location.href='index.html'">返回首页</button>
+</div>
+</div>
+
+</div>
+
+<script>
+let currentCard = 'A';
+const cards = ['A','B','C','D'];
+
+function updateProgress() {
+  const idx = cards.indexOf(currentCard);
+  const pct = (idx + 1) / cards.length * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  cards.forEach((c,i) => {
+    const step = document.getElementById('step' + (i+1));
+    step.classList.remove('active','done');
+    if (i < idx) step.classList.add('done');
+    else if (i === idx) step.classList.add('active');
+  });
+}
+
+function nextCard(current) {
+  const idx = cards.indexOf(current);
+  if (idx < cards.length - 1) {
+    document.getElementById('card' + current).classList.remove('active');
+    const next = cards[idx + 1];
+    document.getElementById('card' + next).classList.add('active');
+    currentCard = next;
+    updateProgress();
+    window.scrollTo(0, 0);
+  }
+}
+
+function prevCard(current) {
+  const idx = cards.indexOf(current);
+  if (idx > 0) {
+    document.getElementById('card' + current).classList.remove('active');
+    const prev = cards[idx - 1];
+    document.getElementById('card' + prev).classList.add('active');
+    currentCard = prev;
+    updateProgress();
+    window.scrollTo(0, 0);
+  }
+}
+
+// 多选样式
+document.querySelectorAll('.checkbox-item').forEach(item => {
+  item.addEventListener('click', function() {
+    const checkbox = this.querySelector('input[type="checkbox"]');
+    checkbox.checked = !checkbox.checked;
+    this.classList.toggle('selected', checkbox.checked);
+  });
+});
+
+// 单选样式
+document.querySelectorAll('.radio-item').forEach(item => {
+  item.addEventListener('click', function() {
+    const radio = this.querySelector('input[type="radio"]');
+    radio.checked = true;
+    this.parentElement.querySelectorAll('.radio-item').forEach(r => r.classList.remove('selected'));
+    this.classList.add('selected');
+  });
+});
+
+function showResults() {
+  nextCard('C');
+  setTimeout(() => {
+    const city = document.getElementById('city').value || '未知城市';
+    document.getElementById('resultsContainer').innerHTML = `
+      <div style="background:#f8f9fa; padding:20px; border-radius:8px; margin:10px 0;">
+        <h3 style="color:var(--blue); margin-bottom:15px;">✅ 问卷已完成</h3>
+        <p style="margin-bottom:10px;">📍 孩子城市：<strong>${city}</strong></p>
+        <p style="margin-bottom:10px;">📊 正在匹配 51 所学校...</p>
+        <p style="color:#666; font-size:14px;">完整功能开发中，敬请期待</p>
+      </div>
+    `;
+  }, 500);
+}
+
+updateProgress();
+</script>
+</body>
+</html>

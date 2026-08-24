@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>学校清单 - 爱尔兰中学择校决策系统（测试版）</title>
+<style>
+:root { --blue:#2F5496; --green:#375623; --amber:#7F6000; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:"PingFang SC","Microsoft YaHei",Arial,sans-serif; background:#f5f7fa; color:#333; }
+.test-banner { background:#ff6b6b; color:white; padding:8px; text-align:center; font-weight:bold; }
+.container { max-width:1200px; margin:20px auto; padding:20px; }
+h1 { color:var(--blue); margin-bottom:20px; }
+.section { background:white; padding:20px; margin-bottom:20px; border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,0.1); }
+table { width:100%; border-collapse:collapse; margin-top:15px; }
+th,td { padding:10px 12px; text-align:left; border-bottom:1px solid #e0e0e0; }
+th { background:#f8f9fa; font-weight:600; position:sticky; top:0; }
+tr:hover { background:#f8f9fa; }
+.badge { display:inline-block; padding:3px 8px; border-radius:12px; font-size:11px; font-weight:500; }
+.badge.boys { background:#cce5ff; color:#004085; }
+.badge.girls { background:#f8d7da; color:#721c24; }
+.badge.mixed { background:#d4edda; color:#155724; }
+.badge.fee { background:#fff3cd; color:#856404; }
+.badge.ib { background:#e7f1ff; color:#0c5460; }
+.badge.eal { background:#d1ecf1; color:#0c5460; }
+.filters { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:15px; }
+.filter-btn { padding:8px 16px; border:1px solid #ddd; background:white; border-radius:20px; cursor:pointer; font-size:13px; }
+.filter-btn.active { background:var(--blue); color:white; border-color:var(--blue); }
+.search-box { padding:10px 15px; border:1px solid #ddd; border-radius:6px; width:250px; font-size:14px; }
+.stats { display:flex; gap:20px; margin:15px 0; }
+.stat-box { background:#f8f9fa; padding:15px 20px; border-radius:6px; flex:1; text-align:center; }
+.stat-num { font-size:28px; font-weight:bold; color:var(--blue); }
+.stat-label { font-size:13px; color:#666; margin-top:5px; }
+</style>
+</head>
+<body>
+<div class="test-banner">⚠️ 测试版本 - 请勿对外发布</div>
+<div class="container">
+
+<h1>🏫 爱尔兰收费学校清单</h1>
+
+<div class="section">
+<div class="stats">
+<div class="stat-box"><div class="stat-num">51</div><div class="stat-label">总学校数</div></div>
+<div class="stat-box"><div class="stat-num">35</div><div class="stat-label">都柏林</div></div>
+<div class="stat-box"><div class="stat-num">€5,000-20,000</div><div class="stat-label">走读学费范围</div></div>
+<div class="stat-box"><div class="stat-num">€15,000-35,000</div><div class="stat-label">寄宿学费范围</div></div>
+</div>
+
+<div class="filters">
+<input type="text" class="search-box" id="searchBox" placeholder="搜索学校名称..." oninput="filterTable()">
+<button class="filter-btn active" onclick="filterBy('all')">全部</button>
+<button class="filter-btn" onclick="filterBy('boys')">男校</button>
+<button class="filter-btn" onclick="filterBy('girls')">女校</button>
+<button class="filter-btn" onclick="filterBy('mixed')">混校</button>
+<button class="filter-btn" onclick="filterBy('dublin')">都柏林</button>
+<button class="filter-btn" onclick="filterBy('eal')">有EAL</button>
+<button class="filter-btn" onclick="filterBy('ib')">IB课程</button>
+</div>
+
+<table id="schoolTable">
+<thead>
+<tr>
+<th>学校名称</th>
+<th>性别</th>
+<th>地区</th>
+<th>走读学费</th>
+<th>寄宿学费</th>
+<th>课程</th>
+<th>EAL</th>
+<th>梯队</th>
+</tr>
+</thead>
+<tbody id="schoolBody"></tbody>
+</table>
+</div>
+
+</div>
+
+<script>
+const schools = [
+{id:"s01",name:"Blackrock College",gender:"boys",county:"Dublin",city:"Dublin",feeDay:19450,feeBoarding:21500,curriculum:"Irish",eal:"no",tier:2},
+{id:"s02",name:"Clongowes Wood College",gender:"boys",county:"Kildare",city:"Clane",feeDay:null,feeBoarding:29216,curriculum:"Irish",eal:"no",tier:2},
+{id:"s03",name:"Gonzaga College",gender:"boys",county:"Dublin",city:"Dublin",feeDay:8240,feeBoarding:null,curriculum:"Irish",eal:"no",tier:2},
+{id:"s04",name:"Castleknock College",gender:"boys",county:"Dublin",city:"Dublin",feeDay:6790,feeBoarding:null,curriculum:"Irish",eal:"no",tier:2},
+{id:"s05",name:"Belvedere College",gender:"boys",county:"Dublin",city:"Dublin",feeDay:7500,feeBoarding:null,curriculum:"Irish",eal:"no",tier:2},
+{id:"s06",name:"St Michael's College",gender:"boys",county:"Dublin",city:"Dublin",feeDay:null,feeBoarding:null,curriculum:"Irish",eal:"no",tier:2},
+{id:"s07",name:"St Mary's College",gender:"boys",county:"Dublin",city:"Dublin",feeDay:null,feeBoarding:null,curriculum:"Irish",eal:"no",tier:2},
+{id:"s08",name:"C.B.C. Monkstown",gender:"boys",county:"Dublin",city:"Dublin",feeDay:5150,feeBoarding:null,curriculum:"Irish",eal:"no",tier:2},
+{id:"s09",name:"Christian Brothers College Cork",gender:"boys",county:"Cork",city:"Cork",feeDay:4650,feeBoarding:null,curriculum:"Irish",eal:"no",tier:3},
+{id:"s10",name:"Presentation Brothers College Cork",gender:"boys",county:"Cork",city:"Cork",feeDay:5000,feeBoarding:null,curriculum:"Irish",eal:"no",tier:3},
+{id:"s11",name:"Glenstal Abbey School",gender:"boys",county:"Limerick",city:"Murroe",feeDay:14600,feeBoarding:23138,curriculum:"Irish",eal:"unknown",tier:3},
+{id:"s12",name:"Rockwell College",gender:"mixed",county:"Tipperary",city:"Cashel",feeDay:7125,feeBoarding:25000,curriculum:"Irish",eal:"unknown",tier:3},
+{id:"s13",name:"Cistercian College Roscrea",gender:"boys",county:"Offaly",city:"Roscrea",feeDay:null,feeBoarding:8700,curriculum:"Irish",eal:"unknown",tier:3},
+{id:"s14",name:"Newbridge College",gender:"mixed",county:"Kildare",city:"Newbridge",feeDay:5100,feeBoarding:null,curriculum:"Irish",eal:"no",tier:2},
+{id:"s15",name:"Alexandra College",gender:"girls",county:"Dublin",city:"Dublin",feeDay:8726,feeBoarding:null,curriculum:"Irish",eal:"yes",tier:2},
+{id:"s16",name:"Mount Anville Secondary School",gender:"girls",county:"Dublin",city:"Dublin",feeDay:7705,feeBoarding:null,curriculum:"Irish",eal:"no",tier:2},
+{id:"s17",name:"Loreto College Foxrock",gender:"girls",county:"Dublin",city:"Dublin",feeDay:5500,feeBoarding:null,curriculum:"Irish",eal:"no",tier:2},
+{id:"s18",name:"Loreto College St Stephen's Green",gender:"girls",county:"Dublin",city:"Dublin",feeDay:5850,feeBoarding:null,curriculum:"Irish",eal:"no",tier:2},
+{id:"s19",name:"Loreto Abbey Dalkey",gender:"girls",county:"Dublin",city:"Dalkey",feeDay:4800,feeBoarding:null,curriculum:"Irish",eal:"no",tier:2},
+{id:"s20",name:"Loreto High School Beaufort",gender:"girls",county:"Dublin",city:"Dublin",feeDay:4995,feeBoarding:null,curriculum:"Irish",eal:"no",tier:2},
+{id:"s21",name:"The Teresian School",gender:"girls",county:"Dublin",city:"Dublin",feeDay:6770,feeBoarding:null,curriculum:"Irish",eal:"no",tier:2},
+{id:"s22",name:"Holy Child Killiney",gender:"girls",county:"Dublin",city:"Killiney",feeDay:7100,feeBoarding:null,curriculum:"Irish",eal:"no",tier:2},
+{id:"s23",name:"St Joseph of Cluny",gender:"girls",county:"Dublin",city:"Dublin",feeDay:5720,feeBoarding:null,curriculum:"Irish",eal:"no",tier:2},
+{id:"s24",name:"Rathdown School",gender:"girls",county:"Dublin",city:"Dublin",feeDay:8470,feeBoarding:null,curriculum:"Irish",eal:"no",tier:2},
+{id:"s25",name:"Mount Sackville",gender:"girls",county:"Dublin",city:"Dublin",feeDay:4900,feeBoarding:null,curriculum:"Irish",eal:"no",tier:2},
+{id:"s26",name:"The King's Hospital",gender:"mixed",county:"Dublin",city:"Dublin",feeDay:9132,feeBoarding:18000,curriculum:"Irish",eal:"unknown",tier:2},
+{id:"s27",name:"St Columba's College",gender:"mixed",county:"Dublin",city:"Dublin",feeDay:11093,feeBoarding:31322,curriculum:"Irish",eal:"unknown",tier:2},
+{id:"s28",name:"Wesley College",gender:"mixed",county:"Dublin",city:"Dublin",feeDay:7690,feeBoarding:17350,curriculum:"Irish",eal:"unknown",tier:2},
+{id:"s29",name:"St Gerard's School",gender:"mixed",county:"Wicklow",city:"Bray",feeDay:8577,feeBoarding:null,curriculum:"Irish",eal:"yes",tier:2},
+{id:"s30",name:"The High School Dublin",gender:"mixed",county:"Dublin",city:"Dublin",feeDay:7100,feeBoarding:null,curriculum:"Irish",eal:"no",tier:2},
+{id:"s31",name:"Sutton Park School",gender:"mixed",county:"Dublin",city:"Dublin",feeDay:8300,feeBoarding:null,curriculum:"Irish",eal:"yes",tier:2},
+{id:"s32",name:"Sandford Park School",gender:"mixed",county:"Dublin",city:"Dublin",feeDay:8226,feeBoarding:null,curriculum:"Irish",eal:"no",tier:2},
+{id:"s33",name:"Terenure College",gender:"boys",county:"Dublin",city:"Dublin",feeDay:6070,feeBoarding:null,curriculum:"Irish",eal:"no",tier:2},
+{id:"s34",name:"St Conleth's College",gender:"boys",county:"Dublin",city:"Dublin",feeDay:6550,feeBoarding:null,curriculum:"Irish",eal:"no",tier:2},
+{id:"s35",name:"Catholic University School",gender:"boys",county:"Dublin",city:"Dublin",feeDay:6450,feeBoarding:null,curriculum:"Irish",eal:"no",tier:2},
+{id:"s36",name:"John Scottus School",gender:"mixed",county:"Dublin",city:"Dublin",feeDay:6000,feeBoarding:null,curriculum:"Irish",eal:"no",tier:2},
+{id:"s37",name:"Rockbrook Park School",gender:"boys",county:"Dublin",city:"Dublin",feeDay:4880,feeBoarding:null,curriculum:"Irish",eal:"no",tier:2},
+{id:"s38",name:"Rosemont Secondary School",gender:"girls",county:"Dublin",city:"Dublin",feeDay:5745,feeBoarding:null,curriculum:"Irish",eal:"no",tier:2},
+{id:"s39",name:"St Kilian's German School",gender:"mixed",county:"Dublin",city:"Dublin",feeDay:6610,feeBoarding:null,curriculum:"German+Irish",eal:"yes",tier:2},
+{id:"s40",name:"St Andrew's College",gender:"mixed",county:"Dublin",city:"Dublin",feeDay:12500,feeBoarding:null,curriculum:"IB",eal:"yes",tier:1},
+{id:"s41",name:"Nord Anglia International School",gender:"mixed",county:"Dublin",city:"Dublin",feeDay:15900,feeBoarding:null,curriculum:"IB",eal:"yes",tier:1},
+{id:"s42",name:"SEK International School",gender:"mixed",county:"Wicklow",city:"Greystones",feeDay:null,feeBoarding:null,curriculum:"IB",eal:"yes",tier:1},
+{id:"s43",name:"Villiers School",gender:"mixed",county:"Limerick",city:"Limerick",feeDay:4970,feeBoarding:18000,curriculum:"Irish+IB",eal:"yes",tier:3},
+{id:"s44",name:"Bandon Grammar School",gender:"mixed",county:"Cork",city:"Bandon",feeDay:4816,feeBoarding:null,curriculum:"Irish",eal:"unknown",tier:3},
+{id:"s45",name:"Midleton College",gender:"mixed",county:"Cork",city:"Midleton",feeDay:5480,feeBoarding:null,curriculum:"Irish",eal:"unknown",tier:3},
+{id:"s46",name:"Scoil Mhuire Cork",gender:"girls",county:"Cork",city:"Cork",feeDay:5000,feeBoarding:null,curriculum:"Irish",eal:"no",tier:3},
+{id:"s47",name:"Newtown School Waterford",gender:"mixed",county:"Waterford",city:"Waterford",feeDay:null,feeBoarding:null,curriculum:"Irish",eal:"unknown",tier:3},
+{id:"s48",name:"Sligo Grammar School",gender:"mixed",county:"Sligo",city:"Sligo",feeDay:4900,feeBoarding:14000,curriculum:"Irish",eal:"unknown",tier:3},
+{id:"s49",name:"Drogheda Grammar School",gender:"mixed",county:"Louth",city:"Drogheda",feeDay:4380,feeBoarding:null,curriculum:"Irish",eal:"unknown",tier:3},
+{id:"s50",name:"Dundalk Grammar School",gender:"mixed",county:"Louth",city:"Dundalk",feeDay:4505,feeBoarding:null,curriculum:"Irish",eal:"unknown",tier:3},
+{id:"s51",name:"Monaghan Collegiate",gender:"mixed",county:"Monaghan",city:"Monaghan",feeDay:3900,feeBoarding:null,curriculum:"Irish",eal:"unknown",tier:3}
+];
+
+let currentFilter = 'all';
+
+function renderTable(data) {
+  const tbody = document.getElementById('schoolBody');
+  tbody.innerHTML = data.map(s => `
+    <tr>
+      <td><strong>${s.name}</strong></td>
+      <td><span class="badge ${s.gender}">${s.gender === 'boys' ? '男校' : s.gender === 'girls' ? '女校' : '混校'}</span></td>
+      <td>${s.county}</td>
+      <td>${s.feeDay ? '€' + s.feeDay.toLocaleString() : '-'}</td>
+      <td>${s.feeBoarding ? '€' + s.feeBoarding.toLocaleString() : '-'}</td>
+      <td>${s.curriculum === 'IB' ? '<span class="badge ib">IB</span>' : s.curriculum}</td>
+      <td>${s.eal === 'yes' ? '<span class="badge eal">有EAL</span>' : s.eal === 'no' ? '无' : '待确认'}</td>
+      <td>Tier ${s.tier}</td>
+    </tr>
+  `).join('');
+}
+
+function filterBy(type) {
+  currentFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  
+  let filtered = schools;
+  if (type === 'boys') filtered = schools.filter(s => s.gender === 'boys');
+  else if (type === 'girls') filtered = schools.filter(s => s.gender === 'girls');
+  else if (type === 'mixed') filtered = schools.filter(s => s.gender === 'mixed');
+  else if (type === 'dublin') filtered = schools.filter(s => s.county === 'Dublin');
+  else if (type === 'eal') filtered = schools.filter(s => s.eal === 'yes');
+  else if (type === 'ib') filtered = schools.filter(s => s.curriculum.includes('IB'));
+  
+  renderTable(filtered);
+}
+
+function filterTable() {
+  const query = document.getElementById('searchBox').value.toLowerCase();
+  const filtered = schools.filter(s => s.name.toLowerCase().includes(query));
+  renderTable(filtered);
+}
+
+renderTable(schools);
+</script>
+</body>
+</html>

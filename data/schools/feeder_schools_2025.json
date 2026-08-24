@@ -1,0 +1,60 @@
+{
+  "version": "2026-08-24",
+  "source": "Irish Times Feeder Schools 2025 + Mathrone Academy",
+  "methodology": "统计每所学校进入爱尔兰大学（TCD/UCD/DCU/NUIG/NUIM/UCC/Ulster等）的学生比例",
+  "caveats": [
+    "仅统计爱尔兰境内大学，不包含英国/美国/欧洲其他大学",
+    "Protestant学校（St Columba's/St Andrew's）实际升学率被低估（很多学生去英国）",
+    "包含mature students和deferrals，非单纯2025应届",
+    "TUD数据不全（约1800名新生未纳入，2026年3/4月补充）",
+    "111所学校2025年LC报考人数下降超15%，已从表格剔除"
+  ],
+  "national_stats": {
+    "third_level_rate": "80%",
+    "fee_paying_students_pct": "7.2%",
+    "fee_paying_university_places_pct": "12.9%",
+    "fee_paying_top25_count": 18
+  },
+  "top_performers": [
+    {"rank":1,"name":"Holy Child School","location":"Killiney, Co Dublin","type":"fee-paying","gender":"girls","progression":"96%"},
+    {"rank":2,"name":"Cistercian College","location":"Roscrea, Co Tipperary","type":"fee-paying","gender":"boys","progression":"95%"},
+    {"rank":3,"name":"Sandford Park School","location":"Ranelagh, Dublin 6","type":"fee-paying","gender":"mixed","progression":"95%"},
+    {"rank":4,"name":"Gonzaga College","location":"Dublin 6","type":"fee-paying","gender":"boys","progression":"near 100%"},
+    {"rank":5,"name":"Blackrock College","location":"Dublin","type":"fee-paying","gender":"boys","progression":"high"},
+    {"rank":6,"name":"Muckross College","location":"Donnybrook, Co Dublin","type":"non-fee","gender":"girls","note":"Top feeder to IUA universities"},
+    {"rank":7,"name":"Coláiste Íosagáin","location":"Booterstown, Co Dublin","type":"Gaelcholáista","gender":"girls","note":"4th place to IUA universities"},
+    {"rank":8,"name":"St Andrew's College","location":"Booterstown, Dublin","type":"fee-paying","gender":"mixed","curriculum":"IB+LC","note":"95%+ IB diploma rate, UK destinations not counted"},
+    {"rank":9,"name":"St Columba's College","location":"Dublin","type":"fee-paying","gender":"mixed","note":"UK destinations not counted"},
+    {"rank":10,"name":"Loreto College Foxrock","location":"Dublin","type":"fee-paying","gender":"girls","progression":"high"}
+  ],
+  "dublin_postcode_stats": {
+    "Dublin 4": {"third_level":"89.1%","university":"75.6%"},
+    "Dublin 6": {"third_level":"87.8%","university":"66.6%"},
+    "Dublin 10": {"third_level":"36.6%","university":"17.6%"},
+    "Dublin 11": {"third_level":"52.2%","university":"26.6%"}
+  },
+  "fee_paying_schools_data": [
+    {"name":"Blackrock College","fee_day":19450,"fee_boarding":21500,"progression":"high","gender":"boys","county":"Dublin"},
+    {"name":"Gonzaga College","fee_day":8240,"fee_boarding":null,"progression":"near 100%","gender":"boys","county":"Dublin"},
+    {"name":"St Andrew's College","fee_day":12500,"fee_boarding":null,"progression":"95%+ IB","gender":"mixed","county":"Dublin","curriculum":"IB+LC"},
+    {"name":"St Columba's College","fee_day":11481,"fee_boarding":31322,"progression":"high","gender":"mixed","county":"Dublin"},
+    {"name":"Clongowes Wood College","fee_day":null,"fee_boarding":29216,"progression":"high","gender":"boys","county":"Kildare"},
+    {"name":"Alexandra College","fee_day":8726,"fee_boarding":null,"progression":"high","gender":"girls","county":"Dublin"},
+    {"name":"Loreto College Foxrock","fee_day":5500,"fee_boarding":null,"progression":"high","gender":"girls","county":"Dublin"},
+    {"name":"Loreto Abbey Dalkey","fee_day":4800,"fee_boarding":null,"progression":"high","gender":"girls","county":"Dublin"},
+    {"name":"The Teresian School","fee_day":6770,"fee_boarding":null,"progression":"high","gender":"girls","county":"Dublin"},
+    {"name":"Holy Child Killiney","fee_day":7100,"fee_boarding":null,"progression":"96%","gender":"girls","county":"Dublin"},
+    {"name":"Sandford Park School","fee_day":8226,"fee_boarding":null,"progression":"95%","gender":"mixed","county":"Dublin"},
+    {"name":"The King's Hospital","fee_day":9132,"fee_boarding":18000,"progression":"high","gender":"mixed","county":"Dublin"},
+    {"name":"Wesley College","fee_day":7690,"fee_boarding":17350,"progression":"high","gender":"mixed","county":"Dublin"},
+    {"name":"Newbridge College","fee_day":5100,"fee_boarding":null,"progression":"high","gender":"mixed","county":"Kildare"},
+    {"name":"Cistercian College Roscrea","fee_day":null,"fee_boarding":8700,"progression":"95%","gender":"boys","county":"Offaly"}
+  ],
+  "notes": [
+    "收费学校学生占Leaving Cert总数7.2%，但占据传统大学名额12.9%",
+    "Top 25升学率榜单中收费学校占18所",
+    "Gaelcholáistí（爱尔兰语学校）升学率也很高",
+    "Deis学校（弱势地区）升学率64%，低于全国平均",
+    "英国/美国大学去向不统计，Protestant学校实际升学率被低估"
+  ]
+}

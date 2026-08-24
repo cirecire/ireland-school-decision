@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🇮🇪 爱尔兰中学择校决策系统 - 测试版</title>
+<style>
+:root { --blue:#2F5496; --green:#375623; --amber:#7F6000; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:"PingFang SC","Microsoft YaHei",Arial,sans-serif; background:#f5f7fa; color:#333; padding:20px; }
+.container { max-width:1200px; margin:0 auto; }
+.test-banner { background:#ff6b6b; color:white; padding:10px; text-align:center; font-weight:bold; margin-bottom:20px; }
+h1 { color:var(--blue); margin-bottom:20px; }
+.section { background:white; padding:20px; margin-bottom:20px; border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,0.1); }
+.progress-bar { background:#e0e0e0; height:20px; border-radius:10px; margin:20px 0; }
+.progress-fill { background:var(--blue); height:100%; border-radius:10px; width:15%; transition:width 0.3s; }
+.btn { background:var(--blue); color:white; border:none; padding:12px 24px; border-radius:4px; cursor:pointer; font-size:16px; margin:10px 5px; }
+.btn:hover { background:#1f3a73; }
+.btn:disabled { background:#ccc; cursor:not-allowed; }
+.status { display:inline-block; padding:4px 12px; border-radius:12px; font-size:12px; margin-left:10px; }
+.status.done { background:#d4edda; color:#155724; }
+.status.todo { background:#fff3cd; color:#856404; }
+.status.doing { background:#cce5ff; color:#004085; }
+</style>
+</head>
+<body>
+<div class="test-banner">⚠️ 测试版本 - 请勿对外发布 - 仅供内部测试使用</div>
+<div class="container">
+<h1>🇮🇪 爱尔兰中学择校决策系统</h1>
+<p>版本：v0.1-test | 更新时间：2026-08-24</p>
+
+<div class="section">
+<h2>📊 开发进度</h2>
+<div class="progress-bar"><div class="progress-fill"></div></div>
+<ul style="line-height:2;">
+<li><span class="status done">已完成</span> GitHub 仓库初始化</li>
+<li><span class="status done">已完成</span> 学校数据库建立（51 所）</li>
+<li><span class="status doing">进行中</span> 问卷原型设计</li>
+<li><span class="status todo">待开始</span> Feeder Schools 数据采集</li>
+<li><span class="status todo">待开始</span> 学校学费核实</li>
+<li><span class="status todo">待开始</span> 区域数据采集</li>
+<li><span class="status todo">待开始</span> 交互式网站开发</li>
+<li><span class="status todo">待开始</span> 报告生成功能</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>🎯 本周目标</h2>
+<p><strong>Day 1 (今天)：</strong>测试站搭建 + 问卷原型 + 核心数据采集</p>
+<p><strong>Day 2-3：</strong>交互式网站雏形 + Feeder Schools 数据</p>
+<p><strong>Day 4-5：</strong>学费核实 + 区域数据 + 社群口碑</p>
+<p><strong>Day 6-7：</strong>测试迭代 + 文档完善</p>
+</div>
+
+<div class="section">
+<h2>🚀 开始测试</h2>
+<p>选择测试入口：</p>
+<button class="btn" onclick="location.href='questionnaire.html'">📝 开始问卷</button>
+<button class="btn" onclick="location.href='schools.html'">🏫 查看学校清单</button>
+<button class="btn" onclick="location.href='data.html'">📊 查看数据状态</button>
+</div>
+
+</div>
+</body>
+</html>
