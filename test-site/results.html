@@ -356,11 +356,15 @@
       const genderMap = { boys: '男校', girls: '女校', mixed: '混校' };
       const boardingMap = { boarding: '全寄宿', day: '走读', both: '走读+寄宿' };
       const typeMap = { public: '公立(免费)', private: '私立', international: '国际' };
-      const feeText = school.feeDay === 0
+      const feeText = (school.feeDay === 0 || school.feeBoarding === 0)
         ? '✅ 完全免费（公立）'
-        : school.feeBoarding
+        : (school.feeBoarding != null && school.feeDay != null)
           ? `💰 走读€${school.feeDay.toLocaleString()}/年 | 寄宿€${school.feeBoarding.toLocaleString()}/年`
-          : `💰 走读€${school.feeDay.toLocaleString()}/年`;
+          : school.feeBoarding != null
+            ? `💰 寄宿€${school.feeBoarding.toLocaleString()}/年`
+            : school.feeDay != null
+              ? `💰 走读€${school.feeDay.toLocaleString()}/年`
+              : '💰 学费请咨询学校';
 
       return `
         <div class="school-card" onclick="toggleDetails(this)">
@@ -423,7 +427,31 @@
           </div>`;
         return;
       }
-      renderResults(userData);
+      // 字段归一化：region 强制数组、boarding 默认 flex、缺字段补默认
+      if (!Array.isArray(userData.region)) {
+        userData.region = userData.region ? [userData.region] : [];
+      }
+      if (!userData.boarding) userData.boarding = 'flex';
+      if (!userData.budget) userData.budget = 'undecided';
+      if (!userData.schoolType) userData.schoolType = userData.schoolPref || 'both';
+
+      // 调试输出：把 userData 原始值打到页面底部（仅 debug 期保留）
+      const dbg = document.createElement('pre');
+      dbg.id = 'debugDump';
+      dbg.style.cssText = 'position:fixed;bottom:0;left:0;right:0;max-height:200px;overflow:auto;background:#111;color:#0f0;font-size:11px;padding:8px;margin:0;z-index:9999;border-top:2px solid #0f0;white-space:pre-wrap;';
+      dbg.textContent = '🔍 DEBUG userData:\n' + JSON.stringify(userData, null, 2);
+      document.body.appendChild(dbg);
+
+      try { renderResults(userData); }
+      catch (err) {
+        document.getElementById('loading').style.display = 'none';
+        const errBox = document.getElementById('errorState');
+        if (errBox) {
+          errBox.style.display = 'block';
+          document.getElementById('errorMessage').textContent = String(err && err.stack || err);
+        }
+        console.error('renderResults crash:', err);
+      }
     });
   </script>
 </body>
