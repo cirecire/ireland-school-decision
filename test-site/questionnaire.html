@@ -431,6 +431,8 @@
 
       const requiredInputs = part.querySelectorAll('input[required], select[required]');
       requiredInputs.forEach(input => {
+        // 跳过被隐藏的必填项（如选「公立学校」后隐藏的住宿/学费）——它们不可见，不应强制
+        if (input.offsetParent === null) return;
         if (input.type === 'radio' || input.type === 'checkbox') {
           const group = part.querySelectorAll(`input[name="${input.name}"]`);
           if (![...group].some(i => i.checked)) {
