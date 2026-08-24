@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数据状态 - 爱尔兰择校</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f4f8; color: #333; line-height: 1.6; }
+    .header { background: linear-gradient(135deg, #1a5f7a 0%, #2d8f6f 100%); color: white; padding: 30px 20px; text-align: center; }
+    .header h1 { font-size: 26px; }
+    .container { max-width: 900px; margin: 0 auto; padding: 30px 20px; }
+    .card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .card h2 { color: #1a5f7a; font-size: 18px; margin-bottom: 16px; border-bottom: 2px solid #e8f4f8; padding-bottom: 10px; }
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; }
+    .stat-box { background: #f8f9fa; border-radius: 8px; padding: 16px; text-align: center; }
+    .stat-num { font-size: 28px; font-weight: 700; color: #1a5f7a; }
+    .stat-label { font-size: 13px; color: #666; margin-top: 4px; }
+    .bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .bar-name { width: 120px; font-size: 13px; color: #555; flex-shrink: 0; }
+    .bar-track { flex: 1; background: #e9ecef; border-radius: 6px; height: 22px; position: relative; overflow: hidden; }
+    .bar-fill { height: 100%; background: linear-gradient(90deg, #2d8f6f, #1a5f7a); border-radius: 6px; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; color: white; font-size: 12px; font-weight: 600; transition: width 0.6s; }
+    .btn-primary { background: #1a5f7a; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 15px; cursor: pointer; text-decoration: none; display: inline-block; margin-top: 10px; }
+    .btn-primary:hover { background: #155166; }
+    .back-link { display: inline-block; margin-bottom: 20px; color: #1a5f7a; text-decoration: none; font-size: 14px; }
+    .tag { background: #e8f4f8; color: #1a5f7a; padding: 6px 12px; border-radius: 20px; font-size: 13px; margin: 0 6px 6px 0; display: inline-block; }
+    .note { font-size: 12px; color: #999; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>📊 择校数据库状态</h1>
+    <p>学校数据库统计 + 您的问卷数据</p>
+  </div>
+  <div class="container">
+    <a href="index.html" class="back-link">← 返回主菜单</a>
+
+    <div class="card">
+      <h2>🏫 学校数据库总览</h2>
+      <div class="stat-grid">
+        <div class="stat-box"><div class="stat-num">56</div><div class="stat-label">学校总数</div></div>
+        <div class="stat-box"><div class="stat-num">51</div><div class="stat-label">收费私校</div></div>
+        <div class="stat-box"><div class="stat-num">5</div><div class="stat-label">公立免费校</div></div>
+        <div class="stat-box"><div class="stat-num">3</div><div class="stat-label">全寄宿校</div></div>
+        <div class="stat-box"><div class="stat-num">15</div><div class="stat-label">走读+寄宿校</div></div>
+      </div>
+      <p class="note">数据来源：IrishLinks / PrivateSchools.ie / 各校官网；升学率(feeders)为基于梯队的估算值，待 Feeder Schools 2025 官方数据核实。</p>
+    </div>
+
+    <div class="card">
+      <h2>📍 按地区分布</h2>
+      <div id="regionBars"></div>
+    </div>
+
+    <div class="card">
+      <h2>⚧ 按性别 / 类型</h2>
+      <div class="bar-row"><div class="bar-name">男校</div><div class="bar-track"><div class="bar-fill" style="width:25%">14</div></div></div>
+      <div class="bar-row"><div class="bar-name">女校</div><div class="bar-track"><div class="bar-fill" style="width:27%">15</div></div></div>
+      <div class="bar-row"><div class="bar-name">混校</div><div class="bar-track"><div class="bar-fill" style="width:41%">23</div></div></div>
+      <div class="bar-row"><div class="bar-name">公立</div><div class="bar-track"><div class="bar-fill" style="width:9%">5</div></div></div>
+      <div class="bar-row"><div class="bar-name">国际校</div><div class="bar-track"><div class="bar-fill" style="width:4%">2</div></div></div>
+    </div>
+
+    <div class="card">
+      <h2>📝 您的问卷数据</h2>
+      <div id="quizData"></div>
+    </div>
+
+    <div style="text-align:center; margin-top:30px;">
+      <a href="questionnaire.html" class="btn-primary">填写 / 修改问卷</a>
+      <a href="results.html" class="btn-primary" style="margin-left:10px;">查看推荐结果</a>
+    </div>
+  </div>
+
+  <script>
+    const REGION_COUNTS = [
+      { name: 'Dublin 都柏林', count: 37 },
+      { name: 'Cork 科克', count: 5 },
+      { name: 'Kildare 基尔代尔', count: 2 },
+      { name: 'Limerick 利默里克', count: 2 },
+      { name: 'Louth 劳斯', count: 2 },
+      { name: 'Wicklow 威克洛', count: 1 },
+      { name: 'Tipperary 蒂珀雷', count: 1 },
+      { name: 'Offaly 奥法利', count: 1 },
+      { name: 'Waterford 瓦特福德', count: 1 },
+      { name: 'Sligo 斯莱戈', count: 1 },
+      { name: 'Monaghan 莫纳亨', count: 1 },
+      { name: 'Westmeath 韦斯特米斯', count: 1 },
+      { name: 'Kilkenny 基尔肯尼', count: 1 }
+    ];
+    const maxCount = Math.max(...REGION_COUNTS.map(r => r.count));
+    document.getElementById('regionBars').innerHTML = REGION_COUNTS.map(r => `
+      <div class="bar-row">
+        <div class="bar-name">${r.name}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${r.count / maxCount * 100}%">${r.count}</div></div>
+      </div>`).join('');
+
+    const quizRaw = localStorage.getItem('ireland_school_quiz_result');
+    const quizBox = document.getElementById('quizData');
+    if (quizRaw) {
+      try {
+        const q = JSON.parse(quizRaw);
+        const tags = [];
+        if (q.schoolPref) tags.push('学校偏好: ' + ({ public: '公立', private: '私立', both: '都可以' }[q.schoolPref] || q.schoolPref));
+        if (q.budget) tags.push('预算: ' + q.budget);
+        if (q.english) tags.push('英语: ' + q.english);
+        if (Array.isArray(q.region) && q.region.length) tags.push('地区: ' + q.region.join('、'));
+        if (Array.isArray(q.priorities) && q.priorities.length) tags.push('优先: ' + q.priorities.join(' > '));
+        quizBox.innerHTML = '<div style="margin-bottom:12px;">' + tags.map(t => `<span class="tag">${t}</span>`).join('') + '</div><p style="color:#2e7d32;font-size:14px;">✅ 已检测到问卷数据，可前往"查看推荐结果"查看匹配学校。</p>';
+      } catch (e) { quizBox.innerHTML = '<p style="color:#999;">问卷数据格式异常。</p>'; }
+    } else {
+      quizBox.innerHTML = '<p style="color:#999;">尚未填写问卷。<a href="questionnaire.html" style="color:#1a5f7a;">点击填写 →</a></p>';
+    }
+  </script>
+</body>
+</html>
