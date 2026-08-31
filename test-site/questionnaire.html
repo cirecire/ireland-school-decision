@@ -618,7 +618,28 @@
 
     // ══════════════ 初始化 ══════════════
     initSortable();
-    if (restoreDraft()) document.getElementById('cacheNote').classList.add('show');
+    const restored = restoreDraft();
+
+    // 如果没有草稿但有首页传来的锚点，直接预填锚点（不污染草稿）
+    if (!restored || !Object.keys(JSON.parse(localStorage.getItem(DRAFT_KEY)||'{}')).length) {
+      const draftRaw = localStorage.getItem(DRAFT_KEY);
+      let draft = {};
+      try { draft = JSON.parse(draftRaw || '{}'); } catch(e) {}
+      const incomingAnchor = draft.anchor;
+      if (incomingAnchor) {
+        const anchorInput = document.querySelector(`input[name="anchor"][value="${CSS.escape(incomingAnchor)}"]`);
+        if (anchorInput) anchorInput.checked = true;
+        anchorChanged();
+        // 显示提示
+        const note = document.getElementById('cacheNote');
+        const anchorNames = { school:'🎯 学校优先', region:'🏠 居住优先', same:'🔗 同一区域' };
+        note.textContent = `✅ 您从首页选择了「${anchorNames[incomingAnchor]||incomingAnchor}」，已自动填入。`;
+        note.classList.add('show');
+        localStorage.removeItem(DRAFT_KEY); // 清除一次性锚点，不留脏数据
+      }
+    }
+
+    if (restored) document.getElementById('cacheNote').classList.add('show');
     updateProgress();
   </script>
 </body>
