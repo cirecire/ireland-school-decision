@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>爱尔兰安家决策 - 爱尔兰择校系统</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f5f5; color: #333; line-height: 1.6; }
+    a { color: #4A90E2; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .container { max-width: 900px; margin: 0 auto; padding: 30px 20px; }
+
+    .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: #666; margin-bottom: 16px; }
+    .back-link:hover { color: #4A90E2; text-decoration: none; }
+
+    .page-header { background: linear-gradient(135deg, #1a5276, #2e86c1); color: white; border-radius: 12px 12px 0 0; padding: 32px; margin-bottom: 0; }
+    .page-header h1 { font-size: 26px; margin-bottom: 6px; }
+    .page-header p { opacity: 0.85; font-size: 14px; }
+    .page-header .tag-row { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag { background: rgba(255,255,255,0.2); border-radius: 20px; padding: 4px 12px; font-size: 13px; }
+
+    .card { background: white; border-radius: 0 0 12px 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 28px 32px; margin-bottom: 24px; }
+    .card + .card { border-radius: 12px; margin-top: -12px; }
+
+    .section-title { font-size: 18px; font-weight: 600; color: #1a5276; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #eaf2f8; }
+
+    /* 家庭摘要 */
+    .family-summary { background: #f0f7ff; border: 1px solid #d5e8f7; border-radius: 8px; padding: 16px 20px; margin-bottom: 24px; font-size: 14px; }
+    .family-summary strong { color: #1a5276; }
+    .family-summary .row { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 8px; }
+    .family-summary .item { display: flex; align-items: center; gap: 6px; }
+    .family-summary .item-label { color: #888; font-size: 12px; }
+    .family-summary .item-value { color: #333; font-weight: 500; }
+
+    /* 决策结论 */
+    .decision-box { background: linear-gradient(135deg, #1a5276, #2e86c1); color: white; border-radius: 12px; padding: 24px 28px; margin-bottom: 24px; }
+    .decision-box h2 { font-size: 18px; margin-bottom: 12px; opacity: 0.9; }
+    .decision-box p { font-size: 15px; line-height: 1.7; }
+    .decision-box .highlight { background: rgba(255,255,255,0.2); border-radius: 6px; padding: 12px 16px; margin-top: 12px; font-size: 14px; }
+
+    /* 区域卡片 */
+    .area-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+    .area-card { border: 1px solid #e0e0e0; border-radius: 10px; padding: 18px; transition: all 0.2s; }
+    .area-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); border-color: #4A90E2; }
+    .area-card.selected { border-color: #4A90E2; background: #f0f7ff; }
+    .area-card h3 { font-size: 16px; color: #1a5276; margin-bottom: 6px; }
+    .area-card .area-en { font-size: 12px; color: #888; margin-bottom: 10px; }
+    .area-card .meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+    .area-card .meta-tag { background: #eaf2f8; color: #1a5276; border-radius: 4px; padding: 2px 8px; font-size: 12px; }
+    .area-card .price { font-size: 18px; font-weight: 700; color: #e74c3c; margin-bottom: 6px; }
+    .area-card .price-unit { font-size: 12px; font-weight: 400; color: #888; }
+    .area-card .desc { font-size: 13px; color: #555; margin-bottom: 10px; line-height: 1.6; }
+    .area-card .verdict { font-size: 12px; padding: 4px 10px; border-radius: 4px; display: inline-block; font-weight: 600; }
+    .verdict-great { background: #d5f5e3; color: #1e8449; }
+    .verdict-good { background: #fef9e7; color: #9a7d0a; }
+    .verdict-note { background: #fdebd0; color: #935116; }
+
+    /* 免责声明 */
+    .disclaimer { background: #fff8e1; border: 1px solid #ffe082; border-radius: 8px; padding: 12px 16px; font-size: 12px; color: #795548; margin-top: 24px; }
+
+    /* 底部学校链接 */
+    .school-link { background: white; border: 2px solid #4A90E2; border-radius: 12px; padding: 24px; text-align: center; margin-top: 24px; }
+    .school-link h3 { color: #1a5276; font-size: 18px; margin-bottom: 8px; }
+    .school-link p { color: #666; font-size: 14px; margin-bottom: 16px; }
+    .btn-school { display: inline-block; background: #4A90E2; color: white; padding: 12px 32px; border-radius: 8px; font-size: 16px; font-weight: 600; transition: background 0.2s; }
+    .btn-school:hover { background: #1a5276; text-decoration: none; color: white; }
+
+    .err-box { background: #fdecea; border: 1px solid #e74c3c; border-radius: 8px; padding: 20px; color: #c0392b; }
+    .err-box h3 { margin-bottom: 8px; }
+    .err-box p { font-size: 14px; }
+
+    /* 跳转修改 */
+    .edit-link { text-align: right; margin-top: 8px; }
+    .edit-link a { font-size: 13px; color: #888; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <a class="back-link" href="questionnaire.html">← 返回修改问卷</a>
+
+  <div class="page-header" id="pageHeader">
+    <h1>🏠 爱尔兰安家决策</h1>
+    <p>基于您的家庭情况，匹配最适合的居住区域与房产方案</p>
+    <div class="tag-row" id="headerTags"></div>
+  </div>
+
+  <div class="card">
+    <div id="content">
+      <div class="family-summary" id="familySummary"></div>
+      <div class="decision-box" id="decisionBox"></div>
+      <h3 class="section-title">📍 推荐居住区域</h3>
+      <div class="area-grid" id="areaGrid"></div>
+      <div class="disclaimer">
+        ⚠️ <strong>数据说明：</strong>房价数据基于 CSO（爱尔兰统计局）官方数据及 2024 年公开市场报告，各区域价格仅供参考，实际房价受房屋类型、面积、朝向、年份等因素影响较大。建议您到爱尔兰后实地考察，或联系当地房产经纪人获取最新信息。
+      </div>
+      <div class="school-link" id="schoolLink"></div>
+    </div>
+    <div class="edit-link"><a href="questionnaire.html">← 修改问卷答案</a></div>
+  </div>
+
+</div>
+
+<script>
+// ============ 数据定义 ============
+
+// 居住区域数据（CSO 2024 房价 + 典型房屋 + 周边学校）
+const AREA_DATA = {
+  dublin_center: {
+    name: '都柏林市中心', en: 'Dublin City Centre',
+    county: 'Dublin', tag: '工作机会多', priceRange: '€280k–€550k',
+    priceMid: '€400k', schoolCount: 6,
+    propTypes: '公寓为主（50-90㎡），新房少，老房翻新年份重要',
+    verdict: 'good',
+    verdictText: '适合生活方式',
+    verdictNote: '成本高，预算有限时压力大',
+    commute: '步行/公交可达工作区',
+    goodFor: ['有稳定工作的家庭', '喜欢城市生活的家庭'],
+    notFor: ['预算有限的家庭', '需要独立 house 的家庭'],
+    schools: '圣三一学院附属学区、都柏林城市大学周边'
+  },
+  dublin_south: {
+    name: '都柏林南部（Dundrum / Stillorgan）', en: 'Dundrum / Stillorgan',
+    county: 'Dublin', tag: '华人聚集·学区好', priceRange: '€450k–€900k',
+    priceMid: '€650k', schoolCount: 11,
+    propTypes: '独栋/半独栋 house（100-180㎡），花园洋房为主，新建公寓多',
+    verdict: 'great',
+    verdictText: '综合推荐',
+    verdictNote: '华人超市、中餐厅齐全，生活便利',
+    commute: 'LUAS 绿线到市中心约 20 分钟',
+    goodFor: ['有孩子的家庭', '希望有中文生活圈的家庭', '需要通勤便利的家庭'],
+    notFor: ['预算低于 €40 万的家庭'],
+    schools: '全爱尔兰私校密度最高区域，St Andrew\'s、Alexandra College 等'
+  },
+  dublin_east: {
+    name: '都柏林东部（Blackrock / Dún Laoghaire）', en: 'Blackrock / Dún Laoghaire',
+    county: 'Dublin', tag: '通勤极佳·海景', priceRange: '€480k–€1.1M',
+    priceMid: '€780k', schoolCount: 8,
+    propTypes: '半独栋/独栋 house（90-200㎡），海景公寓，绿化好',
+    verdict: 'great',
+    verdictText: '强烈推荐',
+    verdictNote: 'Blackrock 是爱尔兰公认顶级学区，Dún Laoghaire 有海滩',
+    commute: 'DART 通勤火车到市中心约 15-25 分钟',
+    goodFor: ['冲刺顶级私校（Blackrock College）的家庭', '希望海边生活的家庭'],
+    notFor: ['预算低于 €45 万的家庭'],
+    schools: 'Blackrock College（全爱 top 男校）、St Andrew\'s College、Sutton Park'
+  },
+  dublin_west: {
+    name: '都柏林西部（Terenure / Rathfarnham）', en: 'Terenure / Rathfarnham',
+    county: 'Dublin', tag: '安静社区·性价高', priceRange: '€350k–€700k',
+    priceMid: '€500k', schoolCount: 6,
+    propTypes: '独栋/半独栋 house（90-160㎡），老牌住宅区，社区感强',
+    verdict: 'good',
+    verdictText: '性价比较好',
+    verdictNote: '比南部/东部便宜，安静，安全',
+    commute: '公交到市中心约 25-35 分钟',
+    goodFor: ['预算中等的有孩家庭', '希望安静社区的家庭'],
+    notFor: ['完全依赖公共交通的家庭（公交班次偏少）'],
+    schools: 'Loreto St Stephen\'s Green、Presentation Terenure'
+  },
+  kildare: {
+    name: 'Kildare 郡（Newbridge / Naas）', en: 'Kildare — Newbridge / Naas',
+    county: 'Kildare', tag: '房价洼地·有顶级私校', priceRange: '€180k–€380k',
+    priceMid: '€270k', schoolCount: 2,
+    propTypes: '独栋 house（100-180㎡），大花园，新建开发区多',
+    verdict: 'great',
+    verdictText: '预算友好·有顶级私校',
+    verdictNote: '全爱尔兰私校密度最低郡之一，但有 Clongowes（全寄宿 top 校）',
+    commute: '火车到 Dublin Heuston 约 35-50 分钟，需自驾',
+    goodFor: ['预算有限的家庭', '接受寄宿学校的家庭', '自驾通勤的家庭'],
+    notFor: ['每天需要通勤 Dublin 市中心的家庭'],
+    schools: 'Clongowes Wood College（全寄宿 top 3 男校）、Newbridge College'
+  },
+  meath: {
+    name: 'Meath 郡（Navan / Trim）', en: 'Meath — Navan / Trim',
+    county: 'Meath', tag: 'M3走廊·房价低', priceRange: '€160k–€350k',
+    priceMid: '€240k', schoolCount: 1,
+    propTypes: '独栋 house（100-180㎡），大户型为主，开发小区多',
+    verdict: 'note',
+    verdictText: '房价洼地·有发展空间',
+    verdictNote: 'M3 高速开通后到 Dublin 约 40 分钟通勤',
+    commute: '自驾为主（无直达火车），M3 到 Dublin 约 40 分钟',
+    goodFor: ['预算非常有限的家庭', '自驾通勤的家庭'],
+    notFor: ['完全依赖公共交通的家庭', '需要大量学校可选的家庭'],
+    schools: '学校资源有限，需进一步核实具体私校'
+  },
+  wicklow: {
+    name: 'Wicklow 郡（Greystones / Bray）', en: 'Wicklow — Greystones / Bray',
+    county: 'Wicklow', tag: '山海环境·优质学区', priceRange: '€250k–€550k',
+    priceMid: '€380k', schoolCount: 2,
+    propTypes: '独栋 house + 海岸公寓，山海景观，环境优美',
+    verdict: 'good',
+    verdictText: '环境优美·华人少',
+    verdictNote: '华人极少，融入本地快，但中文生活圈少',
+    commute: '火车到 Dublin Bray/Wicklow 约 50 分钟',
+    goodFor: ['喜欢户外/自然环境的家庭', '希望快速融入爱尔兰本地的家庭'],
+    notFor: ['需要中文生活圈的家庭'],
+    schools: 'St Gerard\'s School（Bray，IB 课程，约 €8,169/年）'
+  },
+  other_city: {
+    name: '其他城市（Cork / Galway / Limerick）', en: 'Other Cities — Cork / Galway / Limerick',
+    county: 'Cork/Galway', tag: '大城市·生活成本低', priceRange: '€120k–€400k',
+    priceMid: '€230k', schoolCount: 5,
+    propTypes: '独栋 house（100-180㎡），大户型，性价比极高',
+    verdict: 'note',
+    verdictText: '生活成本低·学校资源中等',
+    verdictNote: '都柏林以外城市生活成本明显更低，学校质量差异大',
+    commute: '城市内部通勤，无跨城通勤需求',
+    goodFor: ['远程工作的家庭', '预算非常有限的家庭'],
+    notFor: ['冲刺爱尔兰/英国顶尖大学、需大量私校可选的家庭'],
+    schools: 'CBC Cork、Presentation Brothers 等，省钱但私校密度低'
+  }
+};
+
+// 生活方式 → 适合区域推荐权重
+const LIFESTYLE_RECOMMEND = {
+  employed: {
+    label: '有工作（需通勤）',
+    best: ['dublin_center', 'dublin_south', 'dublin_east'],
+    avoid: ['meath'],
+    note: '优先考虑通勤便利，Dublin 南部或东部是黄金选择'
+  },
+  entrepreneur: {
+    label: '做生意',
+    best: ['dublin_center', 'dublin_south', 'dublin_east'],
+    avoid: ['meath', 'kildare'],
+    note: '优先靠近商业区/科技园区，Dublin 南部或市中心适合'
+  },
+  seeking: {
+    label: '打算找工作',
+    best: ['dublin_south', 'dublin_east', 'dublin_center'],
+    avoid: ['meath'],
+    note: '就业机会集中在 Dublin 大都市区，留在 Dublin 及周边'
+  },
+  remote: {
+    label: '远程工作',
+    best: ['dublin_south', 'dublin_west', 'kildare', 'wicklow'],
+    avoid: [],
+    note: '不依赖通勤，可选择性价比更高区域，Kildare / Wicklow 房价更友好'
+  },
+  passive: {
+    label: '被动收入',
+    best: ['dublin_south', 'dublin_west', 'kildare', 'wicklow'],
+    avoid: ['dublin_center'],
+    note: '预算充裕可追求生活质量；预算有限可选 Kildare / Wicklow 高性价比区域'
+  },
+  retiree: {
+    label: '陪伴孩子为主',
+    best: ['dublin_south', 'dublin_east', 'dublin_west', 'kildare'],
+    avoid: ['dublin_center', 'other_city'],
+    note: '优先学区 + 华人生活圈，Dublin 南部是首选；接受寄宿可选 Kildare'
+  }
+};
+
+// ============ 核心逻辑 ============
+
+const RESULT_KEY = 'ireland_school_quiz_result';
+
+function getUserData() {
+  try {
+    const raw = localStorage.getItem(RESULT_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) { return null; }
+}
+
+function buildPage(user) {
+  if (!user) {
+    document.getElementById('content').innerHTML = `
+      <div class="err-box">
+        <h3>⚠️ 未找到问卷数据</h3>
+        <p>请先 <a href="questionnaire.html">填写问卷</a>，我们才能为您生成安家决策建议。</p>
+      </div>`;
+    document.getElementById('schoolLink').style.display = 'none';
+    return;
+  }
+
+  const lifestyle = user.lifestyle || 'passive';
+  const housingIntent = user.housingIntent || 'undecided';
+  const budget = user.housingBudget || 'undecided';
+  const regions = Array.isArray(user.resideRegion) ? user.resideRegion : (user.resideRegion ? [user.resideRegion] : []);
+
+  // 头部标签
+  const lsRec = LIFESTYLE_RECOMMEND[lifestyle] || LIFESTYLE_RECOMMEND.passive;
+  const intentLabel = {buy:'买房', rent:'租房', both:'考虑买房+租房', undecided:'待定'}[housingIntent] || '待定';
+  document.getElementById('headerTags').innerHTML =
+    `<span class="tag">👤 ${lsRec.label}</span>` +
+    `<span class="tag">🏠 ${intentLabel}</span>` +
+    (regions.length ? `<span class="tag">📍 ${regions.map(r => AREA_DATA[r]?.name || r).join(' / ')}</span>` : '');
+
+  // 家庭摘要
+  const englishLabel = {strong:'优秀（B2+）', mid:'中等（B1-B2）', weak:'较弱（A1-A2）'}[user.english] || user.english || '未知';
+  const schoolPrefLabel = {public:'公立', private:'私立', both:'都可以'}[user.schoolPref] || user.schoolPref || '未知';
+  document.getElementById('familySummary').innerHTML = `
+    <strong>📋 家庭画像摘要</strong>
+    <div class="row">
+      <div class="item"><span class="item-label">孩子英语</span><span class="item-value">${englishLabel}</span></div>
+      <div class="item"><span class="item-label">学校偏好</span><span class="item-value">${schoolPrefLabel}</span></div>
+      <div class="item"><span class="item-label">居住意向</span><span class="item-value">${intentLabel}</span></div>
+      ${budget !== 'undecided' ? `<div class="item"><span class="item-label">购房预算</span><span class="item-value">€${budget === '300k' ? '30万以内' : budget === '500k' ? '30-50万' : budget === '700k' ? '50-70万' : budget === '1m' ? '70-100万' : budget === '1m+' ? '100万+' : budget}</span></div>` : ''}
+    </div>`;
+
+  // 决策结论
+  document.getElementById('decisionBox').innerHTML = `
+    <h2>💡 核心决策建议</h2>
+    <p>${lsRec.note}</p>
+    ${regions.length > 0 ? `<div class="highlight"><strong>您选定的区域：</strong>${regions.map(r => AREA_DATA[r]?.name || r).join('、')}。下方卡片中这些区域会优先高亮显示。</div>` : ''}
+    ${housingIntent === 'rent' ? `<div class="highlight">🏡 租房建议：初到爱尔兰建议先租房（Rent）3-6 个月，熟悉区域后再决定是否买房（Buy）。都柏林南部（Dundrum）和 Kildare（Newbridge）是租金性价比较好的区域。</div>` : ''}
+    ${housingIntent === 'buy' && budget === '300k' ? `<div class="highlight">🏠 €30 万预算买房：Kildare 郡（Newbridge / Naas）是唯一现实选择，Dublin 及周边 €30 万以内基本无法购得好 house。</div>` : ''}
+    ${housingIntent === 'buy' && budget === '500k' ? `<div class="highlight">🏠 €30-50 万预算：Dublin 西部（Terenure）或 Kildare 是主要选择，南部 Dundrum 边缘可能出现惊喜。</div>` : ''}`;
+
+  // 区域卡片
+  const selectedRegions = new Set(regions);
+  const recSet = new Set(lsRec.best || []);
+
+  // 按推荐顺序排序：用户选中 > 推荐区域 > 其他
+  const sortOrder = (a, b) => {
+    const aSel = selectedRegions.has(a) ? 0 : recSet.has(a) ? 1 : 2;
+    const bSel = selectedRegions.has(b) ? 0 : recSet.has(b) ? 1 : 2;
+    if (aSel !== bSel) return aSel - bSel;
+    return AREA_DATA[a].priceMid.localeCompare(AREA_DATA[b].priceMid);
+  };
+
+  const sortedKeys = Object.keys(AREA_DATA).sort(sortOrder);
+
+  let gridHTML = '';
+  for (const key of sortedKeys) {
+    const area = AREA_DATA[key];
+    const isSelected = selectedRegions.has(key);
+    const isRecommended = recSet.has(key);
+    const verdictClass = area.verdict === 'great' ? 'verdict-great' : area.verdict === 'good' ? 'verdict-good' : 'verdict-note';
+    gridHTML += `
+    <div class="area-card${isSelected ? ' selected' : ''}">
+      <h3>${area.name}</h3>
+      <div class="area-en">${area.en}</div>
+      <div class="meta">
+        <span class="meta-tag">🏠 ${area.schoolCount} 所周边私校</span>
+        ${isSelected ? '<span class="meta-tag" style="background:#d5f5e3;color:#1e8449;">✓ 您选定的区域</span>' : ''}
+        ${isRecommended ? '<span class="meta-tag" style="background:#fef9e7;color:#9a7d0a;">★ 推荐</span>' : ''}
+      </div>
+      <div class="price">${area.priceRange}<span class="price-unit"> 中位价参考</span></div>
+      <div class="desc">${area.propTypes}</div>
+      <div style="font-size:13px;color:#555;margin-bottom:10px;">
+        <strong>🏢 通勤：</strong>${area.commute}<br>
+        <strong>✅ 适合：</strong>${area.goodFor.join('、')}<br>
+        <strong>⚠️ 注意：</strong>${area.notFor.join('、')}
+      </div>
+      <span class="verdict ${verdictClass}">${area.verdictText}</span>
+      ${area.verdictNote ? `<span style="font-size:12px;color:#888;margin-left:6px;">${area.verdictNote}</span>` : ''}
+    </div>`;
+  }
+  document.getElementById('areaGrid').innerHTML = gridHTML;
+
+  // 底部学校链接
+  document.getElementById('schoolLink').innerHTML = `
+    <h3>📚 查看推荐学校</h3>
+    <p>根据您的地区偏好和预算，为您匹配最合适的爱尔兰私立/公立学校</p>
+    <a class="btn-school" href="results.html">查看学校推荐 →</a>`;
+}
+
+// 启动
+const userData = getUserData();
+buildPage(userData);
+</script>
+</body>
+</html>

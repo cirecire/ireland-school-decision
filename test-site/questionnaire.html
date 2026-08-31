@@ -84,6 +84,7 @@
         <div class="progress-bar">
           <div class="progress-fill" id="progressFill" style="width: 0%"></div>
         </div>
+        <div id="progressLabel" style="font-size:13px;color:#666;margin-top:8px;text-align:right;">Part A · 孩子情况</div>
       </div>
 
       <div id="cacheNote" class="cache-note">✅ 已为您恢复上次填写的内容，可直接修改或继续</div>
@@ -307,10 +308,152 @@
           </div>
         </div>
 
+        <div class="part" id="partD" style="display: none;">
+          <h2 style="font-size: 20px; margin-bottom: 20px; color: #4A90E2;">Part D: 家庭情况</h2>
+          <p style="color:#666; font-size:14px; margin:0 0 18px; line-height:1.6;">爱尔兰落地后，家里以什么方式生活？这决定了我们推荐哪个区域、是否需要考虑通勤等因素。</p>
+
+          <div class="question">
+            <label class="question-label">家长在爱尔兰的生活方式<span class="required">*</span></label>
+            <div class="question-desc">请选择最接近您家情况的描述</div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="lifestyle" value="employed" required>
+                <div><strong>有工作</strong><br><span style="font-size:13px;color:#666;">家长已在爱尔兰有工作或即将入职（需要考虑通勤）</span></div>
+              </label>
+              <label class="option">
+                <input type="radio" name="lifestyle" value="entrepreneur">
+                <div><strong>做生意</strong><br><span style="font-size:13px;color:#666;">家长计划在爱尔兰创业或经商（需要靠近商业区）</span></div>
+              </label>
+              <label class="option">
+                <input type="radio" name="lifestyle" value="seeking">
+                <div><strong>打算找工作</strong><br><span style="font-size:13px;color:#666;">近期计划在爱尔兰找工作（需要就业机会较多的区域）</span></div>
+              </label>
+              <label class="option">
+                <input type="radio" name="lifestyle" value="remote">
+                <div><strong>远程工作 / 自由职业</strong><br><span style="font-size:13px;color:#666;">家长在国内已有远程工作，不依赖爱尔兰本地就业</span></div>
+              </label>
+              <label class="option">
+                <input type="radio" name="lifestyle" value="passive">
+                <div><strong>被动收入</strong><br><span style="font-size:13px;color:#666;">以租金、股票等被动收入为主，不打算在爱尔兰工作</span></div>
+              </label>
+              <label class="option">
+                <input type="radio" name="lifestyle" value="retiree">
+                <div><strong>陪伴孩子为主</strong><br><span style="font-size:13px;color:#666;">主要目的是陪孩子读书，不考虑在爱尔兰工作</span></div>
+              </label>
+            </div>
+            <div class="error-msg" id="lifestyleError">请选择家长在爱尔兰的生活方式</div>
+          </div>
+
+          <div class="question">
+            <label class="question-label">购房 / 租房意向<span class="required">*</span></label>
+            <div class="question-desc">您家计划在爱尔兰买房还是租房？</div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="housingIntent" value="buy" required onchange="toggleHousingBudget(); saveDraft();">
+                <div><strong>买房</strong><br><span style="font-size:13px;color:#666;">计划在爱尔兰购置房产</span></div>
+              </label>
+              <label class="option">
+                <input type="radio" name="housingIntent" value="rent" onchange="toggleHousingBudget(); saveDraft();">
+                <div><strong>租房</strong><br><span style="font-size:13px;color:#666;">先租房过渡，视情况再决定是否买房</span></div>
+              </label>
+              <label class="option">
+                <input type="radio" name="housingIntent" value="both" onchange="toggleHousingBudget(); saveDraft();">
+                <div><strong>两者都在考虑</strong><br><span style="font-size:13px;color:#666;">尚未确定，取决于找到的区域和价格</span></div>
+              </label>
+              <label class="option">
+                <input type="radio" name="housingIntent" value="undecided" onchange="toggleHousingBudget(); saveDraft();">
+                <div><strong>待定</strong><br><span style="font-size:13px;color:#666;">还没想好，需要更多信息后再决定</span></div>
+              </label>
+            </div>
+            <div class="error-msg" id="housingIntentError">请选择购房或租房意向</div>
+          </div>
+
+          <div id="housingBudgetBlock" style="display:none;" class="question">
+            <label class="question-label" id="housingBudgetLabel">购房预算（€）</label>
+            <div class="question-desc">预计总房价范围</div>
+            <div class="options">
+              <label class="option"><input type="radio" name="housingBudget" value="300k"> <strong>€30万以内</strong> <span style="font-size:13px;color:#666;">（高性价比区域，如 Kildare / Meath）</span></label>
+              <label class="option"><input type="radio" name="housingBudget" value="500k"> <strong>€30-50万</strong> <span style="font-size:13px;color:#666;">（中档区域，如 Dundrum / Blackrock）</span></label>
+              <label class="option"><input type="radio" name="housingBudget" value="700k"> <strong>€50-70万</strong> <span style="font-size:13px;color:#666;">（优质学区，如 Dublin 4 / Dún Laoghaire）</span></label>
+              <label class="option"><input type="radio" name="housingBudget" value="1m"> <strong>€70-100万</strong> <span style="font-size:13px;color:#666;">（高端学区，如 Blackrock / Dalkey）</span></label>
+              <label class="option"><input type="radio" name="housingBudget" value="1m+"> <strong>€100万以上</strong> <span style="font-size:13px;color:#666;">（顶级区域，预算宽裕）</span></label>
+              <label class="option"><input type="radio" name="housingBudget" value="undecided"> <strong>待定 / 未确定预算</strong></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="part" id="partE" style="display: none;">
+          <h2 style="font-size: 20px; margin-bottom: 20px; color: #4A90E2;">Part E: 居住偏好</h2>
+          <p style="color:#666; font-size:14px; margin:0 0 18px; line-height:1.6;">最后，请告诉我们您对爱尔兰居住区域的偏好。这将直接影响学校推荐与安家建议的关联度。</p>
+
+          <div class="question">
+            <label class="question-label">希望住在哪个区域<span class="required">*</span></label>
+            <div class="question-desc">（可多选）选「都柏林周边」时，学校筛选会同时限定通勤范围内学校</div>
+            <div class="options" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+              <label class="option" style="flex-direction:column;gap:4px;">
+                <input type="checkbox" name="resideRegion" value="dublin_center">
+                <div><strong>🏙️ 都柏林市中心</strong><br><span style="font-size:12px;color:#666;">工作机会多，生活便利，但房价高、稍拥挤</span></div>
+              </label>
+              <label class="option" style="flex-direction:column;gap:4px;">
+                <input type="checkbox" name="resideRegion" value="dublin_south">
+                <div><strong>🌿 都柏林南部</strong><br><span style="font-size:12px;color:#666;">Dundrum / Stillorgan 一带，华人较多，学区好</span></div>
+              </label>
+              <label class="option" style="flex-direction:column;gap:4px;">
+                <input type="checkbox" name="resideRegion" value="dublin_east">
+                <div><strong>🌊 都柏林东部</strong><br><span style="font-size:12px;color:#666;">Blackrock / Dún Laoghaire，海景区域，通勤便利</span></div>
+              </label>
+              <label class="option" style="flex-direction:column;gap:4px;">
+                <input type="checkbox" name="resideRegion" value="dublin_west">
+                <div><strong>🏘️ 都柏林西部</strong><br><span style="font-size:12px;color:#666;">如 Terenure / Rathfarnham，安静住宅区</span></div>
+              </label>
+              <label class="option" style="flex-direction:column;gap:4px;">
+                <input type="checkbox" name="resideRegion" value="kildare">
+                <div><strong>🌾 Kildare 郡</strong><br><span style="font-size:12px;color:#666;">Newbridge / Naas，房价低，有 Clongowes / Newbridge College</span></div>
+              </label>
+              <label class="option" style="flex-direction:column;gap:4px;">
+                <input type="checkbox" name="resideRegion" value="meath">
+                <div><strong>🌳 Meath 郡</strong><br><span style="font-size:12px;color:#666;">Navan / Trim，房价低，通都柏林 M3 走廊</span></div>
+              </label>
+              <label class="option" style="flex-direction:column;gap:4px;">
+                <input type="checkbox" name="resideRegion" value="wicklow">
+                <div><strong>⛰️ Wicklow 郡</strong><br><span style="font-size:12px;color:#666;">Greystones / Bray，山海之间，环境好，学区有 St Gerard's</span></div>
+              </label>
+              <label class="option" style="flex-direction:column;gap:4px;">
+                <input type="checkbox" name="resideRegion" value="other_city">
+                <div><strong>🏙️ 其他城市</strong><br><span style="font-size:12px;color:#666;">Cork / Galway / Limerick 等大城市</span></div>
+              </label>
+            </div>
+            <div class="error-msg" id="resideRegionError">请至少选择一个居住区域</div>
+          </div>
+
+          <div class="question">
+            <label class="question-label">以下因素对您选居住区域有多重要？</label>
+            <div class="question-desc">帮助我们判断您更看重便利性、生活成本还是环境</div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="residePriority" value="cost_focus">
+                <div><strong>生活成本优先</strong><br><span style="font-size:13px;color:#666;">希望房租/房价尽量低，不在乎稍偏远</span></div>
+              </label>
+              <label class="option">
+                <input type="radio" name="residePriority" value="balance">
+                <div><strong>性价比优先</strong><br><span style="font-size:13px;color:#666;">希望在成本和便利性之间找到平衡</span></div>
+              </label>
+              <label class="option">
+                <input type="radio" name="residePriority" value="convenience">
+                <div><strong>便利性优先</strong><br><span style="font-size:13px;color:#666;">希望靠近学校、超市、医疗机构等</span></div>
+              </label>
+              <label class="option">
+                <input type="radio" name="residePriority" value="environment">
+                <div><strong>环境质量优先</strong><br><span style="font-size:13px;color:#666;">希望安静、安全、社区氛围好</span></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
         <div class="btn-group">
           <button type="button" class="btn btn-secondary" id="btnPrev" style="display: none;" onclick="prevPart()">← 上一步</button>
           <button type="button" class="btn btn-primary" id="btnNext" onclick="nextPart()">下一步 →</button>
-          <button type="submit" class="btn btn-primary" id="btnSubmit" style="display: none;">查看推荐学校</button>
+          <button type="submit" class="btn btn-primary" id="btnSubmit" style="display: none;">查看安家 & 择校推荐 →</button>
         </div>
       </form>
     </div>
@@ -318,18 +461,30 @@
 
   <script>
     let currentPart = 1;
-    const totalParts = 3;
+    const totalParts = 5;
     const DRAFT_KEY = 'ireland_quiz_draft';
     const RESULT_KEY = 'ireland_school_quiz_result';
+    const PART_IDS = 'ABCDE';
 
     function updateProgress() {
       document.getElementById('progressFill').style.width = (currentPart / totalParts * 100) + '%';
+      const partLabels = {1:'Part A · 孩子情况', 2:'Part B · 学校偏好', 3:'Part C · 核心诉求', 4:'Part D · 家庭情况', 5:'Part E · 居住偏好'};
+      document.getElementById('progressLabel').textContent = partLabels[currentPart] || ('Part ' + currentPart + ' / ' + totalParts);
     }
 
     function toggleConditional(id, value) {
       const el = document.getElementById(id);
       if (value === 'private' || value === 'both') el.classList.add('show');
       else el.classList.remove('show');
+    }
+
+    function toggleHousingBudget() {
+      const sel = document.querySelector('input[name="housingIntent"]:checked');
+      const block = document.getElementById('housingBudgetBlock');
+      if (block) {
+        if (sel && sel.value !== 'rent' && sel.value !== 'undecided') block.style.display = 'block';
+        else block.style.display = 'none';
+      }
     }
 
     // —— 缓存：实时保存草稿 ——
@@ -377,6 +532,8 @@
       if (data.schoolPref === 'private' || data.schoolPref === 'both') {
         document.getElementById('privateQ').classList.add('show');
       }
+      // 恢复 Part D 条件显示
+      toggleHousingBudget();
       // 恢复排序
       if (Array.isArray(data.priorities) && data.priorities.length === 5) {
         const list = document.getElementById('priorityList');
@@ -425,7 +582,7 @@
     // —— 校验 ——
     function validateCurrentPart() {
       document.querySelectorAll('.error-msg').forEach(e => e.classList.remove('show'));
-      const partId = 'ABC'[currentPart - 1];
+      const partId = PART_IDS[currentPart - 1];
       const part = document.getElementById('part' + partId);
       let valid = true;
 
@@ -453,6 +610,16 @@
         const rc = document.querySelectorAll('input[name="region"]:checked').length;
         if (rc === 0) { valid = false; document.getElementById('regionError').classList.add('show'); }
       }
+      if (partId === 'D') {
+        const lc = document.querySelectorAll('input[name="lifestyle"]:checked').length;
+        if (lc === 0) { valid = false; document.getElementById('lifestyleError').classList.add('show'); }
+        const hc = document.querySelectorAll('input[name="housingIntent"]:checked').length;
+        if (hc === 0) { valid = false; document.getElementById('housingIntentError').classList.add('show'); }
+      }
+      if (partId === 'E') {
+        const rc = document.querySelectorAll('input[name="resideRegion"]:checked').length;
+        if (rc === 0) { valid = false; document.getElementById('resideRegionError').classList.add('show'); }
+      }
 
       if (!valid) alert('请完成所有必填项（标 * 的为必填）');
       return valid;
@@ -461,9 +628,9 @@
     function nextPart() {
       if (!validateCurrentPart()) return;
       if (currentPart < totalParts) {
-        document.getElementById('part' + 'ABC'[currentPart - 1]).style.display = 'none';
+        document.getElementById('part' + PART_IDS[currentPart - 1]).style.display = 'none';
         currentPart++;
-        document.getElementById('part' + 'ABC'[currentPart - 1]).style.display = 'block';
+        document.getElementById('part' + PART_IDS[currentPart - 1]).style.display = 'block';
         document.getElementById('btnPrev').style.display = 'block';
         if (currentPart === totalParts) {
           document.getElementById('btnNext').style.display = 'none';
@@ -476,9 +643,9 @@
 
     function prevPart() {
       if (currentPart > 1) {
-        document.getElementById('part' + 'ABC'[currentPart - 1]).style.display = 'none';
+        document.getElementById('part' + PART_IDS[currentPart - 1]).style.display = 'none';
         currentPart--;
-        document.getElementById('part' + 'ABC'[currentPart - 1]).style.display = 'block';
+        document.getElementById('part' + PART_IDS[currentPart - 1]).style.display = 'block';
         document.getElementById('btnNext').style.display = 'block';
         document.getElementById('btnSubmit').style.display = 'none';
         if (currentPart === 1) document.getElementById('btnPrev').style.display = 'none';
@@ -496,7 +663,7 @@
         localStorage.setItem(RESULT_KEY, JSON.stringify(data));
         localStorage.removeItem(DRAFT_KEY); // 正式提交后清草稿，避免下次进入误恢复
       } catch (e) {}
-      window.location.href = 'results.html';
+      window.location.href = 'housing.html';
     });
 
     // —— 初始化 ——

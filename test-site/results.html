@@ -81,6 +81,16 @@
       <span>想调整答案？</span>
       <a href="questionnaire.html">↩ 返回问卷修改（已填内容会自动保留）</a>
     </div>
+
+    <div id="housingBanner" style="background: linear-gradient(135deg, #1a5276, #2e86c1); border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; color: white; display: none;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+        <div>
+          <div style="font-size:18px; font-weight:600; margin-bottom:4px;">🏠 安家决策</div>
+          <div id="housingBannerSub" style="font-size:13px; opacity:0.85;"></div>
+        </div>
+        <a href="housing.html" style="background:white; color:#1a5276; padding:10px 20px; border-radius:8px; font-weight:600; font-size:14px; white-space:nowrap; text-decoration:none;">查看安家建议 →</a>
+      </div>
+    </div>
     
     <div id="userSummary" class="user-summary">
       <h3>📋 您的条件</h3>
@@ -434,6 +444,21 @@
       if (!userData.boarding) userData.boarding = 'flex';
       if (!userData.budget) userData.budget = 'undecided';
       if (!userData.schoolType) userData.schoolType = userData.schoolPref || 'both';
+
+      // 安家横幅：如果问卷包含居住区域数据，显示 housing.html 入口
+      if (userData.lifestyle || userData.housingIntent || userData.resideRegion) {
+        const banner = document.getElementById('housingBanner');
+        const sub = document.getElementById('housingBannerSub');
+        const lifestyleMap = {employed:'有工作', entrepreneur:'做生意', seeking:'打算找工作', remote:'远程工作', passive:'被动收入', retiree:'陪伴孩子为主'};
+        const intentMap = {buy:'计划买房', rent:'计划租房', both:'考虑买房+租房', undecided:'待定'};
+        if (banner && sub) {
+          banner.style.display = 'block';
+          const ls = lifestyleMap[userData.lifestyle] || '待定';
+          const hi = intentMap[userData.housingIntent] || '';
+          const regions = Array.isArray(userData.resideRegion) ? userData.resideRegion.join('、') : (userData.resideRegion || '');
+          sub.textContent = '生活方式：' + ls + (hi ? ' | 居住意向：' + hi : '') + (regions ? ' | 区域：' + regions : '');
+        }
+      }
 
       // 调试输出：把 userData 原始值打到页面底部（仅 debug 期保留）
       const dbg = document.createElement('pre');
