@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>爱尔兰择校问卷</title>
+  <title>爱尔兰中学择校需求问卷</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f5f5; color: #333; line-height: 1.6; }
@@ -32,7 +32,6 @@
     .option-text { flex: 1; }
     .option-title { font-weight: 500; }
     .option-note { font-size: 13px; color: #666; margin-top: 4px; }
-    .option-en { font-size: 12px; color: #999; font-style: italic; margin-top: 2px; }
 
     .conditional { display: none; padding-left: 20px; border-left: 3px solid #4A90E2; margin-top: 20px; }
     .conditional.show { display: block; }
@@ -47,6 +46,9 @@
 
     .error-msg { color: #E74C3C; font-size: 13px; margin-top: 8px; display: none; }
     .error-msg.show { display: block; }
+
+    .cache-note { background:#e8f5e9; color:#2e7d32; font-size:13px; padding:10px 14px; border-radius:6px; margin-bottom:16px; display:none; }
+    .cache-note.show { display:block; }
 
     /* 排序列表 */
     .sortable-list { list-style: none; padding: 0; margin: 12px 0 0; }
@@ -63,23 +65,17 @@
     .drag-handle { color: #aaa; font-size: 18px; }
     .sort-hint { font-size: 13px; color: #4A90E2; margin-bottom: 6px; }
 
-    /* 结果页 */
-    .result-card { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 30px; margin-bottom: 20px; }
-    .result-title { font-size: 20px; font-weight: 600; color: #4A90E2; margin-bottom: 20px; }
-    .result-item { padding: 12px 0; border-bottom: 1px solid #eee; }
-    .result-item:last-child { border-bottom: none; }
-    .result-key { font-weight: 500; color: #666; }
-    .result-value { margin-top: 4px; }
-
-    .cache-note { background:#e8f5e9; color:#2e7d32; font-size:13px; padding:10px 14px; border-radius:6px; margin-bottom:16px; display:none; }
-    .cache-note.show { display:block; }
+    /* 矛盾提示 */
+    .contradiction-box { background: #fff3f3; border: 1px solid #E74C3C; border-radius: 8px; padding: 14px 16px; margin-top: 12px; color: #c0392b; font-size: 14px; line-height: 1.6; display: none; }
+    .contradiction-box.show { display: block; }
+    .contradiction-box .contrad-title { font-weight: 600; margin-bottom: 4px; }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="quiz-card">
       <div class="quiz-header">
-        <div class="quiz-title">爱尔兰择校需求问卷</div>
+        <div class="quiz-title">爱尔兰中学择校需求问卷</div>
         <div class="quiz-subtitle">请根据实际情况填写，我们将为您推荐最适合的学校</div>
         <div class="progress-bar">
           <div class="progress-fill" id="progressFill" style="width: 0%"></div>
@@ -90,22 +86,23 @@
       <div id="cacheNote" class="cache-note">✅ 已为您恢复上次填写的内容，可直接修改或继续</div>
 
       <form id="quizForm" novalidate>
-        <!-- Part A: 孩子画像 -->
+
+        <!-- ══════════════ Part A：孩子情况 ══════════════ -->
         <div class="part" id="partA">
-          <h2 style="font-size: 20px; margin-bottom: 20px; color: #4A90E2;">Part A: 孩子画像</h2>
+          <h2 style="font-size: 20px; margin-bottom: 24px; color: #4A90E2;">Part A：孩子情况</h2>
 
           <div class="question">
             <label class="question-label">孩子目前所在城市<span class="required">*</span></label>
             <select name="city" required onchange="saveDraft()">
               <option value="">请选择</option>
-              <option value="beijing">北京 Beijing</option>
-              <option value="shanghai">上海 Shanghai</option>
-              <option value="guangzhou">广州 Guangzhou</option>
-              <option value="shenzhen">深圳 Shenzhen</option>
-              <option value="hangzhou">杭州 Hangzhou</option>
-              <option value="chengdu">成都 Chengdu</option>
-              <option value="nanjing">南京 Nanjing</option>
-              <option value="wuhan">武汉 Wuhan</option>
+              <option value="beijing">北京</option>
+              <option value="shanghai">上海</option>
+              <option value="guangzhou">广州</option>
+              <option value="shenzhen">深圳</option>
+              <option value="hangzhou">杭州</option>
+              <option value="chengdu">成都</option>
+              <option value="nanjing">南京</option>
+              <option value="wuhan">武汉</option>
               <option value="other">其他城市</option>
             </select>
           </div>
@@ -118,7 +115,7 @@
               <label class="option"><input type="radio" name="schoolType" value="key" required onchange="saveDraft()">
                 <div class="option-text"><div class="option-title">重点学校</div><div class="option-note">省/市重点学校，竞争激烈</div></div></label>
               <label class="option"><input type="radio" name="schoolType" value="international" required onchange="saveDraft()">
-                <div class="option-text"><div class="option-title">国际学校</div><div class="option-note">IB/AP/A-level 等国际课程</div></div></label>
+                <div class="option-text"><div class="option-title">国际学校</div><div class="option-note">IB / AP / A-level 等国际课程</div></div></label>
             </div>
           </div>
 
@@ -130,7 +127,7 @@
               <label class="option"><input type="radio" name="rank" value="top30" required onchange="saveDraft()">
                 <div class="option-text"><div class="option-title">前 30%</div><div class="option-note">中上学生</div></div></label>
               <label class="option"><input type="radio" name="rank" value="middle" required onchange="saveDraft()">
-                <div class="option-text"><div class="option-title">前 30%-70%</div><div class="option-note">中等学生</div></div></label>
+                <div class="option-text"><div class="option-title">前 30% - 70%</div><div class="option-note">中等学生</div></div></label>
               <label class="option"><input type="radio" name="rank" value="bottom" required onchange="saveDraft()">
                 <div class="option-text"><div class="option-title">后 30%</div><div class="option-note">需要额外支持</div></div></label>
             </div>
@@ -138,116 +135,128 @@
 
           <div class="question">
             <label class="question-label">孩子的英语水平<span class="required">*</span></label>
-            <div class="question-desc">请选择标化考试成绩或自评</div>
+            <div class="question-desc">请选择标化考试成绩，或无成绩时参考描述自评</div>
             <select name="english" required onchange="saveDraft()">
               <option value="">请选择</option>
               <optgroup label="标化考试成绩">
                 <option value="c1">雅思 6.5+ / 托福 100+ / CAE / CPE</option>
                 <option value="b2">雅思 6.0 / 托福 80-99 / FCE</option>
                 <option value="b1">雅思 5.5 / 托福 60-79 / PET</option>
-                <option value="weak">雅思 5.0 / 托福 &lt;60 / KET</option>
+                <option value="weak">雅思 5.0 以下 / 托福 &lt;60</option>
               </optgroup>
               <optgroup label="自评（无标化成绩）">
-                <option value="strong">流利（可全英文上课）</option>
-                <option value="mid">中等（需适应期）</option>
-                <option value="weakself">较弱（需语言支持）</option>
+                <option value="strong">流利，可全英文上课</option>
+                <option value="mid">中等，需 3-6 个月适应期</option>
+                <option value="weakself">较弱，需语言强化支持</option>
               </optgroup>
             </select>
           </div>
-
-          <div class="question">
-            <label class="question-label">孩子的性格特点（可多选）<span class="required">*</span></label>
-            <div class="options">
-              <label class="option"><input type="checkbox" name="personality" value="independent" onchange="saveDraft()">
-                <div class="option-text"><div class="option-title">独立型</div><div class="option-note">能自己管理学习和生活</div></div></label>
-              <label class="option"><input type="checkbox" name="personality" value="sensitive" onchange="saveDraft()">
-                <div class="option-text"><div class="option-title">敏感型</div><div class="option-note">需要更多关注和支持</div></div></label>
-              <label class="option"><input type="checkbox" name="personality" value="social" onchange="saveDraft()">
-                <div class="option-text"><div class="option-title">社交型</div><div class="option-note">喜欢交朋友，适应快</div></div></label>
-              <label class="option"><input type="checkbox" name="personality" value="quiet" onchange="saveDraft()">
-                <div class="option-text"><div class="option-title">内向型</div><div class="option-note">需要时间适应新环境</div></div></label>
-            </div>
-            <div class="error-msg" id="personalityError">请至少选择一项性格特点</div>
-          </div>
         </div>
 
-        <!-- Part B: 家庭条件 -->
+        <!-- ══════════════ Part B：家庭与决策 ══════════════ -->
         <div class="part" id="partB" style="display: none;">
-          <h2 style="font-size: 20px; margin-bottom: 12px; color: #4A90E2;">Part B: 决策锚点</h2>
-          <p style="color:#666; font-size:14px; margin:0 0 20px; line-height:1.6;">这一步决定接下来推荐的核心逻辑：<strong style="color:#4A90E2;">先定哪个，另一个就跟哪个。</strong></p>
+          <h2 style="font-size: 20px; margin-bottom: 24px; color: #4A90E2;">Part B：家庭情况与决策方式</h2>
 
+          <!-- 家长同行情况 -->
           <div class="question">
-            <label class="question-label">您家决策的主锚是？<span class="required">*</span></label>
-            <div class="question-desc">主锚决定推荐方向，另一项自动跟随</div>
+            <label class="question-label">家长是否同去爱尔兰？<span class="required">*</span></label>
+            <div class="options">
+              <label class="option"><input type="radio" name="parentGo" value="both" required onchange="saveDraft()">
+                <div class="option-text"><div class="option-title">父母双方都去</div><div class="option-note">全家定居爱尔兰</div></div></label>
+              <label class="option"><input type="radio" name="parentGo" value="one" required onchange="saveDraft()">
+                <div class="option-text"><div class="option-title">一方先行，另一方后去</div><div class="option-note">父母一方先去安顿，再接另一方</div></div></label>
+              <label class="option"><input type="radio" name="parentGo" value="none" required onchange="saveDraft()">
+                <div class="option-text"><div class="option-title">孩子单独去（家长不去）</div><div class="option-note">需安排监护人/寄宿家庭</div></div></label>
+            </div>
+          </div>
+
+          <!-- 家长在当地打算 -->
+          <div class="question">
+            <label class="question-label">家长在当地的主要打算？<span class="required">*</span></label>
+            <div class="options">
+              <label class="option"><input type="radio" name="parentWork" value="work" required onchange="saveDraft()">
+                <div class="option-text"><div class="option-title">在当地找工作 / 上班</div></div></label>
+              <label class="option"><input type="radio" name="parentWork" value="remote" required onchange="saveDraft()">
+                <div class="option-text"><div class="option-title">远程工作（国内公司/自由职业）</div><div class="option-note">地点灵活，不依赖爱尔兰就业市场</div></div></label>
+              <label class="option"><input type="radio" name="parentWork" value="business" required onchange="saveDraft()">
+                <div class="option-text"><div class="option-title">做生意 / 投资 / 房产出租</div><div class="option-note">不依赖固定雇主</div></div></label>
+              <label class="option"><input type="radio" name="parentWork" value="none" required onchange="saveDraft()">
+                <div class="option-text"><div class="option-title">不打算工作（陪伴/退休/其他）</div></div></label>
+            </div>
+          </div>
+
+          <!-- 住宿方式 -->
+          <div class="question">
+            <label class="question-label">孩子的住宿方式<span class="required">*</span></label>
+            <div class="options">
+              <label class="option"><input type="radio" name="boarding" value="day" required onchange="saveDraft(); checkContradiction()">
+                <div class="option-text"><div class="option-title">走读（家长陪读，孩子每天回家）</div><div class="option-note">需家长长期在爱尔兰</div></div></label>
+              <label class="option"><input type="radio" name="boarding" value="boarding" required onchange="saveDraft(); checkContradiction()">
+                <div class="option-text"><div class="option-title">寄宿（学校宿舍）</div><div class="option-note">全寄宿或周寄宿，无需家长陪读</div></div></label>
+              <label class="option"><input type="radio" name="boarding" value="homestay" required onchange="saveDraft(); checkContradiction()">
+                <div class="option-text"><div class="option-title">寄宿家庭</div><div class="option-note">学校安排当地家庭，家长可不在爱尔兰</div></div></label>
+              <label class="option"><input type="radio" name="boarding" value="flex" required onchange="saveDraft(); checkContradiction()">
+                <div class="option-text"><div class="option-title">都可以</div></div></label>
+            </div>
+          </div>
+
+          <!-- 预算 -->
+          <div class="question">
+            <label class="question-label">学费预算（每年，欧元）<span class="required">*</span></label>
+            <div class="options">
+              <label class="option"><input type="radio" name="budget" value="5k" required onchange="saveDraft(); checkContradiction()">
+                <div class="option-text"><div class="option-title">≤ €5,000</div><div class="option-note">约 ¥4万/年，公立学校区间</div></div></label>
+              <label class="option"><input type="radio" name="budget" value="10k" required onchange="saveDraft(); checkContradiction()">
+                <div class="option-text"><div class="option-title">€5,000 - 10,000</div><div class="option-note">约 ¥4-8万/年</div></div></label>
+              <label class="option"><input type="radio" name="budget" value="15k" required onchange="saveDraft(); checkContradiction()">
+                <div class="option-text"><div class="option-title">€10,000 - 15,000</div><div class="option-note">约 ¥8-12万/年</div></div></label>
+              <label class="option"><input type="radio" name="budget" value="20k" required onchange="saveDraft(); checkContradiction()">
+                <div class="option-text"><div class="option-title">€15,000 - 20,000</div><div class="option-note">约 ¥12-16万/年</div></div></label>
+              <label class="option"><input type="radio" name="budget" value="25k" required onchange="saveDraft(); checkContradiction()">
+                <div class="option-text"><div class="option-title">€20,000 - 25,000</div><div class="option-note">约 ¥16-20万/年</div></div></label>
+              <label class="option"><input type="radio" name="budget" value="unlimited" required onchange="saveDraft(); checkContradiction()">
+                <div class="option-text"><div class="option-title">€25,000+</div></div></label>
+            </div>
+          </div>
+
+          <hr style="border: none; border-top: 1px solid #eee; margin: 32px 0;">
+
+          <!-- 决策锚点 -->
+          <div class="question">
+            <label class="question-label">您家的决策主锚是？<span class="required">*</span></label>
+            <div class="question-desc">主锚决定推荐方向：先定哪个，另一个就跟哪个</div>
             <div class="options">
               <label class="option">
-                <input type="radio" name="anchor" value="school" required onchange="anchorChanged(); saveDraft();">
+                <input type="radio" name="anchor" value="school" required onchange="anchorChanged(); saveDraft()">
                 <div class="option-text">
                   <div class="option-title">🎯 学校优先</div>
                   <div class="option-note">先确定目标学校 → 安家建议跟随该校所在区域</div>
-                  <div class="option-en">适合：有明确目标学校，或愿意围绕学校选住处的家庭</div>
                 </div>
               </label>
               <label class="option">
-                <input type="radio" name="anchor" value="region" required onchange="anchorChanged(); saveDraft();">
+                <input type="radio" name="anchor" value="region" required onchange="anchorChanged(); saveDraft()">
                 <div class="option-text">
                   <div class="option-title">🏠 居住优先</div>
                   <div class="option-note">先确定住在哪里 → 只推荐该区域的学校</div>
-                  <div class="option-en">适合：有明确的居住区域偏好，或先解决安家问题的家庭</div>
                 </div>
               </label>
               <label class="option">
-                <input type="radio" name="anchor" value="same" required onchange="anchorChanged(); saveDraft();">
+                <input type="radio" name="anchor" value="same" required onchange="anchorChanged(); saveDraft()">
                 <div class="option-text">
-                  <div class="option-title">🔗 同一区域</div>
-                  <div class="option-note">居住区域 = 学校所在区域，两者保持一致</div>
-                  <div class="option-en">适合：还没特定偏好，希望看完整选项后再综合决策</div>
+                  <div class="option-title">🔗 同一区域（综合决策）</div>
+                  <div class="option-note">学校和居住在同一区域，两者保持一致</div>
                 </div>
               </label>
             </div>
             <div class="error-msg" id="anchorError">请选择一种决策锚点</div>
           </div>
 
-          <!-- 锚点=学校：展示学校类型+住宿+预算，让用户心里有数 -->
-          <div id="anchorSchoolHint" style="display:none;">
-            <div class="question">
-              <label class="question-label">目标学校类型<span class="required">*</span></label>
-              <div class="options">
-                <label class="option"><input type="radio" name="schoolPref" value="public" required onchange="saveDraft()">
-                  <div class="option-text"><div class="option-title">公立学校</div><div class="option-note">免费，Stamp 4 可就读，需家长陪读</div></div></label>
-                <label class="option"><input type="radio" name="schoolPref" value="private" required onchange="saveDraft()">
-                  <div class="option-text"><div class="option-title">私立学校</div><div class="option-note">收费，可寄宿，有 EAL 支持</div></div></label>
-                <label class="option"><input type="radio" name="schoolPref" value="both" required onchange="saveDraft()">
-                  <div class="option-text"><div class="option-title">都可以接受</div></div></label>
-              </div>
-            </div>
-            <div class="question">
-              <label class="question-label">住宿方式<span class="required">*</span></label>
-              <div class="options">
-                <label class="option"><input type="radio" name="boarding" value="day" required onchange="saveDraft()"><div class="option-text"><div class="option-title">走读</div><div class="option-note">家长陪读，孩子每天回家</div></div></label>
-                <label class="option"><input type="radio" name="boarding" value="boarding" required onchange="saveDraft()"><div class="option-text"><div class="option-title">寄宿</div><div class="option-note">学校宿舍（全寄宿或周寄宿）</div></div></label>
-                <label class="option"><input type="radio" name="boarding" value="homestay" required onchange="saveDraft()"><div class="option-text"><div class="option-title">寄宿家庭</div><div class="option-note">学校安排当地家庭</div></div></label>
-                <label class="option"><input type="radio" name="boarding" value="flex" required onchange="saveDraft()"><div class="option-text"><div class="option-title">都可以</div></div></label>
-              </div>
-            </div>
-            <div class="question">
-              <label class="question-label">学费预算（每年，欧元）</label>
-              <div class="options">
-                <label class="option"><input type="radio" name="budget" value="10k" required onchange="saveDraft()"><div class="option-text"><div class="option-title">≤ €10,000</div><div class="option-note">约 ¥8万/年</div></div></label>
-                <label class="option"><input type="radio" name="budget" value="15k" required onchange="saveDraft()"><div class="option-text"><div class="option-title">€10,000-15,000</div></div></label>
-                <label class="option"><input type="radio" name="budget" value="20k" required onchange="saveDraft()"><div class="option-text"><div class="option-title">€15,000-20,000</div></div></label>
-                <label class="option"><input type="radio" name="budget" value="25k" required onchange="saveDraft()"><div class="option-text"><div class="option-title">€20,000-25,000</div></div></label>
-                <label class="option"><input type="radio" name="budget" value="unlimited" required onchange="saveDraft()"><div class="option-text"><div class="option-title">≥ €25,000</div></div></label>
-                <label class="option"><input type="radio" name="budget" value="undecided" required onchange="saveDraft()"><div class="option-text"><div class="option-title">还没想好</div></div></label>
-              </div>
-            </div>
-          </div>
-
-          <!-- 锚点=居住 或 同一区域：展示区域选择 -->
+          <!-- 锚点=居住/同一区域：展示区域选择 -->
           <div id="anchorRegionHint" style="display:none;">
             <div class="question">
               <label class="question-label">希望住在哪里？<span class="required">*</span></label>
-              <div class="question-desc">（可多选）学校和安家方案会限制在这些区域内</div>
+              <div class="question-desc">（可多选）学校和安家方案将限制在所选区域内</div>
+
               <div style="margin: 12px 0; font-weight: 500; color: #666; font-size: 13px;">🌆 都柏林 Dublin</div>
               <div class="options" style="margin-bottom: 16px; display:grid; grid-template-columns:1fr 1fr; gap:8px;">
                 <label class="option"><input type="checkbox" name="region" value="dublin4" onchange="saveDraft()"><div class="option-text"><div class="option-title">Dublin 4</div><div class="option-note">使馆区，顶级学区</div></div></label>
@@ -255,14 +264,16 @@
                 <label class="option"><input type="checkbox" name="region" value="dublin14" onchange="saveDraft()"><div class="option-text"><div class="option-title">Dublin 14 (Dundrum)</div><div class="option-note">最大华人社区</div></div></label>
                 <label class="option"><input type="checkbox" name="region" value="blackrock" onchange="saveDraft()"><div class="option-text"><div class="option-title">Blackrock</div><div class="option-note">精英海滨区</div></div></label>
                 <label class="option"><input type="checkbox" name="region" value="dunlaoghaire" onchange="saveDraft()"><div class="option-text"><div class="option-title">Dún Laoghaire</div><div class="option-note">海滨，DART 沿线</div></div></label>
-                <label class="option"><input type="checkbox" name="region" value="dublin_other" onchange="saveDraft()"><div class="option-text"><div class="option-title">都柏林其他</div><div class="option-note">其他都柏林区域</div></div></label>
+                <label class="option"><input type="checkbox" name="region" value="dublin_other" onchange="saveDraft()"><div class="option-text"><div class="option-title">都柏林其他区域</div><div class="option-note">St Andrew's / Belvedere / Castleknock 等</div></div></label>
               </div>
+
               <div style="margin: 12px 0; font-weight: 500; color: #666; font-size: 13px;">🌾 都柏林周边 Dublin Surroundings</div>
               <div class="options" style="margin-bottom: 16px; display:grid; grid-template-columns:1fr 1fr; gap:8px;">
                 <label class="option"><input type="checkbox" name="region" value="kildare" onchange="saveDraft()"><div class="option-text"><div class="option-title">Kildare 郡</div><div class="option-note">Newbridge / Naas，Clongowes</div></div></label>
                 <label class="option"><input type="checkbox" name="region" value="meath" onchange="saveDraft()"><div class="option-text"><div class="option-title">Meath 郡</div><div class="option-note">Navan，M3 走廊</div></div></label>
-                <label class="option"><input type="checkbox" name="region" value="wicklow" onchange="saveDraft()"><div class="option-text"><div class="option-title">Wicklow 郡</div><div class="option-note">Greystones / Bray，St Gerard's</div></div></label>
+                <label class="option"><input type="checkbox" name="region" value="wicklow" onchange="saveDraft()"><div class="option-text"><div class="option-title">Wicklow 郡</div><div class="option-note">Greystones / Bray</div></div></label>
               </div>
+
               <div style="margin: 12px 0; font-weight: 500; color: #666; font-size: 13px;">🏙️ 其他城市 Other Cities</div>
               <div class="options" style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
                 <label class="option"><input type="checkbox" name="region" value="cork" onchange="saveDraft()"><div class="option-text"><div class="option-title">Cork 科克</div></div></label>
@@ -272,38 +283,83 @@
               </div>
               <div class="error-msg" id="regionError">请至少选择一个区域</div>
             </div>
-            <div class="question">
-              <label class="question-label">目标学校类型<span class="required">*</span></label>
-              <div class="options">
-                <label class="option"><input type="radio" name="schoolPref" value="public" required onchange="saveDraft()"><div class="option-text"><div class="option-title">公立学校</div><div class="option-note">免费</div></div></label>
-                <label class="option"><input type="radio" name="schoolPref" value="private" required onchange="saveDraft()"><div class="option-text"><div class="option-title">私立学校</div><div class="option-note">收费，可寄宿</div></div></label>
-                <label class="option"><input type="radio" name="schoolPref" value="both" required onchange="saveDraft()"><div class="option-text"><div class="option-title">都可以</div></div></label>
-              </div>
-            </div>
-            <div class="question">
-              <label class="question-label">住宿方式<span class="required">*</span></label>
-              <div class="options">
-                <label class="option"><input type="radio" name="boarding" value="day" required onchange="saveDraft()"><div class="option-text"><div class="option-title">走读</div></div></label>
-                <label class="option"><input type="radio" name="boarding" value="boarding" required onchange="saveDraft()"><div class="option-text"><div class="option-title">寄宿</div></div></label>
-                <label class="option"><input type="radio" name="boarding" value="homestay" required onchange="saveDraft()"><div class="option-text"><div class="option-title">寄宿家庭</div></div></label>
-                <label class="option"><input type="radio" name="boarding" value="flex" required onchange="saveDraft()"><div class="option-text"><div class="option-title">都可以</div></div></label>
-              </div>
-            </div>
-            <div class="question">
-              <label class="question-label">学费预算（每年）</label>
-              <div class="options">
-                <label class="option"><input type="radio" name="budget" value="10k" required onchange="saveDraft()"><div class="option-text"><div class="option-title">≤ €10,000</div></div></label>
-                <label class="option"><input type="radio" name="budget" value="15k" required onchange="saveDraft()"><div class="option-text"><div class="option-title">€10-15k</div></div></label>
-                <label class="option"><input type="radio" name="budget" value="20k" required onchange="saveDraft()"><div class="option-text"><div class="option-title">€15-20k</div></div></label>
-                <label class="option"><input type="radio" name="budget" value="25k" required onchange="saveDraft()"><div class="option-text"><div class="option-title">€20-25k</div></div></label>
-                <label class="option"><input type="radio" name="budget" value="unlimited" required onchange="saveDraft()"><div class="option-text"><div class="option-title">≥ €25k</div></div></label>
-                <label class="option"><input type="radio" name="budget" value="undecided" required onchange="saveDraft()"><div class="option-text"><div class="option-title">未决定</div></div></label>
-              </div>
-            </div>
           </div>
+
+          <hr style="border: none; border-top: 1px solid #eee; margin: 32px 0;">
+
+          <!-- 核心诉求排序 -->
+          <div class="question">
+            <label class="question-label">以下五个维度，请按对您的重要程度排序</label>
+            <div class="question-desc">拖动卡片调整顺序，或点击 ▲▼ 微调。排在最前的权重最高。</div>
+
+            <div class="sort-hint">📌 拖动或点击 ▲▼ 调整顺序</div>
+            <ul class="sortable-list" id="priorityList">
+              <li class="sortable-item" data-id="academic" draggable="true">
+                <span class="rank">1</span>
+                <div class="text">
+                  <div class="text-title">📚 学术成绩</div>
+                  <div class="text-note">学校升学率、高考成绩、大学去向</div>
+                </div>
+                <div class="item-btns">
+                  <button type="button" class="move-btn" onclick="moveItem(this, -1)">▲</button>
+                  <button type="button" class="move-btn" onclick="moveItem(this, 1)">▼</button>
+                </div>
+              </li>
+              <li class="sortable-item" data-id="happiness" draggable="true">
+                <span class="rank">2</span>
+                <div class="text">
+                  <div class="text-title">😊 孩子开心</div>
+                  <div class="text-note">适应程度、社交氛围、课外活动</div>
+                </div>
+                <div class="item-btns">
+                  <button type="button" class="move-btn" onclick="moveItem(this, -1)">▲</button>
+                  <button type="button" class="move-btn" onclick="moveItem(this, 1)">▼</button>
+                </div>
+              </li>
+              <li class="sortable-item" data-id="integration" draggable="true">
+                <span class="rank">3</span>
+                <div class="text">
+                  <div class="text-title">🤝 融入本地</div>
+                  <div class="text-note">本地生比例、华人比例、语言环境</div>
+                </div>
+                <div class="item-btns">
+                  <button type="button" class="move-btn" onclick="moveItem(this, -1)">▲</button>
+                  <button type="button" class="move-btn" onclick="moveItem(this, 1)">▼</button>
+                </div>
+              </li>
+              <li class="sortable-item" data-id="cost" draggable="true">
+                <span class="rank">4</span>
+                <div class="text">
+                  <div class="text-title">💰 费用可控</div>
+                  <div class="text-note">学费、寄宿费、生活费总体可控</div>
+                </div>
+                <div class="item-btns">
+                  <button type="button" class="move-btn" onclick="moveItem(this, -1)">▲</button>
+                  <button type="button" class="move-btn" onclick="moveItem(this, 1)">▼</button>
+                </div>
+              </li>
+              <li class="sortable-item" data-id="location" draggable="true">
+                <span class="rank">5</span>
+                <div class="text">
+                  <div class="text-title">🏡 居住环境</div>
+                  <div class="text-note">社区安全、房价、家长通勤方便</div>
+                </div>
+                <div class="item-btns">
+                  <button type="button" class="move-btn" onclick="moveItem(this, -1)">▲</button>
+                  <button type="button" class="move-btn" onclick="moveItem(this, 1)">▼</button>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- 矛盾检测提示 -->
+          <div id="contradictionBox" class="contradiction-box">
+            <div class="contrad-title">⚠️ 检测到以下冲突，请修正后再提交：</div>
+            <div id="contradictionList" style="margin-top: 8px;"></div>
+          </div>
+
         </div>
 
-        <!-- Part C: 核心诉求 -->
         <div class="btn-group">
           <button type="button" class="btn btn-secondary" id="btnPrev" style="display: none;" onclick="prevPart()">← 上一步</button>
           <button type="button" class="btn btn-primary" id="btnNext" onclick="nextPart()">下一步 →</button>
@@ -320,40 +376,116 @@
     const RESULT_KEY = 'ireland_school_quiz_result';
     const PART_IDS = 'AB';
 
+    // ══════════════ 进度条 ══════════════
     function updateProgress() {
       document.getElementById('progressFill').style.width = (currentPart / totalParts * 100) + '%';
-      const partLabels = {1:'Part A · 孩子情况', 2:'Part B · 决策锚点（最后一步）'};
+      const partLabels = {1:'Part A · 孩子情况', 2:'Part B · 家庭与决策（最后一步）'};
       document.getElementById('progressLabel').textContent = partLabels[currentPart] || ('Part ' + currentPart + ' / ' + totalParts);
     }
 
-    // —— 锚点切换：控制 Part B 内条件字段的显示/隐藏 ——
+    // ══════════════ 锚点切换 ══════════════
     function anchorChanged() {
       const sel = document.querySelector('input[name="anchor"]:checked');
       const anchor = sel ? sel.value : null;
-      const schoolHint = document.getElementById('anchorSchoolHint');
       const regionHint = document.getElementById('anchorRegionHint');
-      if (schoolHint) schoolHint.style.display = (anchor === 'school') ? 'block' : 'none';
       if (regionHint) regionHint.style.display = (anchor === 'region' || anchor === 'same') ? 'block' : 'none';
-      // 清除错误状态
       document.querySelectorAll('.error-msg').forEach(e => e.classList.remove('show'));
       document.querySelectorAll('.option').forEach(o => o.style.borderColor = '');
     }
 
-    function toggleConditional(id, value) {
-      const el = document.getElementById(id);
-      if (value === 'private' || value === 'both') el.classList.add('show');
-      else el.classList.remove('show');
+    // ══════════════ 排序：拖拽 + ▲▼ 按钮 ══════════════
+    function initSortable() {
+      const list = document.getElementById('priorityList');
+      let draggedItem = null;
+
+      list.addEventListener('dragstart', function(e) {
+        if (e.target.classList.contains('sortable-item')) {
+          draggedItem = e.target;
+          e.target.classList.add('dragging');
+        }
+      });
+      list.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        const after = getDragAfterElement(list, e.clientY);
+        if (draggedItem && after !== draggedItem) {
+          if (after) list.insertBefore(draggedItem, after);
+          else list.appendChild(draggedItem);
+        }
+      });
+      list.addEventListener('dragend', function(e) {
+        if (e.target.classList.contains('sortable-item')) {
+          e.target.classList.remove('dragging');
+          draggedItem = null;
+          updateRanks();
+          saveDraft();
+        }
+      });
     }
 
-    function toggleHousingBudget() {
-      const sel = document.querySelector('input[name="housingIntent"]:checked');
-      const block = document.getElementById('housingBudgetBlock');
-      if (block) {
-        if (sel && sel.value !== 'rent' && sel.value !== 'undecided') block.style.display = 'block';
-        else block.style.display = 'none';
+    function getDragAfterElement(container, y) {
+      const els = [...container.querySelectorAll('.sortable-item:not(.dragging)')];
+      return els.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) return { offset, element: child };
+        else return closest;
+      }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    function moveItem(btn, dir) {
+      const li = btn.closest('.sortable-item');
+      const list = document.getElementById('priorityList');
+      const items = [...list.querySelectorAll('.sortable-item')];
+      const idx = items.indexOf(li);
+      const newIdx = idx + dir;
+      if (newIdx < 0 || newIdx >= items.length) return;
+      if (dir < 0) list.insertBefore(li, items[newIdx]);
+      else list.insertBefore(items[newIdx + 1], li);
+      updateRanks();
+      saveDraft();
+    }
+
+    function updateRanks() {
+      document.querySelectorAll('#priorityList .sortable-item').forEach((li, i) => {
+        li.querySelector('.rank').textContent = i + 1;
+      });
+    }
+
+    // ══════════════ 矛盾检测 ══════════════
+    function checkContradiction() {
+      const boarding = document.querySelector('input[name="boarding"]:checked');
+      const budget = document.querySelector('input[name="budget"]:checked');
+      const parentGo = document.querySelector('input[name="parentGo"]:checked');
+      const box = document.getElementById('contradictionBox');
+      const list = document.getElementById('contradictionList');
+      const issues = [];
+
+      // 矛盾1：走读但家长不去爱尔兰
+      if (boarding && boarding.value === 'day' && parentGo && parentGo.value === 'none') {
+        issues.push('「走读」需要家长每天在爱尔兰接送陪伴，但您选择了「孩子单独去」——请修改住宿方式或确认家长陪同安排。');
+      }
+
+      // 矛盾2：预算极低但要寄宿
+      if (budget && budget.value === '5k' && boarding && boarding.value === 'boarding') {
+        issues.push('「预算 ≤ €5,000」基本只能覆盖公立或低价走读私立，但您选择了「寄宿」——爱尔兰寄宿学校最低约 €15,000/年，请修改预算或住宿方式。');
+      }
+
+      // 矛盾3：预算中等但选了纯高费校
+      if (budget && (budget.value === '5k' || budget.value === '10k') && boarding && boarding.value === 'boarding') {
+        issues.push('「预算 ≤ €10,000」选择寄宿学校空间很小，建议改为「走读」或「寄宿家庭」，或将预算调高。');
+      }
+
+      if (issues.length > 0) {
+        list.innerHTML = issues.map(i => `<div style="margin-top:6px;">• ${i}</div>`).join('');
+        box.classList.add('show');
+        return false;
+      } else {
+        box.classList.remove('show');
+        return true;
       }
     }
 
+    // ══════════════ 表单收集 ══════════════
     function collectData() {
       const form = document.getElementById('quizForm');
       const fd = new FormData(form);
@@ -364,47 +496,51 @@
           data[k].push(v);
         } else data[k] = v;
       });
+      // 优先级排序
+      const priorities = [...document.querySelectorAll('#priorityList .sortable-item')].map(li => li.dataset.id);
+      data.priorities = priorities;
       return data;
     }
 
     function saveDraft() {
-      try {
-        localStorage.setItem(DRAFT_KEY, JSON.stringify(collectData()));
-      } catch (e) {}
+      try { localStorage.setItem(DRAFT_KEY, JSON.stringify(collectData())); } catch (e) {}
     }
 
     function restoreDraft() {
-      let raw;
-      try { raw = localStorage.getItem(DRAFT_KEY); } catch (e) { return false; }
-      if (!raw) return false;
-      let data;
-      try { data = JSON.parse(raw); } catch (e) { return false; }
+      let raw, data;
+      try { raw = localStorage.getItem(DRAFT_KEY); data = JSON.parse(raw); } catch (e) { return false; }
       if (!data || Object.keys(data).length === 0) return false;
-
-      // 填充表单
       for (const [k, v] of Object.entries(data)) {
         if (k === 'priorities') continue;
         const vals = Array.isArray(v) ? v : [v];
         vals.forEach(val => {
           const input = document.querySelector(`[name="${k}"][value="${CSS.escape(val)}"]`);
-          if (input) { input.checked = true; }
+          if (input) input.checked = true;
         });
       }
-      // 恢复锚点条件显示
+      // 恢复优先级排序
+      if (data.priorities && Array.isArray(data.priorities)) {
+        const list = document.getElementById('priorityList');
+        data.priorities.forEach(id => {
+          const li = list.querySelector(`[data-id="${id}"]`);
+          if (li) list.appendChild(li);
+        });
+        updateRanks();
+      }
       anchorChanged();
       return true;
     }
 
-    // —— 校验 ——
+    // ══════════════ 校验 ══════════════
     function validateCurrentPart() {
       document.querySelectorAll('.error-msg').forEach(e => e.classList.remove('show'));
+      document.querySelectorAll('.option').forEach(o => o.style.borderColor = '');
       const partId = PART_IDS[currentPart - 1];
       const part = document.getElementById('part' + partId);
       let valid = true;
 
       const requiredInputs = part.querySelectorAll('input[required], select[required]');
       requiredInputs.forEach(input => {
-        // 跳过被隐藏的必填项（如选「公立学校」后隐藏的住宿/学费）——它们不可见，不应强制
         if (input.offsetParent === null) return;
         if (input.type === 'radio' || input.type === 'checkbox') {
           const group = part.querySelectorAll(`input[name="${input.name}"]`);
@@ -418,10 +554,6 @@
         }
       });
 
-      if (partId === 'A') {
-        const pc = document.querySelectorAll('input[name="personality"]:checked').length;
-        if (pc === 0) { valid = false; document.getElementById('personalityError').classList.add('show'); }
-      }
       if (partId === 'B') {
         const anchorSel = document.querySelector('input[name="anchor"]:checked');
         if (!anchorSel) { valid = false; document.getElementById('anchorError').classList.add('show'); }
@@ -438,6 +570,7 @@
       return valid;
     }
 
+    // ══════════════ 步骤切换 ══════════════
     function nextPart() {
       if (!validateCurrentPart()) return;
       if (currentPart < totalParts) {
@@ -467,19 +600,24 @@
       }
     }
 
-    // —— 提交 ——
+    // ══════════════ 提交 ══════════════
     document.getElementById('quizForm').addEventListener('submit', function(e) {
       e.preventDefault();
       if (!validateCurrentPart()) return;
+      if (!checkContradiction()) {
+        alert('请先修正冲突项后再提交');
+        return;
+      }
       const data = collectData();
       try {
         localStorage.setItem(RESULT_KEY, JSON.stringify(data));
-        localStorage.removeItem(DRAFT_KEY); // 正式提交后清草稿，避免下次进入误恢复
+        localStorage.removeItem(DRAFT_KEY);
       } catch (e) {}
       window.location.href = 'results.html';
     });
 
-    // —— 初始化 ——
+    // ══════════════ 初始化 ══════════════
+    initSortable();
     if (restoreDraft()) document.getElementById('cacheNote').classList.add('show');
     updateProgress();
   </script>
