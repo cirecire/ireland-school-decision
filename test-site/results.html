@@ -299,15 +299,36 @@
         const engMap = { c1: '🎓 雅思6.5+', b2: '🎓 雅思6.0', b1: '🎓 雅思5.5', weak: '📚 ≤雅思5', strong: '🎓 流利', mid: '🎓 中等', weakself: '📚 较弱' };
         tags.push(engMap[user.english] || user.english);
       }
+      // 锚点摘要
+      const anchorMap = { school: '🎯 学校优先', region: '🏠 居住优先', same: '🔗 同一区域' };
+      if (user.anchor) tags.push(anchorMap[user.anchor] || user.anchor);
+      if (user.schoolPref) {
+        const prefMap = { public: '🏫 公立', private: '🏢 私立', both: '🔄 都可以' };
+        tags.push(prefMap[user.schoolPref] || user.schoolPref);
+      }
+      if (user.boarding) {
+        const boardMap = { day: '🏠 走读', boarding: '🏫 寄宿', homestay: '👨‍👩‍👧 寄宿家庭', flex: '🔄 都可以' };
+        tags.push(boardMap[user.boarding] || user.boarding);
+      }
+      if (user.budget) {
+        const budgetMap = { '10k': '💶 ≤€10k', '15k': '💶 €10-15k', '20k': '💶 €15-20k', '25k': '💶 €20-25k', 'unlimited': '💰 灵活', 'undecided': '💰 待定' };
+        tags.push(budgetMap[user.budget] || user.budget);
+      }
       if (Array.isArray(user.region) && user.region.length) {
         const regMap = { dublin4: 'Dublin 4', dublin6: 'Dublin 6', dublin14: 'Dundrum', blackrock: 'Blackrock', dunlaoghaire: 'Dún Laoghaire', wicklow: 'Wicklow', kildare: 'Kildare', meath: 'Meath', cork: 'Cork', galway: 'Galway', limerick: 'Limerick', waterford: 'Waterford', dublin_other: '都柏林其他' };
-        tags.push('📌 地区：' + user.region.map(r => regMap[r] || r).join('、'));
-      }
-      if (Array.isArray(user.priorities) && user.priorities.length === 5) {
-        const priMap = { academic: '升学率', happiness: '孩子快乐', integration: '融入', cost: '学费', location: '地理位置' };
-        tags.push('⭐ 优先：' + priMap[user.priorities[0]] + ' > ' + priMap[user.priorities[4]]);
+        tags.push('📌 区域：' + user.region.map(r => regMap[r] || r).join('、'));
       }
       document.getElementById('summaryTags').innerHTML = tags.map(t => `<span class="tag">${t}</span>`).join('');
+
+      // 安家横幅：统一地区锚点说明
+      const banner = document.getElementById('housingBanner');
+      const sub = document.getElementById('housingBannerSub');
+      if (banner && sub) {
+        banner.style.display = 'block';
+        const anchorText = anchorMap[user.anchor] || '';
+        const regText = Array.isArray(user.region) ? user.region.map(r => (regMap[r] || r)).join('、') : '';
+        sub.textContent = '决策锚点：' + anchorText + (regText ? ' | 选定区域：' + regText : '') + '。下方学校仅显示该区域内的匹配选项。';
+      }
 
       // 地区硬筛：构建候选城市集合
       let userRegions = [];
@@ -437,27 +458,17 @@
           </div>`;
         return;
       }
-      // 字段归一化：region 强制数组、boarding 默认 flex、缺字段补默认
+      // 字段归一化
       if (!Array.isArray(userData.region)) {
         userData.region = userData.region ? [userData.region] : [];
       }
       if (!userData.boarding) userData.boarding = 'flex';
       if (!userData.budget) userData.budget = 'undecided';
       if (!userData.schoolType) userData.schoolType = userData.schoolPref || 'both';
-
-      // 安家横幅：如果问卷包含居住区域数据，显示 housing.html 入口
-      if (userData.lifestyle || userData.housingIntent || userData.resideRegion) {
-        const banner = document.getElementById('housingBanner');
-        const sub = document.getElementById('housingBannerSub');
-        const lifestyleMap = {employed:'有工作', entrepreneur:'做生意', seeking:'打算找工作', remote:'远程工作', passive:'被动收入', retiree:'陪伴孩子为主'};
-        const intentMap = {buy:'计划买房', rent:'计划租房', both:'考虑买房+租房', undecided:'待定'};
-        if (banner && sub) {
-          banner.style.display = 'block';
-          const ls = lifestyleMap[userData.lifestyle] || '待定';
-          const hi = intentMap[userData.housingIntent] || '';
-          const regions = Array.isArray(userData.resideRegion) ? userData.resideRegion.join('、') : (userData.resideRegion || '');
-          sub.textContent = '生活方式：' + ls + (hi ? ' | 居住意向：' + hi : '') + (regions ? ' | 区域：' + regions : '');
-        }
+      // 锚点默认值（锚点是新字段，旧数据没有）
+      if (!userData.anchor) {
+        // 旧版数据兼容：有 region 时默认同一区域锚点
+        userData.anchor = (userData.region && userData.region.length > 0) ? 'same' : 'school';
       }
 
       // 调试输出：把 userData 原始值打到页面底部（仅 debug 期保留）
