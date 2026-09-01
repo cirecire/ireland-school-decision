@@ -97,13 +97,12 @@
 
 <script>
   function goAnchor(anchor) {
-    // 把锚点写入 localStorage，问卷页读取
     try {
       const draft = JSON.parse(localStorage.getItem('ireland_quiz_draft') || '{}');
       draft.anchor = anchor;
       localStorage.setItem('ireland_quiz_draft', JSON.stringify(draft));
     } catch(e) {}
-    location.href = 'questionnaire.html';
+    location.href = 'results.html';
   }
 </script>
 </body>
