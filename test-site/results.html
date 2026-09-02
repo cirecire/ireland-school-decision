@@ -271,7 +271,45 @@
 const SCHOOLS = [
   // Dublin — 细化到 Town
   {id:1,  name:"Blackrock College",          county:"Dublin", town:"Blackrock",  district:"blackrock",     gender:"boys",  type:"private",boarding:"both",    feeDay:7990, feeBoarding:21075,eal:"no",      feeders:91,lcFeeder:96},
-  {id:2,  name:"Clongowes Wood College",      county:"Kildare",town:"Clane",    district:"clane",       gender:"boys",  type:"private",boarding:"boarding",feeDay:null, feeBoarding:25405,eal:"no",      feeders:88,lcFeeder:94},
+  // ── Kildare · Naas ──
+  {id:57, name:"Piper's Hill College",           county:"Kildare",town:"Naas",        district:"naas",         gender:"mixed",type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:75,lcFeeder:75},
+  {id:58, name:"Naas CBS (Meánscoil Iognáid Rís)",county:"Kildare",town:"Naas",        district:"naas",         gender:"boys",  type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:76,lcFeeder:76},
+  {id:59, name:"Coláiste Naomh Mhuire",          county:"Kildare",town:"Naas",        district:"naas",         gender:"girls",type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:75,lcFeeder:75},
+  {id:60, name:"Gael-Choláiste Chill Dara",      county:"Kildare",town:"Naas",        district:"naas",         gender:"mixed",type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:74,lcFeeder:74},
+  {id:68, name:"Cross and Passion College",       county:"Kildare",town:"Kilcullen",   district:"naas",         gender:"mixed",type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:72,lcFeeder:72},
+  // ── Kildare · Newbridge ──
+  {id:61, name:"Patrician Secondary School",      county:"Kildare",town:"Newbridge",  district:"newbridge",   gender:"boys",  type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:74,lcFeeder:74},
+  {id:62, name:"Holy Family Secondary School",    county:"Kildare",town:"Newbridge",  district:"newbridge",   gender:"girls",type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:74,lcFeeder:74},
+  {id:63, name:"St Conleth's Community College",  county:"Kildare",town:"Newbridge",  district:"newbridge",   gender:"mixed",type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:73,lcFeeder:73},
+  {id:64, name:"Curragh Community College",       county:"Kildare",town:"Newbridge",  district:"newbridge",   gender:"mixed",type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:72,lcFeeder:72},
+  // ── Kildare · Kildare Town ──
+  {id:65, name:"Kildare Town Community School",   county:"Kildare",town:"Kildare Town",district:"kildaretown", gender:"mixed",type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:72,lcFeeder:72},
+  {id:66, name:"Presentation Secondary Kildare",  county:"Kildare",town:"Kildare Town",district:"kildaretown", gender:"girls",type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:73,lcFeeder:73},
+  {id:67, name:"St Joseph's Academy",            county:"Kildare",town:"Kildare Town",district:"kildaretown", gender:"boys",  type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:73,lcFeeder:73},
+  // ── Kildare · Clane ──
+  {id:69, name:"Scoil Mhuire Community School",  county:"Kildare",town:"Clane",      district:"clane",        gender:"mixed",type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:72,lcFeeder:72},
+  {id:2,  name:"Clongowes Wood College",          county:"Kildare",town:"Clane",      district:"clane",        gender:"boys",  type:"private",boarding:"boarding",feeDay:null, feeBoarding:25405,eal:"no",      feeders:88,lcFeeder:94},
+  // ── Kildare · Celbridge ──
+  {id:70, name:"Salesian College Celbridge",       county:"Kildare",town:"Celbridge",  district:"celbridge",   gender:"boys",  type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:74,lcFeeder:74},
+  {id:71, name:"St Wolstan's Community School",   county:"Kildare",town:"Celbridge",  district:"celbridge",   gender:"girls",type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:73,lcFeeder:73},
+  {id:72, name:"Celbridge Community School",       county:"Kildare",town:"Celbridge",  district:"celbridge",   gender:"mixed",type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:73,lcFeeder:73},
+  // ── Kildare · Leixlip ──
+  {id:73, name:"Confey Community College",         county:"Kildare",town:"Leixlip",    district:"leixlip",     gender:"mixed",type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:72,lcFeeder:72},
+  {id:74, name:"Coláiste Chiaráin",               county:"Kildare",town:"Leixlip",    district:"leixlip",     gender:"mixed",type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:71,lcFeeder:71},
+  // ── Kildare · Maynooth ──
+  {id:75, name:"Maynooth Post Primary School",     county:"Kildare",town:"Maynooth",   district:"maynooth",    gender:"mixed",type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:73,lcFeeder:73},
+  {id:76, name:"Maynooth Community College",      county:"Kildare",town:"Maynooth",   district:"maynooth",    gender:"mixed",type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:72,lcFeeder:72},
+  {id:77, name:"Gaelcholáiste Mhaigh Nuad",       county:"Kildare",town:"Maynooth",   district:"maynooth",    gender:"mixed",type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:72,lcFeeder:72},
+  // ── Kildare · Athy ──
+  {id:78, name:"Athy Community College",           county:"Kildare",town:"Athy",        district:"athy",         gender:"mixed",type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:71,lcFeeder:71},
+  {id:79, name:"Scoil Eoin Athy",                 county:"Kildare",town:"Athy",        district:"athy",         gender:"boys",  type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:71,lcFeeder:71},
+  {id:80, name:"Scoil Mhuire Athy",               county:"Kildare",town:"Athy",        district:"athy",         gender:"girls",type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:71,lcFeeder:71},
+  // ── Kildare · 其他小镇 ──
+  {id:81, name:"Scoil Dara (Kilcock)",            county:"Kildare",town:"Kilcock",     district:"celbridge",   gender:"mixed",type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:70,lcFeeder:70},
+  {id:82, name:"St Paul's Secondary Monasterevin", county:"Kildare",town:"Monasterevin",district:"athy",         gender:"mixed",type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:70,lcFeeder:70},
+  {id:83, name:"Rathangan Secondary School",       county:"Kildare",town:"Rathangan",   district:"kildaretown", gender:"mixed",type:"public",boarding:"day",    feeDay:0,    feeBoarding:null,  eal:"no",      feeders:70,lcFeeder:70},
+  // ── Kildare · Newbridge College（唯一私立）───
+  {id:14, name:"Newbridge College",                county:"Kildare",town:"Newbridge",  district:"newbridge",   gender:"mixed", type:"private",boarding:"day",    feeDay:5325, feeBoarding:null,  eal:"no",      feeders:82,lcFeeder:82},
   {id:3,  name:"Gonzaga College",             county:"Dublin", town:"Dublin 6", district:"dublin6",     gender:"boys",  type:"private",boarding:"day",    feeDay:8000, feeBoarding:null,  eal:"no",      feeders:89,lcFeeder:95},
   {id:4,  name:"Castleknock College",         county:"Dublin", town:"Blanchardstown",district:"dublin_other",gender:"boys",type:"private",boarding:"both",feeDay:8500,feeBoarding:19000,eal:"no", feeders:87,lcFeeder:93},
   {id:5,  name:"Belvedere College",           county:"Dublin", town:"Dublin 1", district:"dublin_other", gender:"boys",  type:"private",boarding:"day",    feeDay:7500, feeBoarding:null,  eal:"no",      feeders:82,lcFeeder:88},
@@ -283,7 +321,7 @@ const SCHOOLS = [
   {id:11, name:"Glenstal Abbey School",       county:"Limerick",town:"Limerick City",district:"limerick",gender:"boys",type:"private",boarding:"boarding",feeDay:14600,feeBoarding:23138,eal:"unknown",feeders:84,lcFeeder:88},
   {id:12, name:"Rockwell College",            county:"Tipperary",town:"Cashel", district:"limerick",  gender:"mixed", type:"private",boarding:"both",   feeDay:7125, feeBoarding:25000,eal:"unknown",  feeders:82,lcFeeder:86},
   {id:13, name:"Cistercian College Roscrea",  county:"Offaly",  town:"Roscrea",   district:"limerick",  gender:"boys",  type:"private",boarding:"boarding",feeDay:null, feeBoarding:8700,  eal:"unknown",  feeders:80,lcFeeder:84},
-  {id:14, name:"Newbridge College",            county:"Kildare",town:"Newbridge",district:"newbridge", gender:"mixed", type:"private",boarding:"day",    feeDay:5325, feeBoarding:null,  eal:"no",      feeders:82,lcFeeder:82},
+
   {id:15, name:"Alexandra College",           county:"Dublin", town:"Dublin 6", district:"dublin6",     gender:"girls", type:"private",boarding:"both",   feeDay:8000, feeBoarding:17000,eal:"yes",      feeders:81,lcFeeder:89},
   {id:16, name:"Mount Anville Secondary",      county:"Dublin", town:"Dublin 14",district:"dublin14",  gender:"girls", type:"private",boarding:"day",    feeDay:7705, feeBoarding:null,  eal:"no",      feeders:84,lcFeeder:88},
   {id:17, name:"Loreto College Foxrock",       county:"Dublin", town:"Foxrock",  district:"dublin_other",gender:"girls",type:"private",boarding:"day",  feeDay:5500,feeBoarding:null,  eal:"no",      feeders:83,lcFeeder:87},
@@ -331,19 +369,26 @@ const SCHOOLS = [
 
 // 城镇 → 房价数据
 const HOUSING_DATA = {
-  dublin4:        {label:"Dublin 4",        median:780000,entry:550000,trend:"up",    trendPct:"+5.3%/年"},
-  dublin6:        {label:"Dublin 6 / 2区", median:620000,entry:420000,trend:"up",    trendPct:"+4.1%/年"},
-  dublin14:       {label:"Dublin 14",       median:580000,entry:380000,trend:"up",    trendPct:"+5.8%/年"},
-  blackrock:      {label:"Blackrock",       median:780000,entry:520000,trend:"stable",trendPct:"+3.2%/年"},
-  dunlaoghaire:   {label:"Dún Laoghaire",  median:520000,entry:330000,trend:"up",    trendPct:"+8.1%/年"},
-  dublin_other:   {label:"都柏林其他区域",  median:420000,entry:280000,trend:"stable",trendPct:"+3.5%/年"},
-  newbridge:      {label:"Newbridge",       median:295000,entry:195000,trend:"stable",trendPct:"+2.8%/年"},
-  clane:          {label:"Clane",           median:295000,entry:195000,trend:"stable",trendPct:"+2.8%/年"},
-  wicklow:        {label:"Bray / Wicklow",  median:340000,entry:220000,trend:"up",    trendPct:"+4.5%/年"},
-  cork:           {label:"Cork 城",         median:295000,entry:190000,trend:"stable",trendPct:"+2.5%/年"},
-  limerick:       {label:"Limerick 城",    median:225000,entry:145000,trend:"stable",trendPct:"+2.2%/年"},
-  meath:          {label:"Meath / Louth",  median:270000,entry:175000,trend:"stable",trendPct:"+3.0%/年"},
-  galway:         {label:"Galway / Sligo", median:320000,entry:210000,trend:"up",    trendPct:"+4.0%/年"},
+  dublin4:        {label:"Dublin 4",           median:780000,entry:550000,trend:"up",    trendPct:"+5.3%/年"},
+  dublin6:        {label:"Dublin 6 / 2区",    median:620000,entry:420000,trend:"up",    trendPct:"+4.1%/年"},
+  dublin14:       {label:"Dublin 14",          median:580000,entry:380000,trend:"up",    trendPct:"+5.8%/年"},
+  blackrock:      {label:"Blackrock",           median:780000,entry:520000,trend:"stable",trendPct:"+3.2%/年"},
+  dunlaoghaire:   {label:"Dún Laoghaire",      median:520000,entry:330000,trend:"up",    trendPct:"+8.1%/年"},
+  dublin_other:   {label:"都柏林其他区域",     median:420000,entry:280000,trend:"stable",trendPct:"+3.5%/年"},
+  newbridge:      {label:"Newbridge",           median:295000,entry:195000,trend:"stable",trendPct:"+2.8%/年"},
+  clane:          {label:"Clane",               median:295000,entry:195000,trend:"stable",trendPct:"+2.8%/年"},
+  naas:           {label:"Naas",                median:330000,entry:220000,trend:"stable",trendPct:"+3.0%/年"},
+  kildaretown:    {label:"Kildare Town",        median:260000,entry:170000,trend:"stable",trendPct:"+2.5%/年"},
+  kilcullen:      {label:"Kilcullen",            median:320000,entry:210000,trend:"stable",trendPct:"+2.8%/年"},
+  celbridge:      {label:"Celbridge / Kilcock",  median:380000,entry:255000,trend:"stable",trendPct:"+3.2%/年"},
+  leixlip:        {label:"Leixlip",              median:340000,entry:225000,trend:"stable",trendPct:"+3.1%/年"},
+  maynooth:       {label:"Maynooth",             median:400000,entry:270000,trend:"up",    trendPct:"+4.5%/年"},
+  athy:           {label:"Athy",                 median:185000,entry:120000,trend:"stable",trendPct:"+2.0%/年"},
+  wicklow:        {label:"Bray / Wicklow",      median:340000,entry:220000,trend:"up",    trendPct:"+4.5%/年"},
+  cork:           {label:"Cork 城",              median:295000,entry:190000,trend:"stable",trendPct:"+2.5%/年"},
+  limerick:       {label:"Limerick 城",          median:225000,entry:145000,trend:"stable",trendPct:"+2.2%/年"},
+  meath:          {label:"Meath / Louth",       median:270000,entry:175000,trend:"stable",trendPct:"+3.0%/年"},
+  galway:         {label:"Galway / Sligo",      median:320000,entry:210000,trend:"up",    trendPct:"+4.0%/年"},
   waterford:      {label:"Waterford / Kilkenny",median:195000,entry:125000,trend:"stable",trendPct:"+1.8%/年"},
 };
 
