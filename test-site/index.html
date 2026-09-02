@@ -5,105 +5,71 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>爱尔兰择校 + 安家决策</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f4f8; color: #333; }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f4f8;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;}
 
-    /* ── Hero ── */
-    .hero { background: linear-gradient(135deg, #1a5f7a 0%, #2d8f6f 100%); color: white; padding: 60px 20px; text-align: center; }
-    .hero-emoji { font-size: 48px; margin-bottom: 16px; }
-    .hero h1 { font-size: 32px; font-weight: 700; margin-bottom: 12px; }
-    .hero p  { font-size: 18px; opacity: 0.9; max-width: 600px; margin: 0 auto; line-height: 1.7; }
+    .container{background:white;border-radius:20px;padding:48px 40px;max-width:680px;width:100%;box-shadow:0 4px 24px rgba(0,0,0,0.08);text-align:center;}
+    .logo{font-size:52px;margin-bottom:16px;}
+    h1{font-size:26px;font-weight:700;color:#1a5f7a;margin-bottom:10px;}
+    .subtitle{color:#888;font-size:15px;line-height:1.7;margin-bottom:36px;}
 
-    /* ── Anchor Section ── */
-    .section { max-width: 900px; margin: 40px auto; padding: 0 20px; }
-    .section-title { font-size: 22px; font-weight: 600; color: #1a5f7a; margin-bottom: 8px; text-align: center; }
-    .section-sub  { font-size: 14px; color: #888; text-align: center; margin-bottom: 28px; }
+    .choice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;}
+    @media(max-width:580px){.choice-grid{grid-template-columns:1fr;}}
 
-    .anchor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-    @media (max-width: 640px) { .anchor-grid { grid-template-columns: 1fr; } }
-
-    .anchor-card {
-      background: white; border-radius: 16px; padding: 28px 24px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08); cursor: pointer;
-      transition: all 0.2s; text-align: center; border: 2px solid transparent;
+    .choice-card{
+      border:2px solid #e0e8f0;border-radius:14px;padding:28px 16px;cursor:pointer;
+      transition:all 0.2s;text-align:center;
     }
-    .anchor-card:hover {
-      border-color: #1a5f7a; transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(26,95,122,0.15);
-    }
-    .anchor-icon { font-size: 40px; margin-bottom: 14px; }
-    .anchor-title { font-size: 18px; font-weight: 700; color: #1a5f7a; margin-bottom: 8px; }
-    .anchor-desc  { font-size: 13px; color: #666; line-height: 1.6; margin-bottom: 20px; }
-    .anchor-flow  { font-size: 12px; color: #888; background: #f0f7ff; border-radius: 8px; padding: 8px 12px; margin-bottom: 16px; }
-    .anchor-btn   {
-      display: inline-block; background: #1a5f7a; color: white;
-      padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 600;
-      text-decoration: none; transition: background 0.2s;
-    }
-    .anchor-card:hover .anchor-btn { background: #155166; }
+    .choice-card:hover{border-color:#1a5f7a;transform:translateY(-3px);box-shadow:0 6px 20px rgba(26,95,122,0.12);}
+    .choice-card .icon{font-size:38px;margin-bottom:10px;}
+    .choice-card .title{font-size:16px;font-weight:700;color:#1a5f7a;margin-bottom:6px;}
+    .choice-card .desc{font-size:13px;color:#888;line-height:1.5;}
 
-    /* ── Footer links ── */
-    .footer-links { text-align: center; margin-top: 48px; padding: 0 20px 40px; }
-    .footer-links a { color: #1a5f7a; text-decoration: none; font-size: 14px; margin: 0 12px; }
-    .footer-links a:hover { text-decoration: underline; }
-    .footer-note { text-align: center; font-size: 12px; color: #aaa; margin-top: 12px; }
+    .features{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:16px;}
+    .feature-tag{background:#e8f4f8;color:#1a5f7a;padding:5px 14px;border-radius:20px;font-size:12px;}
   </style>
 </head>
 <body>
+<div class="container">
+  <div class="logo">🇮🇪</div>
+  <h1>爱尔兰中学择校 + 安家</h1>
+  <p class="subtitle">
+    选城镇 → 看学校 → 查房价<br>
+    同一界面，无需切换
+  </p>
 
-<div class="hero">
-  <div class="hero-emoji">🇮🇪</div>
-  <h1>爱尔兰中学择校 + 安家决策</h1>
-  <p>选学校、选住处、看房价——一个工具全搞定。<br>基于您的实际情况，给出可落地的推荐。</p>
-</div>
-
-<div class="section">
-  <div class="section-title">第一步：选一个决策主锚</div>
-  <div class="section-sub">先决定「先定哪个」，其余自动跟随。不确定的话选第三个。</div>
-
-  <div class="anchor-grid">
-    <div class="anchor-card" onclick="goAnchor('school')">
-      <div class="anchor-icon">🎯</div>
-      <div class="anchor-title">学校优先</div>
-      <div class="anchor-desc">你有明确的目标学校，或者先想清楚要上什么学校。</div>
-      <div class="anchor-flow">学校 → 住处自动跟随该校所在区域</div>
-      <span class="anchor-btn">从这里开始 →</span>
+  <div class="choice-grid">
+    <div class="choice-card" onclick="go('school')">
+      <div class="icon">🎯</div>
+      <div class="title">学校优先</div>
+      <div class="desc">先确定目标学校<br>住处跟随该校所在城镇</div>
     </div>
-
-    <div class="anchor-card" onclick="goAnchor('region')">
-      <div class="anchor-icon">🏠</div>
-      <div class="anchor-title">居住优先</div>
-      <div class="anchor-desc">你想先解决安家问题，或者有明确的居住区域偏好。</div>
-      <div class="anchor-flow">区域 → 只推荐该区域内的学校</div>
-      <span class="anchor-btn">从这里开始 →</span>
+    <div class="choice-card" onclick="go('region')">
+      <div class="icon">🏠</div>
+      <div class="title">居住优先</div>
+      <div class="desc">先确定住在哪<br>再看该城镇有哪些学校</div>
     </div>
-
-    <div class="anchor-card" onclick="goAnchor('same')">
-      <div class="anchor-icon">🔗</div>
-      <div class="anchor-title">还没想好</div>
-      <div class="anchor-desc">还没特定偏好，希望看完整选项后再综合决策。</div>
-      <div class="anchor-flow">学校 + 区域一起看，结论更完整</div>
-      <span class="anchor-btn">从这里开始 →</span>
+    <div class="choice-card" onclick="go('same')">
+      <div class="icon">🔗</div>
+      <div class="title">还没想好</div>
+      <div class="desc">看完整选项<br>综合比较后再决定</div>
     </div>
+  </div>
+
+  <div class="features">
+    <span class="feature-tag">🏛️ 56 所学校</span>
+    <span class="feature-tag">🏠 城镇实时房价</span>
+    <span class="feature-tag">🇮🇪 全国 26 个郡</span>
+    <span class="feature-tag">🔍 实时筛选</span>
+    <span class="feature-tag">🔗 学校+安家联动</span>
   </div>
 </div>
 
-<div class="footer-links">
-  <a href="schools.html">🏫 浏览全部学校清单</a>
-  <a href="data.html">📊 查看数据状态</a>
-  <a href="guide.html">📖 申请攻略</a>
-</div>
-<div class="footer-note">数据覆盖爱尔兰 56 所学校 · 13 个区域房价参考</div>
-
 <script>
-  function goAnchor(anchor) {
-    try {
-      const draft = JSON.parse(localStorage.getItem('ireland_quiz_draft') || '{}');
-      draft.anchor = anchor;
-      localStorage.setItem('ireland_quiz_draft', JSON.stringify(draft));
-    } catch(e) {}
-    location.href = 'results.html';
-  }
+function go(anchor) {
+  localStorage.setItem('ireland_quiz_draft', JSON.stringify({anchor}));
+  window.location.href = 'results.html';
+}
 </script>
 </body>
 </html>
