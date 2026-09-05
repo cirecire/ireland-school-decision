@@ -573,7 +573,7 @@ function renderSchoolMini(s) {
   const ealClass = s.eal==='yes'?'eal-yes':s.eal==='no'?'eal-no':'';
   const ealText = s.eal==='yes'?'EAL支持':s.eal==='no'?'无EAL':'EAL待核';
   const prog = s.progression;
-  let progLabel, progClass;
+  let progLabel, progClass, progWarn = '';
   if (prog==null) { progLabel='升学率待更新'; progClass='fee-gray'; }
   else if (prog>=85) { progLabel='升学率 '+prog+'%'; progClass='fee-green'; }
   else if (prog>=65) { progLabel='升学率 '+prog+'%'; progClass='fee-yellow'; }
